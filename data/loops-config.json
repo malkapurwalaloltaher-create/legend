@@ -1,0 +1,14 @@
+{
+  "1446171480831295601": {
+    "rumors": {
+      "channelId": "1448914411690528858",
+      "intervalMs": 3600000,
+      "active": true
+    },
+    "yap": {
+      "channelId": "1448911339849515109",
+      "intervalMs": 1800000,
+      "active": true
+    }
+  }
+}

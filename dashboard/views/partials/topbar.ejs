@@ -1,0 +1,21 @@
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="sidebar-toggle" id="sidebarToggle" type="button">☰</button>
+
+    <div class="page-heading">
+      <h1><%= pageTitle %></h1>
+      <p><%= pageSubtitle %></p>
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <a href="/switch-server" class="server-switch-pill">
+      <img src="<%= guildIcon %>" alt="Server Icon" />
+      <span><%= guildName %></span>
+      <strong>Switch</strong>
+    </a>
+
+    <span class="version-pill"><%= dashboardVersion %></span>
+    <a href="/logout" class="logout-btn">Logout</a>
+  </div>
+</header>

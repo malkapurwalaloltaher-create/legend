@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Legendary Bot Customer Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(139, 92, 246, 0.36), transparent 36%),
+        radial-gradient(circle at bottom right, rgba(34, 211, 238, 0.18), transparent 34%),
+        linear-gradient(135deg, #06051f, #11113c 48%, #070720);
+      color: #fff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .customer-shell {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 34px;
+    }
+
+    .customer-card {
+      width: min(1120px, 100%);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      overflow: hidden;
+      border-radius: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(13, 13, 38, 0.86);
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.42);
+    }
+
+    .customer-visual {
+      min-height: 620px;
+      padding: 42px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background:
+        linear-gradient(140deg, rgba(139, 92, 246, 0.82), rgba(6, 182, 212, 0.28)),
+        url("<%= botBanner || '' %>");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .customer-mini {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      width: fit-content;
+      padding: 14px 16px;
+      border-radius: 22px;
+      background: rgba(8, 8, 28, 0.48);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .customer-mini img {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      object-fit: cover;
+    }
+
+    .customer-mini span {
+      font-size: 16px;
+      font-weight: 1000;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .customer-visual h1 {
+      margin: 0;
+      font-size: clamp(44px, 5vw, 78px);
+      line-height: 0.94;
+      letter-spacing: -0.06em;
+      font-weight: 1000;
+    }
+
+    .customer-visual p {
+      max-width: 460px;
+      margin: 22px 0 0;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 18px;
+      line-height: 1.55;
+      font-weight: 750;
+    }
+
+    .customer-panel {
+      padding: 58px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: linear-gradient(180deg, rgba(14, 14, 43, 0.96), rgba(9, 9, 28, 0.96));
+    }
+
+    .customer-logo-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .customer-logo-row img {
+      width: 78px;
+      height: 78px;
+      border-radius: 24px;
+      object-fit: cover;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.38);
+    }
+
+    .customer-panel h2 {
+      margin: 0;
+      font-size: clamp(36px, 4vw, 62px);
+      line-height: 0.96;
+      font-weight: 1000;
+      letter-spacing: -0.055em;
+      background: linear-gradient(135deg, #ffffff, #a78bfa 58%, #38bdf8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .customer-panel p {
+      margin: 0 0 28px;
+      color: #c9c5ff;
+      font-size: 17px;
+      line-height: 1.6;
+      font-weight: 650;
+    }
+
+    .customer-actions {
+      display: grid;
+      gap: 14px;
+    }
+
+    .discord-login-btn,
+    .invite-btn {
+      min-height: 68px;
+      border-radius: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 1000;
+      background: linear-gradient(135deg, #5865f2, #7c3aed 52%, #22d3ee);
+      box-shadow: 0 18px 40px rgba(88, 101, 242, 0.28);
+      transition: 0.18s ease;
+    }
+
+    .invite-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: none;
+    }
+
+    .discord-login-btn:hover,
+    .invite-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.06);
+    }
+
+    .customer-note {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 18px;
+      color: #d8d3ff;
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.28);
+      font-size: 14px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .customer-alert {
+      margin-bottom: 18px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-weight: 850;
+    }
+
+    .customer-alert.error {
+      color: #fecaca;
+      background: rgba(239, 68, 68, 0.16);
+      border: 1px solid rgba(239, 68, 68, 0.38);
+    }
+
+    .customer-alert.success {
+      color: #bbf7d0;
+      background: rgba(34, 197, 94, 0.14);
+      border: 1px solid rgba(34, 197, 94, 0.34);
+    }
+
+    @media (max-width: 900px) {
+      .customer-card {
+        grid-template-columns: 1fr;
+      }
+
+      .customer-visual {
+        min-height: 360px;
+      }
+
+      .customer-panel {
+        padding: 34px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="customer-shell">
+    <section class="customer-card">
+      <div class="customer-visual">
+        <div class="customer-mini">
+          <img src="<%= botAvatar %>" alt="Legendary Bot" />
+          <span>Legendary Bot</span>
+        </div>
+
+        <div>
+          <h1>Manage your Discord server.</h1>
+          <p>
+            Login with Discord, choose a server you manage, and configure Legendary Bot from a clean customer dashboard.
+          </p>
+        </div>
+      </div>
+
+      <div class="customer-panel">
+        <div class="customer-logo-row">
+          <img src="<%= botAvatar %>" alt="Legendary Bot" />
+          <h2>Customer Portal</h2>
+        </div>
+
+        <% if (error) { %>
+          <div class="customer-alert error"><%= error %></div>
+        <% } %>
+
+        <% if (success) { %>
+          <div class="customer-alert success"><%= success %></div>
+        <% } %>
+
+        <p>
+          Connect your Discord account to view servers you can manage. Servers with Legendary Bot installed can be opened directly.
+        </p>
+
+        <div class="customer-actions">
+          <a class="discord-login-btn" href="/customer/login">Login with Discord</a>
+          <a class="invite-btn" href="<%= inviteUrl %>" target="_blank" rel="noreferrer">Invite Legendary Bot</a>
+        </div>
+
+        <div class="customer-note">
+          Only servers where you have Administrator or Manage Server permission will be manageable.
+        </div>
+      </div>
+    </section>
+  </main>
+<script src="/assets/js/site-music.js"></script></body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sports - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+<link rel="icon" type="image/png" href="/favicon.png?v=3.7.0" />
+<link rel="shortcut icon" type="image/png" href="/favicon.png?v=3.7.0" />
+<script src="/dashboard.js"></script>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+
+    <main class="main-content">
+      <%- include("partials/topbar", {
+        pageTitle: "Sports",
+        pageSubtitle: "Save football, cricket, and goal alert channels."
+      }) %>
+
+      <% if (success) { %>
+        <div class="alert success"><%= success %></div>
+      <% } %>
+
+      <% if (error) { %>
+        <div class="alert error"><%= error %></div>
+      <% } %>
+
+      <section class="hero-card">
+        <div class="hero-text">
+          <div class="hero-icon-wrap">
+            <img src="<%= botAvatar %>" class="hero-bot-avatar" alt="Bot Avatar" />
+          </div>
+          <div>
+            <h2>Sports Dashboard</h2>
+            <p>
+              Choose your sports channels using the clean channel picker below.
+              Settings are saved in MongoDB and test buttons send real Discord messages.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <form method="POST" action="/sports/save">
+        <div class="sports-grid">
+          <section class="section-card sports-card">
+            <div class="section-header">
+              <h2>⚽ Football</h2>
+              <p>Set the channel for football score updates.</p>
+            </div>
+
+            <div class="form-stack">
+              <input
+                type="hidden"
+                name="footballChannelId"
+                id="footballChannelId"
+                value="<%= sportsConfig.footballChannelId || '' %>"
+              />
+
+              <div class="pretty-picker" data-target="footballChannelId">
+                <div class="pretty-picker-title">
+                  Selected:
+                  <span id="footballChannelIdLabel">
+                    <%= sportsConfig.footballChannelName ? `# ${sportsConfig.footballChannelName}` : "None" %>
+                  </span>
+                </div>
+
+                <div class="pretty-channel-list">
+                  <% channelGroups.forEach(group => { %>
+                    <div class="pretty-category">📁 <%= group.name %></div>
+
+                    <% group.channels.forEach(channel => { %>
+                      <button
+                        type="button"
+                        class="pretty-channel-option <%= sportsConfig.footballChannelId === channel.id ? 'selected' : '' %>"
+                        data-channel-id="<%= channel.id %>"
+                        data-channel-name="# <%= channel.name %>"
+                      >
+                        <span>#</span>
+                        <strong><%= channel.name %></strong>
+                      </button>
+                    <% }) %>
+                  <% }) %>
+                </div>
+              </div>
+
+              <label class="toggle-line">
+                <input type="checkbox" name="footballEnabled" <%= sportsConfig.footballEnabled ? "checked" : "" %> />
+                <span>Enable football system</span>
+              </label>
+
+              <form></form>
+            </div>
+          </section>
+
+          <section class="section-card sports-card">
+            <div class="section-header">
+              <h2>🏏 Cricket</h2>
+              <p>Set the channel for cricket score updates.</p>
+            </div>
+
+            <div class="form-stack">
+              <input
+                type="hidden"
+                name="cricketChannelId"
+                id="cricketChannelId"
+                value="<%= sportsConfig.cricketChannelId || '' %>"
+              />
+
+              <div class="pretty-picker" data-target="cricketChannelId">
+                <div class="pretty-picker-title">
+                  Selected:
+                  <span id="cricketChannelIdLabel">
+                    <%= sportsConfig.cricketChannelName ? `# ${sportsConfig.cricketChannelName}` : "None" %>
+                  </span>
+                </div>
+
+                <div class="pretty-channel-list">
+                  <% channelGroups.forEach(group => { %>
+                    <div class="pretty-category">📁 <%= group.name %></div>
+
+                    <% group.channels.forEach(channel => { %>
+                      <button
+                        type="button"
+                        class="pretty-channel-option <%= sportsConfig.cricketChannelId === channel.id ? 'selected' : '' %>"
+                        data-channel-id="<%= channel.id %>"
+                        data-channel-name="# <%= channel.name %>"
+                      >
+                        <span>#</span>
+                        <strong><%= channel.name %></strong>
+                      </button>
+                    <% }) %>
+                  <% }) %>
+                </div>
+              </div>
+
+              <label class="toggle-line">
+                <input type="checkbox" name="cricketEnabled" <%= sportsConfig.cricketEnabled ? "checked" : "" %> />
+                <span>Enable cricket system</span>
+              </label>
+            </div>
+          </section>
+
+          <section class="section-card sports-card">
+            <div class="section-header">
+              <h2>🚨 Goal Alerts</h2>
+              <p>Set a special channel for football goal alerts.</p>
+            </div>
+
+            <div class="form-stack">
+              <input
+                type="hidden"
+                name="goalAlertChannelId"
+                id="goalAlertChannelId"
+                value="<%= sportsConfig.goalAlertChannelId || '' %>"
+              />
+
+              <div class="pretty-picker" data-target="goalAlertChannelId">
+                <div class="pretty-picker-title">
+                  Selected:
+                  <span id="goalAlertChannelIdLabel">
+                    <%= sportsConfig.goalAlertChannelName ? `# ${sportsConfig.goalAlertChannelName}` : "None" %>
+                  </span>
+                </div>
+
+                <div class="pretty-channel-list">
+                  <% channelGroups.forEach(group => { %>
+                    <div class="pretty-category">📁 <%= group.name %></div>
+
+                    <% group.channels.forEach(channel => { %>
+                      <button
+                        type="button"
+                        class="pretty-channel-option <%= sportsConfig.goalAlertChannelId === channel.id ? 'selected' : '' %>"
+                        data-channel-id="<%= channel.id %>"
+                        data-channel-name="# <%= channel.name %>"
+                      >
+                        <span>#</span>
+                        <strong><%= channel.name %></strong>
+                      </button>
+                    <% }) %>
+                  <% }) %>
+                </div>
+              </div>
+
+              <label class="toggle-line">
+                <input type="checkbox" name="goalAlertsEnabled" <%= sportsConfig.goalAlertsEnabled ? "checked" : "" %> />
+                <span>Enable goal alerts</span>
+              </label>
+            </div>
+          </section>
+
+          <section class="section-card sports-card">
+            <div class="section-header">
+              <h2>⚙️ Update Settings</h2>
+              <p>Control how often sports systems should update.</p>
+            </div>
+
+            <div class="form-stack">
+              <label class="form-group">
+                <span>Update every X minutes</span>
+                <input
+                  class="input"
+                  type="number"
+                  name="updateMinutes"
+                  min="1"
+                  value="<%= sportsConfig.updateMinutes || 5 %>"
+                />
+              </label>
+
+              <button class="primary-btn" type="submit">Save Sports Settings</button>
+            </div>
+          </section>
+        </div>
+      </form>
+
+      <section class="section-card">
+        <div class="section-header">
+          <h2>Test Alerts</h2>
+          <p>Send test embeds to your saved sports channels.</p>
+        </div>
+
+        <div class="sports-test-actions">
+          <form method="POST" action="/sports/test/football">
+            <button class="mini-btn" type="submit">Send Football Test</button>
+          </form>
+
+          <form method="POST" action="/sports/test/cricket">
+            <button class="mini-btn" type="submit">Send Cricket Test</button>
+          </form>
+
+          <form method="POST" action="/sports/test/goal">
+            <button class="mini-btn" type="submit">Send Goal Alert Test</button>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById("sidebar");
+    const sidebarToggle = document.getElementById("sidebarToggle");
+
+    if (sidebarToggle) {
+      sidebarToggle.addEventListener("click", () => {
+        sidebar.classList.toggle("show");
+      });
+    }
+
+    document.querySelectorAll(".pretty-picker").forEach((picker) => {
+      const targetId = picker.dataset.target;
+      const input = document.getElementById(targetId);
+      const label = document.getElementById(targetId + "Label");
+
+      picker.querySelectorAll(".pretty-channel-option").forEach((button) => {
+        button.addEventListener("click", () => {
+          picker.querySelectorAll(".pretty-channel-option").forEach((btn) => {
+            btn.classList.remove("selected");
+          });
+
+          button.classList.add("selected");
+          input.value = button.dataset.channelId;
+          label.textContent = button.dataset.channelName;
+        });
+      });
+    });
+  </script>
+<script src="/assets/js/site-music.js"></script></body>
+</html>

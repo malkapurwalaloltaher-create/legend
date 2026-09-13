@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#8b5cf6" />
+  <meta name="description" content="Color Clash — a fast color focus game by Xavier." />
+  <title>Color Clash</title>
+  <link rel="icon" href="favicon.ico" sizes="any" />
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <div class="bg-orbs orb-a"></div><div class="bg-orbs orb-b"></div><div class="bg-orbs orb-c"></div>
+  <div id="particle-layer" aria-hidden="true"></div>
+
+  <audio id="sfx-start" preload="auto" src="assets/audio/start.mp3"></audio>
+  <audio id="sfx-correct" preload="auto" src="assets/audio/correct.mp3"></audio>
+  <audio id="sfx-wrong" preload="auto" src="assets/audio/wrong.mp3"></audio>
+  <audio id="sfx-tick" preload="auto" src="assets/audio/tick.mp3"></audio>
+  <audio id="sfx-timeout" preload="auto" src="assets/audio/timeout.mp3"></audio>
+  <audio id="sfx-record" preload="auto" src="assets/audio/record.mp3"></audio>
+
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Color Clash home"><span class="brand-mark">◉</span><span>COLOR <b>CLASH</b></span></a>
+    <div class="top-actions">
+      <button id="sound-toggle" class="icon-btn" type="button" aria-pressed="true">🔊 <span>Sound</span></button>
+      <button id="history-toggle" class="icon-btn" type="button">☷ <span>History</span></button>
+    </div>
+  </header>
+
+  <aside id="history-panel" class="history-panel" aria-hidden="true">
+    <div class="panel-head"><div><span class="eyebrow">LOCAL STATS</span><h2>Run History</h2></div><button id="history-close" class="close-btn" type="button">×</button></div>
+    <div class="history-summary"><div><span>BEST SCORE</span><b id="history-best">0</b></div><div><span>BEST STREAK</span><b id="history-streak">0</b></div></div>
+    <div id="history-list" class="history-list"></div>
+    <button id="clear-history" class="ghost-danger" type="button">Clear local history</button>
+  </aside>
+  <div id="history-scrim" class="scrim"></div>
+
+  <main class="shell">
+    <a class="lands-back" href="/" aria-label="Back to Legendary Lands">
+      <span class="lands-back-arrow" aria-hidden="true">&larr;</span>
+      <span>Back to Legendary Lands</span>
+      <span class="lands-back-spectrum" aria-hidden="true"></span>
+    </a>
+
+    <section class="hero-copy">
+      <span class="eyebrow">FOCUS. DECIDE. CLASH.</span>
+      <h1>Tap the <span>color</span>,<br/>not the word.</h1>
+      <p>Read less. React smarter. Beat your best score in a fast neon focus challenge.</p>
+    </section>
+
+    <section id="game-card" class="game-card">
+      <div class="hud-row">
+        <div class="hud-chip"><span>PLAYER</span><b id="player-name">Player</b></div>
+        <div class="hud-chip"><span>ROUND</span><b id="round-display">0 / 10</b></div>
+        <div class="hud-chip"><span>SCORE</span><b id="score-display">0</b></div>
+        <div class="hud-chip"><span>STREAK</span><b id="streak-display">0</b></div>
+      </div>
+
+      <div class="progress-wrap"><div id="round-progress" class="progress-bar"></div></div>
+      <div class="timer-wrap"><div id="timer-number">—</div><div class="timer-line"><div id="timer-fill"></div></div></div>
+
+      <div id="game-stage" class="game-stage stage-idle">
+        <div class="stage-kicker" id="stage-kicker">READY WHEN YOU ARE</div>
+        <div id="color-word" class="color-word">COLOR</div>
+        <div id="stage-instruction" class="stage-instruction">Press Start Game to begin a 10-round focus run.</div>
+      </div>
+
+      <div id="answers" class="answers" aria-label="Color answer options"></div>
+      <div class="game-actions">
+        <button id="start-btn" class="primary-btn" type="button">Start Game <span>→</span></button>
+        <button id="certificate-btn" class="secondary-btn" type="button" disabled>Generate Certificate</button>
+      </div>
+      <p class="note">Correct answers score more when you answer faster. Wrong answers lose points.</p>
+    </section>
+
+    <section class="rank-strip">
+      <div><span>BEST SCORE</span><b id="best-score">0</b></div>
+      <div><span>BEST STREAK</span><b id="best-streak">0</b></div>
+      <div><span>LAST RANK</span><b id="last-rank">—</b></div>
+    </section>
+
+    <div class="project-links" aria-label="Project links">
+      <a class="github-link" href="https://github.com/mrxavier53/Color-Clash" target="_blank" rel="noopener noreferrer">
+        <svg class="github-link-icon" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
+          <path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8 8 0 0 0 8 0Z"/>
+        </svg>
+        <span>View on GitHub</span>
+        <span class="github-link-arrow" aria-hidden="true">↗</span>
+      </a>
+      <p>Created by Xavier · <a href="https://mrxavier53.github.io/Color-Clash/" target="_blank" rel="noopener noreferrer">Play Color Clash online</a></p>
+    </div>
+  </main>
+
+  <section id="name-modal" class="modal active" role="dialog" aria-modal="true">
+    <div class="modal-card intro-card">
+      <span class="eyebrow">WELCOME TO</span>
+      <h2>COLOR <span>CLASH</span></h2>
+      <p>Enter a player name. It will be used for your local history and certificates.</p>
+      <label for="name-input">PLAYER NAME</label>
+      <input id="name-input" maxlength="18" placeholder="Xavier" autocomplete="nickname" />
+      <button id="name-submit" class="primary-btn" type="button">Enter Arena <span>→</span></button>
+    </div>
+  </section>
+
+  <section id="result-modal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-card result-card">
+      <span class="eyebrow">RUN COMPLETE</span>
+      <h2 id="result-title">Color Clash Result</h2>
+      <div class="result-score"><span id="result-score">0</span><small>POINTS</small></div>
+      <div class="result-grid"><div><span>ACCURACY</span><b id="result-accuracy">0%</b></div><div><span>BEST STREAK</span><b id="result-streak">0</b></div></div>
+      <div id="result-rank" class="rank-badge">—</div>
+      <div id="result-stars" class="stars">☆☆☆☆☆</div>
+      <div class="modal-actions"><button id="play-again" class="primary-btn" type="button">Play Again <span>↻</span></button><button id="open-certificate" class="secondary-btn" type="button">Certificate</button></div>
+    </div>
+  </section>
+
+  <section id="certificate-modal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-card certificate-choice">
+      <button id="certificate-close" class="close-btn certificate-x" type="button">×</button>
+      <span class="eyebrow">CERTIFICATE STUDIO</span>
+      <h2>Which result?</h2>
+      <p>Choose the achievement you want to place on your certificate.</p>
+      <button id="cert-current" class="choice-btn" type="button"><strong>Current Result</strong><span>Use your most recent completed game</span></button>
+      <button id="cert-best" class="choice-btn" type="button"><strong>Best Result</strong><span>Use your highest saved score</span></button>
+    </div>
+  </section>
+
+  <canvas id="certificate-canvas" width="1600" height="1000" hidden></canvas>
+  <div id="toast" class="toast" role="status"></div>
+  <div id="confetti" class="confetti"></div>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

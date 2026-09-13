@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Embed Templates - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" type="image/png" href="/favicon.png?v=4.3.0" />
+  <link rel="shortcut icon" type="image/png" href="/favicon.png?v=4.3.0" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+
+    <main class="main-content">
+      <%- include("partials/topbar", {
+        pageTitle: "Embed Templates",
+        pageSubtitle: "Save, edit, duplicate, and manage reusable embed designs for your server."
+      }) %>
+
+      <% if (success) { %>
+        <div class="alert success"><%= success %></div>
+      <% } %>
+
+      <% if (error) { %>
+        <div class="alert error"><%= error %></div>
+      <% } %>
+
+      <section class="hero-card">
+        <div class="hero-text">
+          <div class="hero-icon-wrap">
+            <img src="<%= botAvatar %>" class="hero-bot-avatar" alt="Bot Avatar" />
+          </div>
+          <div>
+            <h2>Embed Template Library</h2>
+            <p>
+              Create reusable embeds for announcements, giveaways, welcome messages,
+              booster messages, rules, updates, and more.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="builder-grid">
+        <section class="section-card">
+          <div class="section-header">
+            <h2>Create Template</h2>
+            <p>Save a reusable message/embed layout.</p>
+          </div>
+
+          <form method="POST" action="/embed-templates/create" class="form-stack">
+            <label class="form-group">
+              <span>Template Name</span>
+              <input
+                name="name"
+                class="input"
+                placeholder="Example: Booster Announcement"
+                required
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Category</span>
+              <input
+                name="category"
+                class="input"
+                placeholder="Example: Announcements"
+                value="General"
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Normal Message Content</span>
+              <textarea
+                name="content"
+                id="content"
+                class="input textarea"
+                placeholder="Optional normal text above the embed..."
+              ></textarea>
+            </label>
+
+            <label class="form-group">
+              <span>Embed Title</span>
+              <input
+                name="embedTitle"
+                id="embedTitle"
+                class="input"
+                placeholder="Example: Server Update"
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Embed Description</span>
+              <textarea
+                name="embedDescription"
+                id="embedDescription"
+                class="input textarea"
+                placeholder="Write your embed description..."
+              ></textarea>
+            </label>
+
+            <div class="form-group">
+              <span>Embed Color</span>
+              <div class="color-row">
+                <input
+                  type="color"
+                  id="embedColorPicker"
+                  class="color-picker"
+                  value="#8b5cf6"
+                />
+                <input
+                  name="embedColor"
+                  id="embedColor"
+                  class="input color-hex-input"
+                  value="#8b5cf6"
+                  placeholder="#8b5cf6"
+                />
+              </div>
+            </div>
+
+            <label class="form-group">
+              <span>Embed Footer</span>
+              <input
+                name="embedFooter"
+                id="embedFooter"
+                class="input"
+                placeholder="THE SUPER LEGENDS"
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Embed Thumbnail URL</span>
+              <input
+                name="embedThumbnail"
+                id="embedThumbnail"
+                class="input"
+                placeholder="https://..."
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Embed Image URL</span>
+              <input
+                name="embedImage"
+                id="embedImage"
+                class="input"
+                placeholder="https://..."
+              />
+            </label>
+
+            <button type="submit" class="primary-btn">Save Template</button>
+          </form>
+        </section>
+
+        <section class="section-card preview-panel">
+          <div class="section-header">
+            <h2>Live Preview</h2>
+            <p>Preview your template before saving.</p>
+          </div>
+
+          <div class="preview-normal" id="previewNormal"></div>
+
+          <div class="discord-preview">
+            <div class="discord-embed">
+              <div class="discord-embed-border" id="embedBorder"></div>
+
+              <div class="discord-embed-content">
+                <div class="discord-title" id="previewTitle">Embed Title</div>
+                <div class="discord-description" id="previewDescription">
+                  Embed description will appear here...
+                </div>
+
+                <img id="previewThumbnail" class="preview-thumbnail hidden" alt="Thumbnail" />
+                <img id="previewImage" class="preview-image hidden" alt="Embed Image" />
+
+                <div class="discord-footer" id="previewFooter">Footer text</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="section-card">
+        <div class="section-header">
+          <h2>Saved Templates</h2>
+          <p>Manage your saved embed templates for this selected server.</p>
+        </div>
+
+        <div class="template-grid">
+          <% if (!templates.length) { %>
+            <div class="empty-mini">No embed templates saved yet.</div>
+          <% } %>
+
+          <% templates.forEach(template => { %>
+            <div class="template-card">
+              <div class="template-card-top">
+                <div>
+                  <h3><%= template.name %></h3>
+                  <p><%= template.category || "General" %></p>
+
+                  <% if (template.sourceLabel) { %>
+                    <p class="template-source-label"><%= template.sourceLabel %></p>
+                  <% } %>
+                </div>
+
+                <span class="status-pill <%= template.enabled ? 'good' : 'bad' %>">
+                  <%= template.enabled ? "Enabled" : "Disabled" %>
+                </span>
+              </div>
+
+              <% if (template.content) { %>
+                <div class="template-normal"><%= template.content %></div>
+              <% } %>
+
+              <div class="template-embed" style="border-left-color: <%= template.embedColor || '#8b5cf6' %>;">
+                <% if (template.embedTitle) { %>
+                  <div class="template-embed-title"><%= template.embedTitle %></div>
+                <% } %>
+
+                <% if (template.embedDescription) { %>
+                  <div class="template-embed-desc"><%= template.embedDescription %></div>
+                <% } %>
+
+                <% if (template.embedThumbnail) { %>
+                  <div class="template-media-note">Thumbnail: <%= template.embedThumbnail %></div>
+                <% } %>
+
+                <% if (template.embedImage) { %>
+                  <div class="template-media-note">Image: <%= template.embedImage %></div>
+                <% } %>
+
+                <% if (template.embedFooter) { %>
+                  <div class="template-embed-footer"><%= template.embedFooter %></div>
+                <% } %>
+              </div>
+
+              <div class="action-row">
+                <a class="mini-link-btn" href="/embed-templates/edit/<%= template._id %>">Edit</a>
+
+                <form method="POST" action="/embed-templates/duplicate/<%= template._id %>">
+                  <button class="mini-btn" type="submit">Duplicate</button>
+                </form>
+
+                <form method="POST" action="/embed-templates/toggle/<%= template._id %>">
+                  <button class="mini-btn" type="submit">
+                    <%= template.enabled ? "Disable" : "Enable" %>
+                  </button>
+                </form>
+
+                <form method="POST" action="/embed-templates/delete/<%= template._id %>">
+                  <button class="mini-btn danger" type="submit">Delete</button>
+                </form>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/dashboard.js"></script>
+
+  <script>
+    const content = document.getElementById("content");
+    const embedTitle = document.getElementById("embedTitle");
+    const embedDescription = document.getElementById("embedDescription");
+    const embedColor = document.getElementById("embedColor");
+    const embedColorPicker = document.getElementById("embedColorPicker");
+    const embedFooter = document.getElementById("embedFooter");
+    const embedThumbnail = document.getElementById("embedThumbnail");
+    const embedImage = document.getElementById("embedImage");
+
+    const previewNormal = document.getElementById("previewNormal");
+    const previewTitle = document.getElementById("previewTitle");
+    const previewDescription = document.getElementById("previewDescription");
+    const previewFooter = document.getElementById("previewFooter");
+    const embedBorder = document.getElementById("embedBorder");
+    const previewThumbnail = document.getElementById("previewThumbnail");
+    const previewImage = document.getElementById("previewImage");
+
+    function validHex(value) {
+      return /^#[0-9A-Fa-f]{6}$/.test(value);
+    }
+
+    function updatePreview() {
+      previewNormal.textContent = content.value.trim() || "";
+      previewTitle.textContent = embedTitle.value.trim() || "Embed Title";
+      previewDescription.textContent =
+        embedDescription.value.trim() || "Embed description will appear here...";
+      previewFooter.textContent = embedFooter.value.trim() || "Footer text";
+      embedBorder.style.background = validHex(embedColor.value.trim())
+        ? embedColor.value.trim()
+        : "#8b5cf6";
+
+      if (embedThumbnail.value.trim()) {
+        previewThumbnail.src = embedThumbnail.value.trim();
+        previewThumbnail.classList.remove("hidden");
+      } else {
+        previewThumbnail.classList.add("hidden");
+      }
+
+      if (embedImage.value.trim()) {
+        previewImage.src = embedImage.value.trim();
+        previewImage.classList.remove("hidden");
+      } else {
+        previewImage.classList.add("hidden");
+      }
+    }
+
+    embedColorPicker.addEventListener("input", () => {
+      embedColor.value = embedColorPicker.value;
+      updatePreview();
+    });
+
+    embedColor.addEventListener("input", () => {
+      if (validHex(embedColor.value.trim())) {
+        embedColorPicker.value = embedColor.value.trim();
+      }
+
+      updatePreview();
+    });
+
+    [
+      content,
+      embedTitle,
+      embedDescription,
+      embedColor,
+      embedFooter,
+      embedThumbnail,
+      embedImage,
+    ].forEach((el) => {
+      el.addEventListener("input", updatePreview);
+    });
+
+    updatePreview();
+  </script>
+<script src="/assets/js/site-music.js"></script></body>
+</html>

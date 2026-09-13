@@ -1,0 +1,733 @@
+:root {
+    --black-bg: #0a0a0a;
+    --black-dark: #050505;
+    --black-light: #111111;
+    --lime-green: #ff2b4f;
+    --lime-green-dark: #c9002b;
+    --lime-green-glow: rgba(255, 43, 79, 0.42);
+    --lime-green-shadow: rgba(255, 43, 79, 0.22);
+    --terminal-font: 'Fira Code', 'Courier New', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, var(--black-bg) 0%, var(--black-dark) 100%);
+    color: var(--lime-green);
+    font-family: var(--terminal-font);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        var(--lime-green-glow) 2px,
+        var(--lime-green-glow) 4px
+    );
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
+    animation: matrixShift 20s linear infinite;
+}
+
+@keyframes matrixShift {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 0 20px;
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.legend-home-nav {
+    display: flex;
+    margin-bottom: 1.5rem;
+}
+
+.legend-home {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid rgba(255, 43, 79, 0.6);
+    border-radius: 4px;
+    background: rgba(10, 0, 3, 0.78);
+    color: #ff9caf;
+    box-shadow: inset 3px 0 0 var(--lime-green), 0 0 16px var(--lime-green-shadow);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.legend-home:hover {
+    background: rgba(255, 43, 79, 0.12);
+    color: #fff4f7;
+    box-shadow: inset 3px 0 0 var(--lime-green), 0 0 24px var(--lime-green-glow);
+    transform: translateY(-2px);
+}
+
+.legend-home:focus-visible {
+    outline: 3px solid #fff4f7;
+    outline-offset: 3px;
+}
+
+.legend-home:active {
+    transform: translateY(1px);
+}
+
+
+header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.glitch {
+    font-size: 3.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    position: relative;
+    text-shadow: 
+        0.05em 0 0 rgba(255, 0, 0, 0.75),
+        -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+        0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+    animation: glitchShake 0.3s infinite;
+}
+
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch::before {
+    animation: glitchEffect 0.3s infinite;
+    color: #ff00ff;
+    z-index: -1;
+}
+
+.glitch::after {
+    animation: glitchEffect 0.3s infinite reverse;
+    color: #00ffff;
+    z-index: -2;
+}
+
+@keyframes glitchEffect {
+    0% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(-2px, 2px);
+    }
+    40% {
+        transform: translate(-2px, -2px);
+    }
+    60% {
+        transform: translate(2px, 2px);
+    }
+    80% {
+        transform: translate(2px, -2px);
+    }
+    100% {
+        transform: translate(0);
+    }
+}
+
+@keyframes glitchShake {
+    0% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(-1px, 1px);
+    }
+    40% {
+        transform: translate(-1px, -1px);
+    }
+    60% {
+        transform: translate(1px, 1px);
+    }
+    80% {
+        transform: translate(1px, -1px);
+    }
+    100% {
+        transform: translate(0);
+    }
+}
+
+.tagline {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    letter-spacing: 2px;
+    margin-top: 0.5rem;
+    border-right: 2px solid var(--lime-green);
+    display: inline-block;
+    padding-right: 0.5rem;
+    animation: blinkCursor 1s step-end infinite;
+}
+
+@keyframes blinkCursor {
+    0%, 100% { border-color: var(--lime-green); }
+    50% { border-color: transparent; }
+}
+
+
+.input-section {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--lime-green);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 20px var(--lime-green-shadow);
+    transition: box-shadow 0.3s ease;
+}
+
+.input-section:hover {
+    box-shadow: 0 0 30px var(--lime-green-glow);
+}
+
+.input-header, .output-header {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.prompt-sign {
+    color: var(--lime-green);
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+.prompt-text {
+    opacity: 0.9;
+}
+
+textarea {
+    width: 100%;
+    background: var(--black-dark);
+    border: 1px solid var(--lime-green);
+    color: var(--lime-green);
+    font-family: var(--terminal-font);
+    font-size: 1rem;
+    padding: 1rem;
+    border-radius: 4px;
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--lime-green-dark);
+    box-shadow: 0 0 10px var(--lime-green-glow);
+}
+
+.char-counter {
+    text-align: right;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    opacity: 0.7;
+}
+
+
+.font-selector {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.font-selector label {
+    font-size: 0.9rem;
+}
+
+select {
+    background: var(--black-dark);
+    border: 1px solid var(--lime-green);
+    color: var(--lime-green);
+    font-family: var(--terminal-font);
+    padding: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+select:hover {
+    box-shadow: 0 0 5px var(--lime-green-glow);
+}
+
+.cyber-button {
+    position: relative;
+    background: transparent;
+    border: 2px solid var(--lime-green);
+    color: var(--lime-green);
+    font-family: var(--terminal-font);
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 0.8rem 2rem;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 1rem;
+    letter-spacing: 2px;
+}
+
+.cyber-button:hover {
+    background: var(--lime-green);
+    color: var(--black-bg);
+    box-shadow: 0 0 20px var(--lime-green-glow);
+    transform: scale(1.02);
+}
+
+.button-glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 50%,
+        rgba(0, 255, 65, 0.1) 50%,
+        rgba(0, 255, 65, 0.1) 100%
+    );
+    background-size: 200% 100%;
+    animation: glitchMove 0.5s linear infinite;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.cyber-button:hover .button-glitch {
+    opacity: 1;
+}
+
+@keyframes glitchMove {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.loading-overlay.hidden {
+    display: none;
+}
+
+.loading-container {
+    text-align: center;
+    width: 80%;
+    max-width: 500px;
+}
+
+.loading-text {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    letter-spacing: 3px;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+.loading-bar-container {
+    width: 100%;
+    height: 4px;
+    background: rgba(0, 255, 65, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.loading-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--lime-green), var(--lime-green-dark));
+    animation: loadingProgress 2s ease-in-out infinite;
+    box-shadow: 0 0 10px var(--lime-green-glow);
+}
+
+@keyframes loadingProgress {
+    0% {
+        width: 0%;
+        transform: translateX(-100%);
+    }
+    50% {
+        width: 70%;
+        transform: translateX(0%);
+    }
+    100% {
+        width: 100%;
+        transform: translateX(100%);
+    }
+}
+
+.loading-dots span {
+    font-size: 2rem;
+    animation: dotBlink 1.4s infinite;
+    display: inline-block;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes dotBlink {
+    0%, 100% {
+        opacity: 0.2;
+        transform: translateY(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+        text-shadow: 0 0 10px var(--lime-green);
+    }
+}
+
+
+.output-section {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--lime-green);
+    border-radius: 8px;
+    padding: 1.5rem;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.output-section.hidden {
+    display: none;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.output-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    background: transparent;
+    border: 1px solid var(--lime-green);
+    color: var(--lime-green);
+    font-family: var(--terminal-font);
+    padding: 0.3rem 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.action-btn:hover {
+    background: var(--lime-green);
+    color: var(--black-bg);
+    transform: scale(1.05);
+}
+
+.ascii-art {
+    font-family: monospace;
+    font-size: 0.8rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+    background: var(--black-dark);
+    padding: 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid rgba(0, 255, 65, 0.3);
+    animation: scanlines 8s linear infinite;
+}
+
+@keyframes scanlines {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 0 20px;
+    }
+}
+
+
+footer {
+    text-align: center;
+    margin-top: 3rem;
+    font-size: 0.7rem;
+    opacity: 0.5;
+    position: relative;
+}
+
+.matrix-rain {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .glitch {
+        font-size: 2rem;
+    }
+    
+    .output-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .ascii-art {
+        font-size: 0.6rem;
+    }
+
+    .legend-home-nav {
+        margin-top: 3.25rem;
+    }
+
+    .legend-home {
+        width: 100%;
+        justify-content: center;
+        font-size: 0.82rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .legend-home {
+        transition: none;
+    }
+
+    .legend-home:hover,
+    .legend-home:active {
+        transform: none;
+    }
+}
+
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--black-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--lime-green);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--lime-green-dark);
+}
+
+.ascii-art::after {
+    content: '▊';
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+
+.cyber-button:active {
+    transform: scale(0.98);
+    box-shadow: 0 0 30px var(--lime-green-glow);
+}
+
+
+.loading-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(0, 255, 65, 0.05) 3px,
+        rgba(0, 255, 65, 0.05) 4px
+    );
+    pointer-events: none;
+    animation: matrixRain 0.5s linear infinite;
+}
+
+@keyframes matrixRain {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 20px; }
+}
+select option{background:#130006;color:#ffccd5;font-weight:700;}
+select{cursor:pointer;}
+.sound-toggle{position:fixed;right:18px;top:18px;z-index:20;border:1px solid var(--lime-green);background:rgba(0,0,0,.75);color:var(--lime-green);border-radius:999px;padding:10px 14px;font-family:var(--terminal-font);font-weight:700;box-shadow:0 0 18px var(--lime-green-shadow);cursor:pointer;}
+.small-tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+.style-preview{font-size:.8rem;opacity:.8;margin-top:8px;line-height:1.5;}
+
+
+/* Discord-style copy combo feedback */
+.action-btn.copy-danger {
+  background: linear-gradient(135deg, #ff1744, #8b0000) !important;
+  border-color: rgba(255, 23, 68, 0.95) !important;
+  color: #fff !important;
+  box-shadow: 0 0 22px rgba(255, 23, 68, 0.75), inset 0 0 14px rgba(255,255,255,.16) !important;
+  animation: dangerPulse .34s ease-in-out infinite alternate;
+}
+.action-btn.copy-legendary {
+  background: linear-gradient(135deg, #ff003c, #ffcc00, #ff003c) !important;
+  background-size: 220% 220% !important;
+  border-color: #ffd700 !important;
+  color: #180005 !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,.35);
+  box-shadow: 0 0 32px rgba(255, 0, 60, .9), 0 0 52px rgba(255, 204, 0, .55) !important;
+  animation: legendaryCopyGlow .42s linear infinite;
+}
+.ascii-art.discord-vibrate { animation: discordVibrate .18s linear 5; }
+.ascii-art.legendary-vibrate { animation: legendaryVibrate .10s linear 13; color: #ffea00; text-shadow: 0 0 10px #ff1744, 0 0 22px #ffea00; }
+@keyframes dangerPulse { from { transform: translateY(0) scale(1); } to { transform: translateY(-1px) scale(1.04); } }
+@keyframes legendaryCopyGlow { 0% { background-position: 0% 50%; } 100% { background-position: 220% 50%; } }
+@keyframes discordVibrate {
+  0%,100% { transform: translate(0,0); }
+  20% { transform: translate(-2px,1px); }
+  40% { transform: translate(2px,-1px); }
+  60% { transform: translate(-1px,-2px); }
+  80% { transform: translate(1px,2px); }
+}
+@keyframes legendaryVibrate {
+  0%,100% { transform: translate(0,0) rotate(0deg) scale(1); }
+  20% { transform: translate(-3px,2px) rotate(-.35deg) scale(1.01); }
+  40% { transform: translate(3px,-2px) rotate(.35deg) scale(1.015); }
+  60% { transform: translate(-2px,-3px) rotate(.2deg) scale(1.01); }
+  80% { transform: translate(2px,3px) rotate(-.2deg) scale(1.015); }
+}
+
+
+/* Xavier update: 10th copy makes the button huge + vibrating too */
+.action-btn.copy-legendary{
+  transform:scale(1.35) !important;
+  z-index:5;
+  animation: legendaryCopyGlow .42s linear infinite, legendaryButtonVibrate .09s linear 14 !important;
+}
+.action-btn.copy-legendary span{display:inline-block;animation: legendaryButtonTextPop .12s linear infinite alternate;}
+@keyframes legendaryButtonVibrate{
+  0%,100%{transform:scale(1.35) translate(0,0) rotate(0deg)}
+  20%{transform:scale(1.42) translate(-4px,2px) rotate(-1.2deg)}
+  40%{transform:scale(1.39) translate(4px,-2px) rotate(1.2deg)}
+  60%{transform:scale(1.43) translate(-3px,-3px) rotate(.8deg)}
+  80%{transform:scale(1.40) translate(3px,3px) rotate(-.8deg)}
+}
+@keyframes legendaryButtonTextPop{from{letter-spacing:0}to{letter-spacing:.08em}}
+
+
+/* Final polish: animated GitHub button + bigger 10th copy combo */
+.github-footer{display:flex;justify-content:center;margin:24px auto 0;}
+.github-link-bottom{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:#ffe4ea;border:1px solid rgba(255,45,85,.45);border-radius:999px;padding:12px 18px;background:rgba(20,0,8,.72);font-weight:900;box-shadow:0 0 24px rgba(255,45,85,.28);animation:githubFloat 2.4s ease-in-out infinite;}
+.github-link-bottom:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 0 38px rgba(255,45,85,.42);}
+.github-mark svg{width:24px;height:24px;fill:currentColor;filter:drop-shadow(0 0 10px rgba(255,45,85,.55));}
+.github-spark{color:#ff2d55;animation:githubSpark 1.3s ease-in-out infinite;}
+@keyframes githubFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes githubSpark{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.25) rotate(18deg)}}
+.action-btn.copy-legendary{transform:scale(1.68) !important;padding:16px 22px !important;font-size:1.08rem !important;}
+@keyframes legendaryButtonVibrate{
+  0%,100%{transform:scale(1.68) translate(0,0) rotate(0deg)}
+  20%{transform:scale(1.78) translate(-5px,3px) rotate(-1.4deg)}
+  40%{transform:scale(1.72) translate(5px,-3px) rotate(1.4deg)}
+  60%{transform:scale(1.80) translate(-4px,-4px) rotate(.9deg)}
+  80%{transform:scale(1.74) translate(4px,4px) rotate(-.9deg)}
+}
+
+
+/* FINAL GitHub animation matched to Color Clash style */
+.github-footer{display:flex!important;justify-content:center!important;align-items:center!important;margin:32px auto 8px!important;position:relative!important;z-index:4!important;}
+.github-link-bottom{position:relative!important;overflow:hidden!important;display:inline-flex!important;align-items:center!important;gap:12px!important;text-decoration:none!important;color:#fff5f7!important;border:1px solid rgba(255,120,144,.55)!important;border-radius:18px!important;padding:15px 24px!important;background:linear-gradient(135deg,rgba(70,10,28,.90),rgba(135,24,55,.74))!important;backdrop-filter:blur(14px)!important;font-weight:1000!important;font-size:1rem!important;box-shadow:0 18px 45px rgba(0,0,0,.35),0 0 30px rgba(255,45,85,.26),inset 0 1px 0 rgba(255,255,255,.12)!important;animation:githubColorClashFloat 2.7s ease-in-out infinite!important;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease!important;}
+.github-link-bottom::before{content:"";position:absolute;inset:-40% -70%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);transform:translateX(-65%) rotate(14deg);animation:githubColorClashShine 2.4s ease-in-out infinite;}
+.github-link-bottom:hover{transform:translateY(-6px) scale(1.045)!important;border-color:rgba(255,210,220,.75)!important;box-shadow:0 24px 60px rgba(0,0,0,.40),0 0 48px rgba(255,45,85,.42)!important;}
+.github-mark,.github-arrow,.github-link-bottom span{position:relative;z-index:1;}
+.github-mark{width:28px;height:28px;display:grid;place-items:center;filter:drop-shadow(0 0 12px rgba(255,120,144,.70));animation:githubIconPulse 1.8s ease-in-out infinite;}
+.github-mark svg{width:28px!important;height:28px!important;fill:currentColor!important;}
+.github-arrow{font-size:1.2rem;color:#ffd6df;text-shadow:0 0 12px rgba(255,45,85,.85);animation:githubArrowJump 1.25s ease-in-out infinite;}
+@keyframes githubColorClashFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes githubColorClashShine{0%{transform:translateX(-75%) rotate(14deg);opacity:0}28%,58%{opacity:1}100%{transform:translateX(75%) rotate(14deg);opacity:0}}
+@keyframes githubIconPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+@keyframes githubArrowJump{0%,100%{transform:translate(0,0)}50%{transform:translate(4px,-4px)}}

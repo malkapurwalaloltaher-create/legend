@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Moderation - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" type="image/png" href="/favicon.png?v=14.3.8" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+
+    <main class="main-content moderation-page">
+      <%- include("partials/topbar", {
+        pageTitle: "Moderation Center",
+        pageSubtitle: "Police Officer tools, automod settings, staff actions, notes, warnings, VC bans, and MongoDB history."
+      }) %>
+
+      <% if (success) { %><div class="alert success"><%= success %></div><% } %>
+      <% if (error) { %><div class="alert error"><%= error %></div><% } %>
+
+      <section class="hero-card">
+        <div class="hero-text">
+          <div class="hero-icon-wrap"><img src="<%= botAvatar %>" class="hero-bot-avatar" alt="Bot" /></div>
+          <div>
+            <h2>🛡️ Legendary Police Officer</h2>
+            <p>Run safe staff actions, save every case to MongoDB, configure automod, and review recent moderation history from one clean dashboard.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats-grid moderation-stats">
+        <div class="stat-card"><div class="stat-icon">📜</div><h3><%= recentCases?.length || 0 %></h3><p>Recent Cases</p></div>
+        <div class="stat-card"><div class="stat-icon">⚠️</div><h3><%= warningCount || 0 %></h3><p>Total Warnings</p></div>
+        <div class="stat-card"><div class="stat-icon">📝</div><h3><%= noteCount || 0 %></h3><p>Staff Notes</p></div>
+        <div class="stat-card"><div class="stat-icon">🎤</div><h3><%= vcBanCount || 0 %></h3><p>Active VC Bans</p></div>
+      </section>
+
+      <form method="POST" action="/moderation/save">
+        <section class="section-card">
+          <div class="section-header">
+            <h2>⚙️ Server Setup</h2>
+            <p>Save your log, welcome, and verification setup to MongoDB.</p>
+          </div>
+          <div class="mod-grid padded-form">
+            <label class="form-group"><span>Moderation Log Channel</span><select name="logChannelId" class="input"><option value="">No log channel</option><% channelGroups.forEach(group => { %><optgroup label="📁 <%= group.name %>"><% group.channels.forEach(channel => { %><option value="<%= channel.id %>" <%= config.logChannelId === channel.id ? "selected" : "" %>># <%= channel.name %></option><% }) %></optgroup><% }) %></select></label>
+            <label class="form-group"><span>Welcome Channel Mirror</span><select name="welcomeChannelId" class="input"><option value="">No welcome channel</option><% channelGroups.forEach(group => { %><optgroup label="📁 <%= group.name %>"><% group.channels.forEach(channel => { %><option value="<%= channel.id %>" <%= config.welcomeChannelId === channel.id ? "selected" : "" %>># <%= channel.name %></option><% }) %></optgroup><% }) %></select></label>
+            <label class="form-group"><span>Verify Channel</span><select name="verifyChannelId" class="input"><option value="">No verify channel</option><% channelGroups.forEach(group => { %><optgroup label="📁 <%= group.name %>"><% group.channels.forEach(channel => { %><option value="<%= channel.id %>" <%= config.verifyChannelId === channel.id ? "selected" : "" %>># <%= channel.name %></option><% }) %></optgroup><% }) %></select></label>
+            <label class="form-group"><span>Verify Role</span><select name="verifyRoleId" class="input"><option value="">No verify role</option><% roles.forEach(role => { %><option value="<%= role.id %>" <%= config.verifyRoleId === role.id ? "selected" : "" %>><%= role.name %></option><% }) %></select></label>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="section-header">
+            <h2>🛡️ Security / AutoMod</h2>
+            <p>These controls power automatic link blocking, spam detection, and anti-raid alerts.</p>
+          </div>
+          <div class="mod-toggle-grid padded-form">
+            <label class="toggle-line"><input type="checkbox" name="automodEnabled" <%= config.automodEnabled ? "checked" : "" %> /><span>Automod Enabled</span></label>
+            <label class="toggle-line"><input type="checkbox" name="antiLinkEnabled" <%= config.antiLinkEnabled ? "checked" : "" %> /><span>Anti-Link</span></label>
+            <label class="toggle-line"><input type="checkbox" name="antiSpamEnabled" <%= config.antiSpamEnabled ? "checked" : "" %> /><span>Anti-Spam</span></label>
+            <label class="toggle-line"><input type="checkbox" name="antiRaidEnabled" <%= config.antiRaidEnabled ? "checked" : "" %> /><span>Anti-Raid</span></label>
+          </div>
+          <div class="mod-grid padded-form">
+            <label class="form-group"><span>Spam Max Messages</span><input name="spamMaxMessages" type="number" class="input" min="2" max="20" value="<%= config.spamMaxMessages || 5 %>" /></label>
+            <label class="form-group"><span>Spam Window Seconds</span><input name="spamWindowSeconds" type="number" class="input" min="3" max="60" value="<%= config.spamWindowSeconds || 8 %>" /></label>
+            <label class="form-group"><span>Spam Timeout Minutes</span><input name="spamTimeoutMinutes" type="number" class="input" min="1" max="40320" value="<%= config.spamTimeoutMinutes || 10 %>" /></label>
+            <label class="form-group"><span>Raid Join Limit</span><input name="raidJoinLimit" type="number" class="input" min="3" max="100" value="<%= config.raidJoinLimit || 8 %>" /></label>
+            <label class="form-group"><span>Raid Window Seconds</span><input name="raidWindowSeconds" type="number" class="input" min="10" max="600" value="<%= config.raidWindowSeconds || 60 %>" /></label>
+          </div>
+          <div class="button-row preview-button-row"><button class="primary-btn" type="submit">Save Moderation Settings</button></div>
+        </section>
+      </form>
+
+      <section class="section-card">
+        <div class="section-header"><h2>🚨 Quick Staff Action</h2><p>Run a safe action by user ID, mention, username, or nickname. Every action is saved to MongoDB.</p></div>
+        <form method="POST" action="/moderation/action" class="form-stack padded-form">
+          <div class="mod-grid">
+            <label class="form-group"><span>Action</span><select name="action" class="input" required><option value="warn">Warn</option><option value="note">Add Note</option><option value="timeout">Timeout / Mute</option><option value="unmute">Unmute</option><option value="kick">Kick</option><option value="ban">Ban</option><option value="hackban">Hackban by ID</option><option value="vcban">VC Ban</option><option value="unvcban">Remove VC Ban</option></select></label>
+            <label class="form-group"><span>User</span><input name="userInput" class="input" placeholder="@user / user ID / username" required /></label>
+            <label class="form-group"><span>Timeout Minutes</span><input name="timeoutMinutes" type="number" min="1" class="input" value="10" /></label>
+            <label class="form-group"><span>Ban Delete Message Days</span><input name="deleteMessageDays" type="number" min="0" max="7" class="input" value="0" /></label>
+          </div>
+          <label class="form-group"><span>Reason / Note Text</span><textarea name="reason" class="input textarea" placeholder="Explain why this action is being taken."></textarea></label>
+          <button class="primary-btn">Run Staff Action</button>
+        </form>
+      </section>
+
+      <section class="section-card">
+        <div class="section-header"><h2>📜 Recent Moderation History</h2><p>Latest saved cases from MongoDB.</p></div>
+        <div class="levels-table-wrap">
+          <% if (!recentCases || !recentCases.length) { %><div class="empty-mini">No moderation cases yet.</div><% } else { %>
+          <table class="levels-table"><thead><tr><th>Case</th><th>Action</th><th>Target</th><th>Moderator</th><th>Reason</th><th>Date</th></tr></thead><tbody>
+          <% recentCases.forEach(c => { %><tr><td>#<%= c.caseId %></td><td><strong><%= c.action %></strong></td><td><%= c.targetId ? `<@${c.targetId}>` : "N/A" %></td><td><%= c.moderatorId ? `<@${c.moderatorId}>` : (c.moderatorTag || "System") %></td><td><%= c.reason || "No reason" %></td><td><%= c.createdAt ? new Date(c.createdAt).toLocaleString() : "Unknown" %></td></tr><% }) %>
+          </tbody></table><% } %>
+        </div>
+        <% if (recentCases && recentCases.length) { %><div class="button-row preview-button-row"><form method="POST" action="/moderation/clear-history"><button class="secondary-btn danger-btn" type="submit">Clear History</button></form></div><% } %>
+      </section>
+
+      <section class="section-card">
+        <div class="section-header"><h2>📚 Included Command Families</h2><p>The Police Officer command suite is included directly inside this bot.</p></div>
+        <div class="mod-command-grid">
+          <% ["Ban/Kick/Mute/Unmute/Warn", "Warnings / Notes / History", "Lock / Unlock / Slowmode", "Purge / PurgeBot / PurgeUser", "Nickname / CleanNick / Dehoist / Strip", "Mass Ban/Kick/Mute/Unmute", "VC Ban / Mass Deafen", "Role Color / Mentionable / Role Dump", "Invites / ClearInvites / CreateInvite", "SetLog / SetWelcome / SetVerify", "Automod / AntiLink / AntiSpam / AntiRaid"].forEach(item => { %>
+            <div class="mod-command-pill"><%= item %></div>
+          <% }) %>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="/dashboard.js"></script>
+<script src="/assets/js/site-music.js"></script></body>
+</html>

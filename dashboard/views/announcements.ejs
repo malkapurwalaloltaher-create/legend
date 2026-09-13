@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Announcements - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" type="image/png" href="/favicon.png?v=4.3.0" />
+  <link rel="shortcut icon" type="image/png" href="/favicon.png?v=4.3.0" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+
+    <main class="main-content">
+      <%- include("partials/topbar", {
+        pageTitle: "Announcements",
+        pageSubtitle: "Send clean announcements, load templates, and save reusable designs."
+      }) %>
+
+      <% if (success) { %>
+        <div class="alert success"><%= success %></div>
+      <% } %>
+
+      <% if (error) { %>
+        <div class="alert error"><%= error %></div>
+      <% } %>
+
+      <div class="builder-grid">
+        <section class="section-card">
+          <div class="section-header">
+            <h2>Announcement Builder</h2>
+            <p>Build announcements with templates, color picker, preview, and save controls.</p>
+          </div>
+
+          <div class="template-loader-box">
+            <label class="form-group">
+              <span>Load Saved Template</span>
+              <select id="templateSelect" class="input">
+                <option value="">Select a template to load</option>
+                <% templates.forEach(template => { %>
+                  <option value="<%= template._id %>">
+                    <%= template.name %> • <%= template.category || "General" %>
+                  </option>
+                <% }) %>
+              </select>
+            </label>
+
+            <button type="button" class="secondary-btn" id="loadTemplateBtn">Load Template</button>
+          </div>
+
+          <form method="POST" action="/announcements/send" class="form-stack">
+            <label class="form-group">
+              <span>Channel</span>
+              <select name="channelId" class="input" required>
+                <option value="">Select channel</option>
+
+                <% channelGroups.forEach(group => { %>
+                  <optgroup label="📁 <%= group.name %>">
+                    <% group.channels.forEach(channel => { %>
+                      <option value="<%= channel.id %>"># <%= channel.name %></option>
+                    <% }) %>
+                  </optgroup>
+                <% }) %>
+              </select>
+            </label>
+
+            <label class="form-group">
+              <span>Mention Mode</span>
+              <select name="mentionMode" class="input">
+                <option value="none">No mention</option>
+                <option value="everyone">@everyone</option>
+                <option value="here">@here</option>
+              </select>
+            </label>
+
+            <label class="form-group">
+              <span>Normal Message Content</span>
+              <textarea
+                name="content"
+                id="content"
+                class="input textarea"
+                placeholder="Optional text above the embed..."
+              ></textarea>
+            </label>
+
+            <label class="form-group">
+              <span>Embed Title</span>
+              <input
+                name="embedTitle"
+                id="embedTitle"
+                class="input"
+                placeholder="Example: Big Server Update"
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Embed Description</span>
+              <textarea
+                name="embedDescription"
+                id="embedDescription"
+                class="input textarea"
+                placeholder="Write your announcement embed..."
+              ></textarea>
+            </label>
+
+            <div class="form-group">
+              <span>Embed Color</span>
+              <div class="color-row">
+                <input type="color" id="embedColorPicker" class="color-picker" value="#8b5cf6" />
+                <input
+                  name="embedColor"
+                  id="embedColor"
+                  class="input color-hex-input"
+                  value="#8b5cf6"
+                />
+              </div>
+            </div>
+
+            <label class="form-group">
+              <span>Embed Footer</span>
+              <input
+                name="embedFooter"
+                id="embedFooter"
+                class="input"
+                placeholder="THE SUPER LEGENDS"
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Embed Thumbnail URL</span>
+              <input
+                name="embedThumbnail"
+                id="embedThumbnail"
+                class="input"
+                placeholder="https://..."
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Embed Image URL</span>
+              <input
+                name="embedImage"
+                id="embedImage"
+                class="input"
+                placeholder="https://..."
+              />
+            </label>
+
+            <div class="template-save-box">
+              <label class="toggle-line">
+                <input type="checkbox" name="saveAsTemplate" />
+                <span>Save this announcement as a template too</span>
+              </label>
+
+              <label class="form-group">
+                <span>Template Name</span>
+                <input
+                  name="templateName"
+                  class="input"
+                  placeholder="Example: Announcement Template"
+                />
+              </label>
+            </div>
+
+            <div class="button-row">
+              <button type="submit" class="primary-btn">Send Announcement</button>
+              <button type="submit" name="onlySaveTemplate" value="yes" class="secondary-btn">
+                Save Template Only
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section class="section-card preview-panel">
+          <div class="section-header">
+            <h2>Preview</h2>
+            <p>Preview your announcement before sending.</p>
+          </div>
+
+          <div class="preview-normal" id="previewNormal"></div>
+
+          <div class="discord-preview">
+            <div class="discord-embed">
+              <div class="discord-embed-border" id="embedBorder"></div>
+
+              <div class="discord-embed-content">
+                <div class="discord-title" id="previewTitle">Announcement Title</div>
+                <div class="discord-description" id="previewDescription">
+                  Announcement description will appear here...
+                </div>
+
+                <img id="previewThumbnail" class="preview-thumbnail hidden" alt="Thumbnail" />
+                <img id="previewImage" class="preview-image hidden" alt="Embed Image" />
+
+                <div class="discord-footer" id="previewFooter">Footer text</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="/dashboard.js"></script>
+
+  
+    <script type="application/json" id="ejs-data-dashboard-views-announcements-ejs-0-templates"><%- JSON.stringify(templates || []).replace(/</g, "\\u003c") %></script>
+
+<script>
+    const templates = JSON.parse(document.getElementById("ejs-data-dashboard-views-announcements-ejs-0-templates").textContent || "null");
+    const templateSelect = document.getElementById("templateSelect");
+    const loadTemplateBtn = document.getElementById("loadTemplateBtn");
+
+    const content = document.getElementById("content");
+    const embedTitle = document.getElementById("embedTitle");
+    const embedDescription = document.getElementById("embedDescription");
+    const embedColor = document.getElementById("embedColor");
+    const embedColorPicker = document.getElementById("embedColorPicker");
+    const embedFooter = document.getElementById("embedFooter");
+    const embedThumbnail = document.getElementById("embedThumbnail");
+    const embedImage = document.getElementById("embedImage");
+
+    const previewNormal = document.getElementById("previewNormal");
+    const previewTitle = document.getElementById("previewTitle");
+    const previewDescription = document.getElementById("previewDescription");
+    const previewFooter = document.getElementById("previewFooter");
+    const embedBorder = document.getElementById("embedBorder");
+    const previewThumbnail = document.getElementById("previewThumbnail");
+    const previewImage = document.getElementById("previewImage");
+
+    function validHex(value) {
+      return /^#[0-9A-Fa-f]{6}$/.test(value);
+    }
+
+    function updatePreview() {
+      previewNormal.textContent = content.value.trim() || "";
+      previewTitle.textContent = embedTitle.value.trim() || "Announcement Title";
+      previewDescription.textContent = embedDescription.value.trim() || "Announcement description will appear here...";
+      previewFooter.textContent = embedFooter.value.trim() || "Footer text";
+      embedBorder.style.background = validHex(embedColor.value.trim()) ? embedColor.value.trim() : "#8b5cf6";
+
+      if (embedThumbnail.value.trim()) {
+        previewThumbnail.src = embedThumbnail.value.trim();
+        previewThumbnail.classList.remove("hidden");
+      } else {
+        previewThumbnail.classList.add("hidden");
+      }
+
+      if (embedImage.value.trim()) {
+        previewImage.src = embedImage.value.trim();
+        previewImage.classList.remove("hidden");
+      } else {
+        previewImage.classList.add("hidden");
+      }
+    }
+
+    function loadTemplate() {
+      const selectedId = templateSelect.value;
+      const template = templates.find(item => String(item._id) === String(selectedId));
+
+      if (!template) return;
+
+      content.value = template.content || "";
+      embedTitle.value = template.embedTitle || "";
+      embedDescription.value = template.embedDescription || "";
+      embedColor.value = template.embedColor || "#8b5cf6";
+      embedColorPicker.value = validHex(embedColor.value) ? embedColor.value : "#8b5cf6";
+      embedFooter.value = template.embedFooter || "";
+      embedThumbnail.value = template.embedThumbnail || "";
+      embedImage.value = template.embedImage || "";
+
+      updatePreview();
+    }
+
+    loadTemplateBtn.addEventListener("click", loadTemplate);
+
+    embedColorPicker.addEventListener("input", () => {
+      embedColor.value = embedColorPicker.value;
+      updatePreview();
+    });
+
+    embedColor.addEventListener("input", () => {
+      if (validHex(embedColor.value.trim())) {
+        embedColorPicker.value = embedColor.value.trim();
+      }
+      updatePreview();
+    });
+
+    [content, embedTitle, embedDescription, embedFooter, embedThumbnail, embedImage].forEach(el => {
+      el.addEventListener("input", updatePreview);
+    });
+
+    updatePreview();
+  </script>
+<script src="/assets/js/site-music.js"></script></body>
+</html>

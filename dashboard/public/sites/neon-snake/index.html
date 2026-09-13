@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#070512">
+  <meta name="description" content="Neon Snake, a responsive synthwave arcade game from Legendary Labs by LXT Studios.">
+  <meta property="og:title" content="Neon Snake | Legendary Labs">
+  <meta property="og:description" content="Chase the signal through a glowing synthwave grid.">
+  <meta property="og:image" content="/assets/images/branding/lxt-studios-logo.png">
+  <title>Neon Snake | Legendary Labs</title>
+  <link rel="icon" href="/assets/images/branding/lxt-studios-32.png" type="image/png">
+  <link rel="stylesheet" href="/assets/css/lxt-brand.css">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="lxt-site-header">
+    <a class="lxt-parent-brand" href="/" aria-label="Legendary Labs by LXT Studios home"><img src="/assets/images/branding/lxt-studios-192.png" alt=""><span><small>Legendary Labs by</small><strong>LXT STUDIOS</strong></span></a>
+    <a class="lxt-back-link" href="/"><span aria-hidden="true">&larr;</span><span><small>Exit arcade</small><strong>Back to Hub</strong></span></a>
+  </header>
+
+  <main class="game-shell">
+    <section class="intro" aria-labelledby="game-title">
+      <p class="kicker">SYNTHWAVE CIRCUIT // GAME 12</p>
+      <h1 id="game-title">NEON <span>SNAKE</span></h1>
+      <p>Thread the grid, collect data cores, and keep the signal alive as the circuit accelerates.</p>
+      <div class="records" aria-label="Local records"><span>BEST <b id="best-score">0000</b></span><span>RUNS <b id="run-count">00</b></span></div>
+    </section>
+
+    <section class="arcade-panel">
+      <div class="hud">
+        <span>SCORE <b id="score">0000</b></span>
+        <span>COMBO <b id="combo">x1</b></span>
+        <span>MODE <b id="mode-label">CLASSIC</b></span>
+        <button id="pause-btn" type="button" aria-label="Pause game">PAUSE</button>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="game-canvas" width="720" height="720" aria-label="Neon Snake game board"></canvas>
+        <div class="scanlines" aria-hidden="true"></div>
+        <section class="overlay" id="menu-screen">
+          <p>SELECT PROGRAM</p>
+          <div class="mode-grid" role="group" aria-label="Game mode">
+            <button class="choice active" data-mode="classic" type="button"><b>CLASSIC</b><small>Walls end the run</small></button>
+            <button class="choice" data-mode="blitz" type="button"><b>BLITZ</b><small>60-second score attack</small></button>
+            <button class="choice" data-mode="zen" type="button"><b>ZEN</b><small>Wrap edges, no pressure</small></button>
+          </div>
+          <label>DIFFICULTY
+            <select id="difficulty"><option value="easy">Cruise</option><option value="normal" selected>Pulse</option><option value="hard">Overdrive</option></select>
+          </label>
+          <button class="launch" id="start-btn" type="button">START SIGNAL</button>
+          <small>WASD / arrows / swipe to steer</small>
+        </section>
+        <section class="overlay hidden" id="result-screen" aria-live="polite">
+          <p id="result-kicker">SIGNAL LOST</p><h2 id="result-score">0000</h2><span id="result-detail">New data logged.</span>
+          <div class="result-actions"><button class="launch" id="restart-btn" type="button">RUN AGAIN</button><button class="ghost" id="menu-btn" type="button">MODES</button></div>
+        </section>
+      </div>
+      <div class="mobile-controls" aria-label="Touch direction controls">
+        <button data-dir="up" aria-label="Move up">▲</button><button data-dir="left" aria-label="Move left">◀</button><button data-dir="down" aria-label="Move down">▼</button><button data-dir="right" aria-label="Move right">▶</button>
+      </div>
+    </section>
+  </main>
+  <footer class="lxt-footer"><img src="/assets/images/branding/lxt-studios-32.png" alt=""><span><strong>Neon Snake</strong> • Legendary Labs by LXT Studios</span></footer>
+  <script src="assets/main.js"></script>
+</body>
+</html>

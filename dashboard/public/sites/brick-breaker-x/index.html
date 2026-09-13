@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#0d0903">
+  <meta name="description" content="Brick Breaker X, a high-impact arcade game from Legendary Labs by LXT Studios."><meta property="og:title" content="Brick Breaker X | Legendary Labs"><meta property="og:image" content="/assets/images/branding/lxt-studios-logo.png">
+  <title>Brick Breaker X | Legendary Labs</title><link rel="icon" href="/assets/images/branding/lxt-studios-32.png"><link rel="stylesheet" href="/assets/css/lxt-brand.css"><link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="lxt-site-header"><a class="lxt-parent-brand" href="/"><img src="/assets/images/branding/lxt-studios-192.png" alt=""><span><small>Legendary Labs by</small><strong>LXT STUDIOS</strong></span></a><a class="lxt-back-link" href="/"><span>&larr;</span><span><small>Leave foundry</small><strong>Back to Hub</strong></span></a></header>
+  <main class="breaker-shell">
+    <section class="title-block"><p>IMPACT FOUNDRY // 13</p><h1>BRICK<br><span>BREAKER X</span></h1><div class="record-strip"><span>HIGH SCORE <b id="best-score">0</b></span><span>BEST COMBO <b id="best-combo">x0</b></span></div></section>
+    <section class="machine">
+      <div class="hud"><span>SCORE <b id="score">000000</b></span><span>COMBO <b id="combo">x1</b></span><span>LIVES <b id="lives">3</b></span><span>LEVEL <b id="level">01</b></span><button id="pause-btn" type="button">PAUSE</button></div>
+      <div class="screen"><canvas id="game" width="760" height="880" aria-label="Brick Breaker X game area"></canvas><div class="noise"></div>
+        <section class="overlay" id="menu"><p>CONFIGURE RUN</p><div class="mode-row"><button class="mode active" data-mode="classic">CLASSIC<small>Clear every sector</small></button><button class="mode" data-mode="rush">RUSH<small>90 second assault</small></button><button class="mode" data-mode="endless">ENDLESS<small>Escalating walls</small></button></div><label>POWER <select id="difficulty"><option value="easy">Warmup</option><option value="normal" selected>Arcade</option><option value="hard">Punishing</option></select></label><button class="primary" id="start-btn">IGNITE BALL</button><small>Move with mouse, touch, A/D, or arrows</small></section>
+        <section class="overlay hidden" id="result"><p id="result-label">RUN OVER</p><h2 id="final-score">0</h2><span id="result-copy">Foundry record saved locally.</span><div><button class="primary" id="again-btn">REBUILD</button><button class="secondary" id="modes-btn">MODES</button></div></section>
+      </div>
+      <div class="touch-rail" id="touch-rail"><span>DRAG TO STEER</span><i></i></div>
+    </section>
+  </main>
+  <footer class="lxt-footer"><img src="/assets/images/branding/lxt-studios-32.png" alt=""><span><strong>Brick Breaker X</strong> • An LXT Studios Project</span></footer><script src="assets/main.js"></script>
+</body></html>

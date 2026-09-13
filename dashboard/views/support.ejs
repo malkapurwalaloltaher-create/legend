@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Support - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" type="image/png" href="/favicon.png?v=3.7.0" />
+  <link rel="shortcut icon" type="image/png" href="/favicon.png?v=3.7.0" />
+  <script src="/dashboard.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+
+    <main class="main-content">
+      <%- include("partials/topbar", {
+        pageTitle: "Support",
+        pageSubtitle: "Contact support to unlock premium access."
+      }) %>
+
+
+      <div class="support-page">
+        <section class="support-hero">
+          <div class="support-icon">💬</div>
+          <div>
+            <h1><%= supportConfig?.supportTitle || "Contact Support" %></h1>
+            <p><%= supportConfig?.supportDescription || "Contact support to unlock Premium for your server." %></p>
+          </div>
+        </section>
+
+        <section class="support-card">
+          <h2>Support Members</h2>
+
+          <% if (supportConfig?.supportUsers?.length) { %>
+            <div class="support-user-grid">
+              <% supportConfig.supportUsers.forEach(user => { %>
+                <div class="support-user-card">
+                  <div class="support-avatar">🛟</div>
+                  <div>
+                    <h3><%= user.label || "Support" %></h3>
+                    <p><%= user.username || "No username set" %></p>
+                    <% if (user.discordId) { %>
+                      <code><%= user.discordId %></code>
+                    <% } %>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <p class="empty-support">
+              No support members are configured yet. Please ask the bot owner to add support accounts.
+            </p>
+          <% } %>
+
+          <div class="support-actions">
+            <% if (supportConfig?.supportInviteUrl) { %>
+              <a class="support-btn" href="<%= supportConfig.supportInviteUrl %>" target="_blank" rel="noreferrer">
+                Join Support Server
+              </a>
+            <% } %>
+
+            <a class="support-btn secondary" href="<%= routeBase || '/dashboard' %>">
+              Back to Dashboard
+            </a>
+          </div>
+
+          <p class="support-note">
+            <%= supportConfig?.supportFooterNote || "Tell support which server and module you want to unlock." %>
+          </p>
+        </section>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById("sidebar");
+    const sidebarToggle = document.getElementById("sidebarToggle");
+
+    if (sidebarToggle && sidebar) {
+      sidebarToggle.addEventListener("click", () => {
+        sidebar.classList.toggle("show");
+      });
+    }
+  </script>
+
+  <style>
+
+    .support-page,
+    .premium-required-shell,
+    .premium-control-page {
+      display: grid;
+      gap: 22px;
+    }
+
+    .premium-lock-hero,
+    .premium-contact-card,
+    .support-hero,
+    .support-card,
+    .premium-control-hero,
+    .premium-panel {
+      border-radius: 30px;
+      border: 1px solid rgba(139, 92, 246, 0.28);
+      background: linear-gradient(135deg, rgba(36, 26, 91, 0.92), rgba(13, 17, 44, 0.94));
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+    }
+
+    .premium-lock-hero,
+    .support-hero,
+    .premium-control-hero {
+      padding: 34px;
+    }
+
+    .premium-lock-hero,
+    .support-hero {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .premium-lock-icon,
+    .support-icon {
+      width: 82px;
+      height: 82px;
+      border-radius: 26px;
+      display: grid;
+      place-items: center;
+      font-size: 42px;
+      flex: 0 0 auto;
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid rgba(245, 158, 11, 0.38);
+    }
+
+    .support-icon {
+      background: rgba(34, 211, 238, 0.14);
+      border-color: rgba(34, 211, 238, 0.34);
+    }
+
+    .premium-lock-hero h1,
+    .support-hero h1,
+    .premium-control-hero h1,
+    .premium-contact-card h2,
+    .support-card h2,
+    .premium-panel h2 {
+      margin: 0;
+      color: #fff;
+      font-weight: 1000;
+      letter-spacing: -0.04em;
+    }
+
+    .premium-lock-hero h1,
+    .support-hero h1,
+    .premium-control-hero h1 {
+      font-size: clamp(38px, 4vw, 64px);
+    }
+
+    .premium-lock-hero p,
+    .support-hero p,
+    .premium-control-hero p,
+    .premium-contact-card p,
+    .support-card p,
+    .premium-panel p {
+      color: #d8d3ff;
+      font-size: 17px;
+      line-height: 1.6;
+      font-weight: 650;
+    }
+
+    .premium-contact-card,
+    .support-card,
+    .premium-panel {
+      padding: 30px;
+    }
+
+    .support-actions {
+      margin-top: 18px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .premium-support-btn,
+    .support-btn,
+    .premium-btn {
+      min-height: 54px;
+      padding: 0 22px;
+      border: 0;
+      border-radius: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 1000;
+      background: linear-gradient(135deg, #7c3aed, #3b82f6 52%, #22d3ee);
+      cursor: pointer;
+    }
+
+    .premium-support-btn.secondary,
+    .support-btn.secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .support-footnote,
+    .support-note,
+    .empty-support {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #d8d3ff;
+      font-weight: 700;
+    }
+
+    .alert {
+      padding: 16px 18px;
+      border-radius: 18px;
+      font-weight: 850;
+    }
+
+    .alert-error,
+    .alert.error {
+      color: #fecaca;
+      background: rgba(239, 68, 68, 0.16);
+      border: 1px solid rgba(239, 68, 68, 0.34);
+    }
+
+    .alert-success,
+    .alert.success {
+      color: #bbf7d0;
+      background: rgba(34, 197, 94, 0.14);
+      border: 1px solid rgba(34, 197, 94, 0.32);
+    }
+
+    .support-user-grid,
+    .module-unlock-grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .module-unlock-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .support-user-card,
+    .module-unlock-card,
+    .owner-toggle-row,
+    .mini-toggle {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .support-user-card {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .support-avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      background: rgba(139, 92, 246, 0.22);
+    }
+
+    .support-user-card h3 {
+      margin: 0;
+      color: #fff;
+      font-size: 18px;
+    }
+
+    .support-user-card p {
+      margin: 4px 0;
+      font-size: 14px;
+    }
+
+    .support-user-card code {
+      color: #a5f3fc;
+      font-weight: 800;
+    }
+
+    .owner-toggle-row,
+    .mini-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .owner-toggle-row strong,
+    .module-unlock-title strong {
+      color: #fff;
+      font-size: 18px;
+    }
+
+    .owner-toggle-row small,
+    .support-settings-form small {
+      display: block;
+      color: #c9c5ff;
+      margin-top: 5px;
+    }
+
+    input[type="checkbox"] {
+      width: 26px;
+      height: 26px;
+      accent-color: #7c3aed;
+    }
+
+    .premium-btn {
+      margin-top: 16px;
+    }
+
+    .premium-btn.small {
+      width: 100%;
+    }
+
+    .module-unlock-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .module-unlock-title span {
+      font-size: 24px;
+    }
+
+    .support-settings-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .support-settings-form label span {
+      display: block;
+      margin-bottom: 8px;
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .support-settings-form input,
+    .support-settings-form textarea {
+      width: 100%;
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      border-radius: 18px;
+      background: rgba(8, 8, 28, 0.76);
+      color: #fff;
+      padding: 14px 16px;
+      font: inherit;
+      font-weight: 700;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 1000px) {
+      .module-unlock-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 800px) {
+      .support-user-grid,
+      .module-unlock-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .premium-lock-hero,
+      .support-hero {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+  </style>
+<script src="/assets/js/site-music.js"></script></body>
+</html>

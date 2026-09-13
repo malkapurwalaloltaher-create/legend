@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Settings - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+<link rel="icon" type="image/png" href="/favicon.png?v=3.7.0" />
+<link rel="shortcut icon" type="image/png" href="/favicon.png?v=3.7.0" />
+<script src="/dashboard.js"></script>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+
+    <main class="main-content">
+      <%- include("partials/topbar", {
+        pageTitle: "Settings",
+        pageSubtitle: "View dashboard status, premium access, and important bot environment checks."
+      }) %>
+
+      <% if (success) { %>
+        <div class="alert success"><%= success %></div>
+      <% } %>
+
+      <% if (error) { %>
+        <div class="alert error"><%= error %></div>
+      <% } %>
+
+      <section class="hero-card">
+        <div class="hero-text">
+          <div class="hero-icon-wrap">
+            <img src="<%= botAvatar %>" class="hero-bot-avatar" alt="Bot Avatar" />
+          </div>
+          <div>
+            <h2>Dashboard Settings</h2>
+            <p>Check your bot status, dashboard version, server connection, and required variables.</p>
+          </div>
+        </div>
+      </section>
+
+
+      <% if (canManagePremium !== false) { %>
+        <section class="section-card premium-settings-section-v16">
+          <div class="section-header">
+            <h2>Premium Access</h2>
+            <p>Owner-only control for unlocking Premium dashboard modules on this selected server.</p>
+          </div>
+
+          <form method="POST" action="<%= routeBase ? `${routeBase}/settings/premium` : '/settings/premium' %>" class="premium-settings-box">
+            <label class="premium-toggle-line big">
+              <input type="checkbox" name="premiumEnabled" <%= premiumEnabled ? "checked" : "" %> />
+              <span class="premium-toggle-ui"></span>
+              <strong><%= premiumEnabled ? "Premium Enabled" : "Free Server" %></strong>
+            </label>
+
+            <div class="premium-mini-note">
+              Premium unlocks Message Builder, Announcements, Confession Style, Yap & Rumors, Starboards, Embed Templates, Moderation, Automations, Custom Commands, Ticketing, Sports, Predictions, and Search Anything.
+            </div>
+
+            <button type="submit" class="primary-btn">Save Premium Status</button>
+          </form>
+        </section>
+      <% } else { %>
+        <section class="section-card premium-settings-section-v16">
+          <div class="section-header">
+            <h2>Plan Status</h2>
+            <p>This server is currently on <strong><%= premiumEnabled ? "Premium" : "Free" %></strong>. Premium can only be changed by the bot owner.</p>
+          </div>
+
+          <div class="premium-settings-box">
+            <div class="premium-toggle-line read-only big">
+              <span class="premium-toggle-ui"></span>
+              <strong><%= premiumEnabled ? "Premium Active" : "Free Plan" %></strong>
+            </div>
+
+            <div class="premium-mini-note">
+              If you need Premium features, contact the bot owner to unlock this server.
+            </div>
+          </div>
+        </section>
+      <% } %>
+
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🤖</div>
+          <div class="stat-value"><%= stats.status %></div>
+          <div class="stat-label">Bot Status</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">🏰</div>
+          <div class="stat-value"><%= guildName %></div>
+          <div class="stat-label">Main Server</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">📦</div>
+          <div class="stat-value"><%= dashboardVersion %></div>
+          <div class="stat-label">Dashboard Version</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">⏱️</div>
+          <div class="stat-value"><%= stats.uptime %></div>
+          <div class="stat-label">Uptime</div>
+        </div>
+      </section>
+
+      <section class="section-card">
+        <div class="section-header">
+          <h2>Environment Checks</h2>
+          <p>These are hidden/private checks only. Your keys are never shown here.</p>
+        </div>
+
+        <div class="table-list">
+          <% checks.forEach(check => { %>
+            <div class="table-row">
+              <div>
+                <div class="row-title"><%= check.name %></div>
+                <div class="row-sub"><%= check.ok ? "Configured correctly" : "Missing from Railway variables" %></div>
+              </div>
+
+              <% if (check.ok) { %>
+                <span class="status-pill good">Ready</span>
+              <% } else { %>
+                <span class="status-pill bad">Missing</span>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById("sidebar");
+    const sidebarToggle = document.getElementById("sidebarToggle");
+
+    if (sidebarToggle) {
+      sidebarToggle.addEventListener("click", () => {
+        sidebar.classList.toggle("show");
+      });
+    }
+  </script>
+<script src="/assets/js/site-music.js"></script></body>
+</html>

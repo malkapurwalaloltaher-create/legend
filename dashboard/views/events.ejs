@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Event Center - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" type="image/png" href="/favicon.png?v=events-v1" />
+  <style>
+    .events-page {
+      display: grid;
+      gap: 18px;
+    }
+
+    .events-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 30px;
+      border-radius: 28px;
+      border: 1px solid rgba(34, 211, 238, 0.24);
+      background:
+        radial-gradient(circle at 15% 20%, rgba(139, 92, 246, 0.35), transparent 34%),
+        radial-gradient(circle at 85% 10%, rgba(34, 211, 238, 0.20), transparent 30%),
+        linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 27, 75, 0.90));
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+    }
+
+    .events-hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -120px auto;
+      width: 280px;
+      height: 280px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.14);
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .events-hero h1 {
+      position: relative;
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 4rem);
+      line-height: 0.95;
+      letter-spacing: -0.07em;
+    }
+
+    .events-hero p {
+      position: relative;
+      max-width: 850px;
+      margin: 12px 0 0;
+      color: rgba(237, 233, 254, 0.82);
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .event-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .event-stat {
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      box-shadow: 0 16px 42px rgba(0,0,0,.18);
+    }
+
+    .event-stat b {
+      display: block;
+      font-size: 1.8rem;
+      letter-spacing: -0.06em;
+    }
+
+    .event-stat span {
+      color: rgba(255,255,255,.64);
+      font-weight: 900;
+      font-size: .86rem;
+    }
+
+    .event-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .event-card {
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(12, 16, 38, 0.72);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.20);
+    }
+
+    .event-card h2, .event-card h3 {
+      margin: 0 0 10px;
+    }
+
+    .event-muted {
+      color: rgba(226,232,240,.68);
+      line-height: 1.5;
+      margin: 0 0 15px;
+      font-weight: 700;
+    }
+
+    .event-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 14px;
+    }
+
+    .event-field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .event-field.full {
+      grid-column: 1 / -1;
+    }
+
+    .event-field span {
+      font-weight: 1000;
+      color: rgba(255,255,255,.92);
+    }
+
+    .event-input,
+    .event-select,
+    .event-textarea {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.055));
+      color: #fff;
+      outline: none;
+      padding: 13px 14px;
+      font-weight: 850;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .event-select option {
+      color: #111827;
+      background: #fff;
+      font-weight: 800;
+    }
+
+    .event-textarea {
+      min-height: 112px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .event-input:focus,
+    .event-select:focus,
+    .event-textarea:focus {
+      border-color: rgba(34, 211, 238, .65);
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, .10), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .event-toggle {
+      display: flex;
+      gap: 11px;
+      align-items: center;
+      padding: 13px;
+      border-radius: 17px;
+      border: 1px solid rgba(255,255,255,.11);
+      background: rgba(255,255,255,.055);
+      font-weight: 1000;
+    }
+
+    .event-toggle input {
+      width: 20px;
+      height: 20px;
+      accent-color: #22d3ee;
+    }
+
+    .event-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .event-btn {
+      border: 0;
+      border-radius: 16px;
+      padding: 12px 16px;
+      color: #07111f;
+      background: linear-gradient(135deg, #8b5cf6, #22d3ee);
+      font-weight: 1000;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .event-btn.secondary {
+      color: #fff;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.13);
+    }
+
+    .event-btn.danger {
+      color: #fff;
+      background: rgba(239, 68, 68, .14);
+      border: 1px solid rgba(239, 68, 68, .34);
+    }
+
+    .event-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .event-row {
+      padding: 15px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.055);
+      display: grid;
+      gap: 9px;
+    }
+
+    .event-row-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .event-row h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .event-row p {
+      margin: 0;
+      color: rgba(226,232,240,.68);
+      line-height: 1.45;
+    }
+
+    .event-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(34,211,238,.24);
+      background: rgba(34,211,238,.08);
+      color: #cffafe;
+      font-size: .76rem;
+      font-weight: 1000;
+      white-space: nowrap;
+    }
+
+    .event-log {
+      max-height: 340px;
+      overflow: auto;
+      display: grid;
+      gap: 10px;
+      padding-right: 4px;
+    }
+
+    .birthday-card {
+      border-color: rgba(236, 72, 153, .22);
+      background: radial-gradient(circle at 85% 20%, rgba(236,72,153,.13), transparent 30%), rgba(12,16,38,.72);
+    }
+
+    .festival-card {
+      border-color: rgba(245, 158, 11, .22);
+      background: radial-gradient(circle at 85% 20%, rgba(245,158,11,.12), transparent 30%), rgba(12,16,38,.72);
+    }
+
+    @media (max-width: 980px) {
+      .event-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .event-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 650px) {
+      .event-form-grid,
+      .event-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .event-row-top {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+
+    <main class="main-content events-page">
+      <%- include("partials/topbar", {
+        pageTitle: "Event Center",
+        pageSubtitle: "Create events, birthdays, reminders, festival posts, and AI-style announcements."
+      }) %>
+
+      <% if (success) { %>
+        <div class="alert success"><%= success %></div>
+      <% } %>
+
+      <% if (error) { %>
+        <div class="alert error"><%= error %></div>
+      <% } %>
+
+      <section class="events-hero">
+        <h1>📅 Event Center</h1>
+        <p>
+          Schedule server events, birthday announcements, reminders, and festival posts from one dashboard.
+          Use custom messages or AI-style polished announcement text.
+        </p>
+      </section>
+
+      <section class="event-stats">
+        <div class="event-stat"><b><%= stats.upcoming %></b><span>Upcoming Events</span></div>
+        <div class="event-stat"><b><%= stats.birthdays %></b><span>Birthdays Saved</span></div>
+        <div class="event-stat"><b><%= stats.reminders %></b><span>Reminder Jobs</span></div>
+        <div class="event-stat"><b><%= stats.sent %></b><span>Announcements Sent</span></div>
+      </section>
+
+      <div class="event-grid">
+        <div class="event-card">
+          <h2>➕ Create Event</h2>
+          <p class="event-muted">Use the calendar/time picker to schedule an event. The bot will announce and remind automatically.</p>
+
+          <form method="POST" action="/dashboard/events/create" class="event-form-grid">
+            <label class="event-field">
+              <span>Event Title</span>
+              <input class="event-input" name="title" maxlength="140" required placeholder="Example: Community Game Night" />
+            </label>
+
+            <label class="event-field">
+              <span>Event Type</span>
+              <select class="event-select" name="type">
+                <option value="custom">Custom Event</option>
+                <option value="community">Community Event</option>
+                <option value="server">Server Event</option>
+                <option value="festival">Festival / Special Day</option>
+              </select>
+            </label>
+
+            <label class="event-field">
+              <span>Start Date + Time</span>
+              <input class="event-input" type="datetime-local" name="startsAt" required />
+            </label>
+
+            <label class="event-field">
+              <span>End Date + Time</span>
+              <input class="event-input" type="datetime-local" name="endsAt" />
+            </label>
+
+            <label class="event-field">
+              <span>Announcement Channel</span>
+              <select class="event-select" name="channelId">
+                <option value="">Use default channel</option>
+                <% channelGroups.forEach(group => { %>
+                  <optgroup label="📁 <%= group.name %>">
+                    <% group.channels.forEach(channel => { %>
+                      <option value="<%= channel.id %>"># <%= channel.name %></option>
+                    <% }) %>
+                  </optgroup>
+                <% }) %>
+              </select>
+            </label>
+
+            <label class="event-field">
+              <span>Ping</span>
+              <select class="event-select" name="pingMode">
+                <option value="none">No ping</option>
+                <option value="here">@here</option>
+                <option value="everyone">@everyone</option>
+                <option value="role">Selected role ID</option>
+              </select>
+            </label>
+
+            <label class="event-field">
+              <span>Role ID For Ping</span>
+              <input class="event-input" name="roleId" placeholder="Only needed when Ping = role" />
+            </label>
+
+            <label class="event-field">
+              <span>Repeat</span>
+              <select class="event-select" name="repeat">
+                <option value="none">Do not repeat</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+              </select>
+            </label>
+
+            <label class="event-field">
+              <span>Reminder Before</span>
+              <select class="event-select" name="reminderMinutes">
+                <option value="0">No reminder</option>
+                <option value="10">10 minutes before</option>
+                <option value="30">30 minutes before</option>
+                <option value="60" selected>1 hour before</option>
+                <option value="1440">1 day before</option>
+                <option value="10080">1 week before</option>
+              </select>
+            </label>
+
+            <label class="event-field">
+              <span>Message Mode</span>
+              <select class="event-select" name="messageMode">
+                <option value="custom">Custom message</option>
+                <option value="ai">AI-style generated message</option>
+                <option value="improve">Improve my rough message</option>
+              </select>
+            </label>
+
+            <label class="event-field full">
+              <span>Banner / Image URL</span>
+              <input class="event-input" name="bannerUrl" placeholder="https://..." />
+            </label>
+
+            <label class="event-field full">
+              <span>Description</span>
+              <textarea class="event-textarea" name="description" placeholder="What is this event about?"></textarea>
+            </label>
+
+            <label class="event-field full">
+              <span>Custom / Rough Message</span>
+              <textarea class="event-textarea" name="customMessage" placeholder="Write the announcement, or give rough notes and choose Improve/AI mode."></textarea>
+            </label>
+
+            <div class="event-actions full">
+              <button class="event-btn" type="submit">Create Event</button>
+            </div>
+          </form>
+        </div>
+
+        <aside class="event-card">
+          <h2>⚙️ Event Settings</h2>
+          <p class="event-muted">Choose default channels and enable/disable automation.</p>
+
+          <form method="POST" action="/dashboard/events/settings" class="event-form-grid">
+            <label class="event-toggle full">
+              <input type="checkbox" name="enabled" <%= config.enabled ? "checked" : "" %> />
+              <span>Enable Event Center</span>
+            </label>
+
+            <label class="event-toggle full">
+              <input type="checkbox" name="remindersEnabled" <%= config.remindersEnabled ? "checked" : "" %> />
+              <span>Enable event reminders</span>
+            </label>
+
+            <label class="event-toggle full">
+              <input type="checkbox" name="birthdayAnnouncementsEnabled" <%= config.birthdayAnnouncementsEnabled ? "checked" : "" %> />
+              <span>Enable birthday announcements</span>
+            </label>
+
+            <label class="event-toggle full">
+              <input type="checkbox" name="aiAnnouncementsEnabled" <%= config.aiAnnouncementsEnabled ? "checked" : "" %> />
+              <span>Enable AI-style announcement writer</span>
+            </label>
+
+            <label class="event-field full">
+              <span>Default Event Channel</span>
+              <select class="event-select" name="defaultChannelId">
+                <option value="">Select a channel</option>
+                <% channelGroups.forEach(group => { %>
+                  <optgroup label="📁 <%= group.name %>">
+                    <% group.channels.forEach(channel => { %>
+                      <option value="<%= channel.id %>" <%= config.defaultChannelId === channel.id ? "selected" : "" %>># <%= channel.name %></option>
+                    <% }) %>
+                  </optgroup>
+                <% }) %>
+              </select>
+            </label>
+
+            <label class="event-field full">
+              <span>Birthday Channel</span>
+              <select class="event-select" name="birthdayChannelId">
+                <option value="">Use default channel</option>
+                <% channelGroups.forEach(group => { %>
+                  <optgroup label="📁 <%= group.name %>">
+                    <% group.channels.forEach(channel => { %>
+                      <option value="<%= channel.id %>" <%= config.birthdayChannelId === channel.id ? "selected" : "" %>># <%= channel.name %></option>
+                    <% }) %>
+                  </optgroup>
+                <% }) %>
+              </select>
+            </label>
+
+            <label class="event-field full">
+              <span>Timezone Label</span>
+              <input class="event-input" name="timezone" value="<%= config.timezone || 'Asia/Dubai' %>" />
+            </label>
+
+            <div class="event-actions full">
+              <button class="event-btn" type="submit">Save Settings</button>
+            </div>
+          </form>
+        </aside>
+      </div>
+
+      <div class="event-grid">
+        <section class="event-card birthday-card">
+          <h2>🎂 Birthday Manager</h2>
+          <p class="event-muted">Add a birthday with the date picker. For your birthday tomorrow, pick tomorrow’s date and save your display name.</p>
+
+          <form method="POST" action="/dashboard/events/birthdays/create" class="event-form-grid">
+            <label class="event-field">
+              <span>Name</span>
+              <input class="event-input" name="displayName" required placeholder="Example: Xavier" />
+            </label>
+
+            <label class="event-field">
+              <span>Discord User ID</span>
+              <input class="event-input" name="userId" placeholder="Optional user ID" />
+            </label>
+
+            <label class="event-field">
+              <span>Birthday Date</span>
+              <input class="event-input" type="date" name="birthdayDate" required />
+            </label>
+
+            <label class="event-field">
+              <span>Birthday Channel</span>
+              <select class="event-select" name="channelId">
+                <option value="">Use birthday/default channel</option>
+                <% channelGroups.forEach(group => { %>
+                  <optgroup label="📁 <%= group.name %>">
+                    <% group.channels.forEach(channel => { %>
+                      <option value="<%= channel.id %>"># <%= channel.name %></option>
+                    <% }) %>
+                  </optgroup>
+                <% }) %>
+              </select>
+            </label>
+
+            <label class="event-field full">
+              <span>Custom Birthday Message</span>
+              <textarea class="event-textarea" name="customMessage" placeholder="Leave empty for AI-style birthday message."></textarea>
+            </label>
+
+            <label class="event-toggle full">
+              <input type="checkbox" name="aiMessageEnabled" checked />
+              <span>Use AI-style birthday message when custom message is empty</span>
+            </label>
+
+            <label class="event-toggle full">
+              <input type="checkbox" name="announceInServer" checked />
+              <span>Post birthday announcement in the selected server channel</span>
+            </label>
+
+            <label class="event-toggle full">
+              <input type="checkbox" name="dmUser" checked />
+              <span>DM the birthday person too, when a Discord User ID is set</span>
+            </label>
+
+            <div class="event-actions full">
+              <button class="event-btn" type="submit">Save Birthday</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="event-card festival-card">
+          <h2>🌍 Festival Quick Add</h2>
+          <p class="event-muted">Create yearly repeating festival or special-day announcements.</p>
+
+          <form method="POST" action="/dashboard/events/festival/create" class="event-form-grid">
+            <label class="event-field">
+              <span>Festival Name</span>
+              <input class="event-input" name="title" required placeholder="Example: New Year" />
+            </label>
+
+            <label class="event-field">
+              <span>Date</span>
+              <input class="event-input" type="date" name="festivalDate" required />
+            </label>
+
+            <label class="event-field full">
+              <span>Message</span>
+              <textarea class="event-textarea" name="customMessage" placeholder="Write a message or leave empty for AI-style text."></textarea>
+            </label>
+
+            <div class="event-actions full">
+              <button class="event-btn" type="submit">Create Yearly Festival</button>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <div class="event-grid">
+        <section class="event-card">
+          <h2>📌 Upcoming Events</h2>
+          <div class="event-list">
+            <% if (!events.length) { %>
+              <div class="empty-mini">No upcoming events yet.</div>
+            <% } %>
+
+            <% events.forEach(event => { %>
+              <div class="event-row">
+                <div class="event-row-top">
+                  <div>
+                    <h3><%= event.title %></h3>
+                    <p><%= event.description || "No description added." %></p>
+                  </div>
+                  <span class="event-pill"><%= event.type %> • <%= event.repeat %></span>
+                </div>
+                <p>Starts: <strong><%= formatDate(event.startsAt) %></strong></p>
+                <div class="event-actions">
+                  <form method="POST" action="/dashboard/events/<%= event._id %>/announce-now">
+                    <button class="event-btn secondary" type="submit">Announce Now</button>
+                  </form>
+                  <form method="POST" action="/dashboard/events/<%= event._id %>/delete">
+                    <button class="event-btn danger" type="submit">Delete</button>
+                  </form>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        </section>
+
+        <section class="event-card">
+          <h2>🎂 Birthdays</h2>
+          <div class="event-list">
+            <% if (!birthdays.length) { %>
+              <div class="empty-mini">No birthdays saved yet.</div>
+            <% } %>
+
+            <% birthdays.forEach(birthday => { %>
+              <div class="event-row">
+                <div class="event-row-top">
+                  <div>
+                    <h3><%= birthday.displayName %></h3>
+                    <p>Birthday: <strong><%= birthday.day %>/<%= birthday.month %></strong></p>
+                    <p>Server: <strong><%= birthday.announceInServer === false ? "Off" : "On" %></strong> • DM: <strong><%= birthday.dmUser ? "On" : "Off" %></strong></p>
+                  </div>
+                  <span class="event-pill">Yearly</span>
+                </div>
+                <div class="event-actions">
+                  <form method="POST" action="/dashboard/events/birthdays/<%= birthday._id %>/delete">
+                    <button class="event-btn danger" type="submit">Delete</button>
+                  </form>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        </section>
+      </div>
+
+      <section class="event-card">
+        <h2>📜 Event Logs</h2>
+        <div class="event-log">
+          <% if (!logs.length) { %>
+            <div class="empty-mini">No event logs yet.</div>
+          <% } %>
+
+          <% logs.forEach(log => { %>
+            <div class="event-row">
+              <div class="event-row-top">
+                <h3><%= log.title || log.type %></h3>
+                <span class="event-pill"><%= formatDate(log.createdAt) %></span>
+              </div>
+              <p><%= log.message %></p>
+            </div>
+          <% }) %>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/dashboard.js"></script>
+  <script src="/assets/js/site-music.js"></script>
+</body>
+</html>

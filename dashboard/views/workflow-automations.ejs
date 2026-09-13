@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Workflow Automations - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" type="image/png" href="/favicon.png?v=mega31" />
+  <style>
+    .auto-page{display:grid;gap:18px}.auto-hero{border-radius:30px;padding:30px;background:linear-gradient(135deg,rgba(34,211,238,.18),rgba(139,92,246,.22)),rgba(10,13,35,.86);border:1px solid rgba(255,255,255,.13);box-shadow:0 24px 70px rgba(0,0,0,.26);overflow:hidden;position:relative}.auto-hero:after{content:"⚙";position:absolute;right:35px;bottom:10px;font-size:7rem;opacity:.08;animation:gear 10s linear infinite}.auto-hero h1{margin:12px 0 0;font-size:clamp(2.1rem,4vw,4.5rem);letter-spacing:-.075em;line-height:.92}.auto-hero p{margin:12px 0 0;color:#cbd5ff;line-height:1.6;max-width:900px}.auto-badge{display:inline-flex;padding:7px 10px;border-radius:999px;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.25);color:#cffafe;font-weight:1000;font-size:.78rem}.auto-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.auto-card{border-radius:24px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.055);padding:20px;box-shadow:0 16px 40px rgba(0,0,0,.18)}.auto-card h2,.auto-card h3{margin:0 0 10px}.auto-muted{color:#b9c2ff;line-height:1.55}.flow{display:grid;gap:10px;margin-top:12px}.flow-step{padding:13px;border-radius:16px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08);font-weight:900}.flow-arrow{text-align:center;color:#67e8f9;font-weight:1000}.auto-form{display:grid;gap:14px}.auto-textarea{width:100%;min-height:120px;resize:vertical;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);color:#fff;padding:12px 14px;font-weight:800}.auto-toggle{display:flex;gap:10px;align-items:center;font-weight:900}.auto-btn{border:0;border-radius:15px;padding:12px 16px;font-weight:1000;color:#06111d;background:linear-gradient(135deg,#22d3ee,#8b5cf6);cursor:pointer}@keyframes gear{to{transform:rotate(360deg)}}@media(max-width:950px){.auto-grid{grid-template-columns:1fr}.auto-hero{padding:23px}}
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+    <main class="main-content">
+      <%- include("partials/topbar", { pageTitle: "Workflow Automations", pageSubtitle: "Trigger/action builder foundation for server automations." }) %>
+      <% if (success) { %><div class="alert success"><%= success %></div><% } %>
+      <% if (error) { %><div class="alert error"><%= error %></div><% } %>
+      <section class="auto-page">
+        <div class="auto-hero"><span class="auto-badge">⚙️ Automation Foundation</span><h1>Workflow Automations</h1><p>Build workflows like: when a user joins, give a role, send a DM, post a welcome message, and log the action. This is the safe foundation before real trigger execution is activated.</p></div>
+        <div class="auto-grid">
+          <div class="auto-card"><h3>Triggers</h3><div class="flow"><div class="flow-step">👋 Member joins</div><div class="flow-step">🎫 Ticket closes</div><div class="flow-step">🎉 Giveaway ends</div><div class="flow-step">🛡 Moderation case created</div></div></div>
+          <div class="auto-card"><h3>Actions</h3><div class="flow"><div class="flow-step">🎭 Give / remove role</div><div class="flow-step">💬 Send channel message</div><div class="flow-step">📩 Send DM</div><div class="flow-step">📜 Create log entry</div></div></div>
+          <div class="auto-card"><h3>Conditions</h3><div class="flow"><div class="flow-step">Has / lacks role</div><div class="flow-step">Channel matches</div><div class="flow-step">Time window</div><div class="flow-step">Premium server only</div></div></div>
+        </div>
+        <div class="auto-card">
+          <h3>Example Workflow</h3>
+          <div class="flow"><div class="flow-step">User joins server</div><div class="flow-arrow">↓</div><div class="flow-step">Give member role</div><div class="flow-arrow">↓</div><div class="flow-step">Send welcome DM</div><div class="flow-arrow">↓</div><div class="flow-step">Log in staff channel</div></div>
+        </div>
+        <form class="auto-card auto-form" method="POST" action="/workflow-automations/save">
+          <label class="auto-toggle"><input type="checkbox" name="enabled" <%= workflowConfig.enabled ? "checked" : "" %> /> Enable workflow automation foundation</label>
+          <label><strong>Automation Notes</strong><textarea class="auto-textarea" name="notes"><%= workflowConfig.notes || "" %></textarea></label>
+          <button class="auto-btn" type="submit">Save Workflow Settings</button>
+        </form>
+      </section>
+    </main>
+  </div>
+  <script src="/dashboard.js"></script>
+  <script src="/assets/js/site-music.js"></script>
+</body>
+</html>

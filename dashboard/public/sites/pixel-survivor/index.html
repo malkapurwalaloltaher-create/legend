@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#090b19" />
+  <meta name="description" content="Pixel Survivor, a neon top-down survival arena built for desktop and mobile." />
+  <title>Pixel Survivor</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <main id="game" class="game" data-state="menu">
+    <canvas id="arena" aria-label="Pixel Survivor game arena"></canvas>
+    <div class="crt" aria-hidden="true"></div>
+
+    <nav class="utility" aria-label="Game controls">
+      <a class="utility-btn back-btn" href="/" aria-label="Back to Legendary Lands"><span class="back-glyph" aria-hidden="true">&larr;</span><span class="utility-label"><small>EXIT CABINET</small>Legendary Lands</span></a>
+      <div class="utility-actions">
+        <a class="utility-btn github-btn" href="https://github.com/mrxavier53" target="_blank" rel="noreferrer" aria-label="Visit mrxavier53 on GitHub"><span class="github-mark" aria-hidden="true">GH</span><span class="utility-label"><small>CREATOR LOG</small>@mrxavier53</span><i aria-hidden="true"></i></a>
+        <button id="sound-btn" class="utility-btn" type="button" aria-pressed="true"><span id="sound-icon" aria-hidden="true">♪</span><span id="sound-label" class="utility-label">Sound on</span></button>
+      </div>
+    </nav>
+
+    <section id="hud" class="hud" aria-label="Current run statistics" hidden>
+      <div class="vitals">
+        <div class="bar-label"><span>CORE INTEGRITY</span><strong id="health-text">100 / 100</strong></div>
+        <div class="bar health-bar"><i id="health-fill"></i></div>
+        <div class="bar-label xp-label"><span>LEVEL <b id="level-value">1</b></span><strong id="xp-text">0 / 10 XP</strong></div>
+        <div class="bar xp-bar"><i id="xp-fill"></i></div>
+      </div>
+      <div id="danger-alert" class="danger-alert" aria-hidden="true"><span>!</span> CORE CRITICAL</div>
+      <div class="run-stats">
+        <div><span>TIME</span><strong id="time-value">00:00</strong></div>
+        <div><span>SCORE</span><strong id="score-value">0</strong></div>
+        <div><span>KILLS</span><strong id="kills-value">0</strong></div>
+      </div>
+      <button id="pause-btn" class="pause-btn" type="button" aria-label="Pause game"><span aria-hidden="true">Ⅱ</span></button>
+    </section>
+
+    <section id="menu-screen" class="screen menu-screen active" aria-labelledby="game-title">
+      <div class="arena-preview-label" aria-hidden="true">
+        <span><i></i> LIVE ARENA FEED</span>
+        <b>SECTOR 09 // NIGHT CYCLE</b>
+      </div>
+      <div class="menu-layout">
+        <div class="hero-panel pixel-frame">
+          <div class="cabinet-status"><span><i></i> CABINET ONLINE</span><b>BUILD 07.86</b></div>
+          <p class="kicker">LEGENDARY LANDS // FLAGSHIP ARCADE 07</p>
+          <h1 id="game-title">PIXEL<br /><span>SURVIVOR</span></h1>
+          <p class="hero-copy">Outrun the swarm. Build an impossible loadout. Survive the neon night.</p>
+          <div class="mission-spec" aria-label="Mission settings">
+            <span><small>WEAPON</small>AUTO-TARGET</span>
+            <span><small>OBJECTIVE</small>ENDLESS</span>
+            <span><small>ZONE</small>NEON NIGHT</span>
+          </div>
+          <div class="menu-actions">
+            <button id="play-btn" class="primary-btn" type="button"><span><small>START RUN</small>DEPLOY</span><b aria-hidden="true">▶</b></button>
+            <button id="how-btn" class="text-btn" type="button">Open field manual</button>
+          </div>
+        </div>
+
+        <aside class="records-panel pixel-frame" aria-label="Local records">
+          <div class="records-head"><span>LOCAL ARCHIVE</span><i aria-hidden="true"></i><b>SECURE</b></div>
+          <div class="record record-score"><span>BEST SCORE</span><strong id="best-score">000000</strong><i aria-hidden="true">PB</i></div>
+          <div class="record-grid">
+            <div class="record"><span>BEST TIME</span><strong id="best-time">00:00</strong></div>
+            <div class="record"><span>TOP LEVEL</span><strong id="best-level">01</strong></div>
+          </div>
+          <div class="threat-head"><span>THREAT INDEX</span><b>5 / 5 KNOWN</b></div>
+          <div class="enemy-preview" aria-hidden="true">
+            <span><i class="mini-enemy basic"></i><b>GRUNT</b></span><span><i class="mini-enemy fast"></i><b>RUSH</b></span><span><i class="mini-enemy tank"></i><b>TANK</b></span><span><i class="mini-enemy zig"></i><b>WISP</b></span><span><i class="mini-enemy orbit"></i><b>ORBIT</b></span>
+          </div>
+          <p>Five hostile signatures detected. Adapt or disappear.</p>
+        </aside>
+      </div>
+      <footer aria-label="Controls summary">
+        <span><kbd>WASD</kbd><kbd>ARROWS</kbd><b>MOVE</b></span>
+        <i aria-hidden="true"></i>
+        <span><kbd>AUTO</kbd><b>TARGET + FIRE</b></span>
+        <i aria-hidden="true"></i>
+        <span><kbd>ESC</kbd><kbd>P</kbd><b>PAUSE</b></span>
+      </footer>
+    </section>
+
+    <section id="how-screen" class="screen dialog-screen" role="dialog" aria-modal="true" aria-labelledby="how-title" hidden>
+      <div class="dialog pixel-frame how-card">
+        <p class="kicker">FIELD MANUAL</p>
+        <h2 id="how-title">STAY MOVING.<br /><span>KEEP GROWING.</span></h2>
+        <div class="how-grid">
+          <article><b>01</b><div><h3>MOVE</h3><p>Use WASD, arrow keys, or the mobile stick. Your weapon targets automatically.</p></div></article>
+          <article><b>02</b><div><h3>COLLECT</h3><p>Defeated enemies drop energy. Pull it in to level up and restore your edge.</p></div></article>
+          <article><b>03</b><div><h3>EVOLVE</h3><p>Choose one of three random upgrades. Builds stack for the entire run.</p></div></article>
+          <article><b>04</b><div><h3>SURVIVE</h3><p>Enemy speed, health and spawn pressure rise continuously. Watch your core.</p></div></article>
+        </div>
+        <button id="how-close" class="primary-btn compact" type="button">BACK TO MENU</button>
+      </div>
+    </section>
+
+    <section id="pause-screen" class="screen dialog-screen" role="dialog" aria-modal="true" aria-labelledby="pause-title" hidden>
+      <div class="dialog pixel-frame pause-card">
+        <p class="kicker">SYSTEM HOLD</p>
+        <h2 id="pause-title">PAUSED</h2>
+        <p>The arena is frozen. Your run is safe.</p>
+        <button id="resume-btn" class="primary-btn compact" type="button">RESUME</button>
+        <button id="pause-menu-btn" class="text-btn" type="button">Abandon run</button>
+      </div>
+    </section>
+
+    <section id="upgrade-screen" class="screen dialog-screen upgrade-screen" role="dialog" aria-modal="true" aria-labelledby="upgrade-title" hidden>
+      <div class="upgrade-wrap">
+        <p class="kicker">LEVEL <span id="upgrade-level">2</span> REACHED</p>
+        <h2 id="upgrade-title">CHOOSE YOUR EVOLUTION</h2>
+        <div class="upgrade-divider" aria-hidden="true"><i></i><span>3 MODULES AVAILABLE</span><i></i></div>
+        <div id="upgrade-choices" class="upgrade-choices"></div>
+        <p class="choice-hint">SELECT 1, 2, 3 OR TAP A MODULE</p>
+      </div>
+    </section>
+
+    <section id="gameover-screen" class="screen dialog-screen" role="dialog" aria-modal="true" aria-labelledby="gameover-title" hidden>
+      <div id="gameover-card" class="dialog pixel-frame gameover-card">
+        <p id="run-status" class="kicker">SIGNAL LOST</p>
+        <h2 id="gameover-title">RUN OVER</h2>
+        <div id="record-flash" class="record-flash" hidden>NEW LOCAL RECORD</div>
+        <div class="final-score"><span>FINAL SCORE</span><strong id="final-score">0</strong><i aria-hidden="true">RUN // COMPLETE</i></div>
+        <div class="final-grid">
+          <div><span>TIME</span><b id="final-time">00:00</b></div>
+          <div><span>LEVEL</span><b id="final-level">1</b></div>
+          <div><span>KILLS</span><b id="final-kills">0</b></div>
+        </div>
+        <button id="restart-btn" class="primary-btn compact" type="button">RUN IT BACK</button>
+        <button id="gameover-menu-btn" class="text-btn" type="button">Main menu</button>
+      </div>
+    </section>
+
+    <div id="joystick" class="joystick" aria-hidden="true">
+      <span class="stick-label">MOVE // SAFE ZONE</span>
+      <div class="stick-base"><i id="stick-knob"><b></b></i></div>
+    </div>
+    <div id="announcement" class="sr-only" aria-live="polite"></div>
+  </main>
+  <script src="assets/main.js"></script>
+</body>
+</html>

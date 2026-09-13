@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Confessions - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+<link rel="icon" type="image/png" href="/favicon.png?v=3.7.0" />
+<link rel="shortcut icon" type="image/png" href="/favicon.png?v=3.7.0" />
+<script src="/dashboard.js"></script>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+
+    <main class="main-content">
+      <%- include("partials/topbar", {
+        pageTitle: "Confessions",
+        pageSubtitle: "Manage anonymous confession settings and staff search tools."
+      }) %>
+
+      <% if (success) { %>
+        <div class="alert success"><%= success %></div>
+      <% } %>
+
+      <% if (error) { %>
+        <div class="alert error"><%= error %></div>
+      <% } %>
+
+      <div class="builder-grid">
+        <section class="section-card">
+          <div class="section-header">
+            <h2>Confession Channel</h2>
+            <p>Channels are organized by your Discord server categories.</p>
+          </div>
+
+          <form method="POST" action="/confessions/set-channel" class="form-stack">
+            <label class="form-group">
+              <span>Channel</span>
+              <select name="channelId" class="input" required>
+                <option value="">Select confession channel</option>
+
+                <% channelGroups.forEach(group => { %>
+                  <optgroup label="📁 <%= group.name %>">
+                    <% group.channels.forEach(channel => { %>
+                      <option value="<%= channel.id %>" <%= confessChannelId === channel.id ? "selected" : "" %>>
+                        # <%= channel.name %>
+                      </option>
+                    <% }) %>
+                  </optgroup>
+                <% }) %>
+              </select>
+            </label>
+
+            <button type="submit" class="primary-btn">Save Confession Channel</button>
+          </form>
+        </section>
+
+        <section class="section-card">
+          <div class="section-header">
+            <h2>Staff Search</h2>
+            <p>Search any confession or reply by bot message ID.</p>
+          </div>
+
+          <form method="POST" action="/confessions/search" class="form-stack">
+            <label class="form-group">
+              <span>Message ID</span>
+              <input name="messageId" class="input" placeholder="Paste confession/reply message ID" required />
+            </label>
+
+            <button type="submit" class="primary-btn">Search Message</button>
+          </form>
+
+          <% if (searchResult) { %>
+            <div class="result-card">
+              <h3>Search Result</h3>
+              <p><strong>Type:</strong> <%= searchResult.type %></p>
+              <% if (searchResult.confessionNumber) { %>
+                <p><strong>Confession Number:</strong> #<%= searchResult.confessionNumber %></p>
+              <% } %>
+              <% if (searchResult.parentConfessionNumber) { %>
+                <p><strong>Reply To:</strong> Confession #<%= searchResult.parentConfessionNumber %></p>
+              <% } %>
+              <p><strong>User:</strong> <%= searchResult.username %></p>
+              <p><strong>User ID:</strong> <%= searchResult.userId %></p>
+              <p><strong>Message ID:</strong> <%= searchResult.messageId %></p>
+              <p><strong>Text:</strong></p>
+              <div class="text-box"><%= searchResult.text %></div>
+            </div>
+          <% } %>
+        </section>
+      </div>
+
+      <section class="section-card">
+        <div class="section-header">
+          <h2>Recent Confessions & Replies</h2>
+          <p>Latest saved confession/reply records from MongoDB.</p>
+        </div>
+
+        <div class="table-list">
+          <% if (!recent.length) { %>
+            <div class="empty-mini">No confessions or replies saved yet.</div>
+          <% } %>
+
+          <% recent.forEach(item => { %>
+            <div class="table-row">
+              <div>
+                <div class="row-title">
+                  <% if (item.type === "confession") { %>
+                    💌 Confession #<%= item.confessionNumber || "?" %>
+                  <% } else { %>
+                    💬 Reply to Confession #<%= item.parentConfessionNumber || "?" %>
+                  <% } %>
+                </div>
+                <div class="row-sub">
+                  Message ID: <%= item.messageId %> • User: <%= item.username %>
+                </div>
+                <div class="row-preview"><%= item.text %></div>
+              </div>
+
+              <span class="status-pill <%= item.type === 'confession' ? 'good' : 'info' %>">
+                <%= item.type %>
+              </span>
+            </div>
+          <% }) %>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById("sidebar");
+    const sidebarToggle = document.getElementById("sidebarToggle");
+
+    if (sidebarToggle) {
+      sidebarToggle.addEventListener("click", () => {
+        sidebar.classList.toggle("show");
+      });
+    }
+  </script>
+<script src="/assets/js/site-music.js"></script></body>
+</html>

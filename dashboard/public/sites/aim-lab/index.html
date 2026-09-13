@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#070806">
+  <meta name="description" content="Aim Lab Mini - a focused, futuristic aim and reaction training arena.">
+  <title>Aim Lab Mini</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-screen="menu" data-mode="rush">
+  <div class="ambient" aria-hidden="true"><span></span><span></span><span></span></div>
+
+  <header class="site-header">
+    <a class="back-link" href="/" aria-label="Back to arena hub"><span class="back-icon" aria-hidden="true">&larr;</span><span class="back-copy"><small>LEGENDARY LANDS</small><b>Back to hub</b></span></a>
+    <button class="brand" id="brand-button" type="button" aria-label="Return to Aim Lab Mini menu">
+      <span class="brand-sight" aria-hidden="true"></span>
+      <span>AIM LAB <b>MINI</b></span>
+    </button>
+    <div class="header-actions">
+      <a class="github-cta" href="https://github.com/mrxavier53" target="_blank" rel="noopener noreferrer" aria-label="View mrxavier53 on GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .7a11.5 11.5 0 0 0-3.64 22.4c.58.1.79-.25.79-.56v-2.23c-3.23.7-3.91-1.37-3.91-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.78 1.2 1.78 1.2 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.74-1.55-2.58-.3-5.29-1.29-5.29-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.16 1.18A10.9 10.9 0 0 1 12 6.1c.98 0 1.95.13 2.87.38 2.19-1.49 3.15-1.18 3.15-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.84 1.19 3.1 0 4.42-2.72 5.39-5.3 5.68.42.36.79 1.07.79 2.16v3.24c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z"/></svg>
+        <span><small>CREATOR</small><b>MRXAVIER53</b></span><i aria-hidden="true">&nearr;</i>
+      </a>
+      <div class="audio-controls" aria-label="Audio settings">
+        <button class="icon-toggle" id="sound-toggle" type="button" aria-pressed="true"><span aria-hidden="true">SFX</span><b>ON</b></button>
+        <button class="icon-toggle" id="music-toggle" type="button" aria-pressed="true"><span aria-hidden="true">MUSIC</span><b>ON</b></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="screen menu-screen active" id="menu-screen" aria-labelledby="menu-title">
+      <div class="menu-hero">
+        <div class="hero-copy">
+          <p class="kicker"><span></span> Precision response studio</p>
+          <h1 id="menu-title">YOUR AIM.<br><em>REFINED.</em></h1>
+          <p class="hero-text">Four focused drills built to sharpen speed, control, micro aim, and visual response. Choose your session and set a new benchmark.</p>
+          <div class="hero-signals" aria-label="Training features">
+            <span><i></i>Instant feedback</span><span><i></i>Local records</span><span><i></i>Four disciplines</span>
+          </div>
+        </div>
+        <div class="player-card panel">
+          <span class="panel-code" aria-hidden="true">LL // 08-53</span>
+          <div class="player-card-head">
+            <span class="status-dot"></span>
+            <span>Player profile</span>
+            <small>LOCAL</small>
+          </div>
+          <label for="player-name">Display name</label>
+          <div class="name-row">
+            <input id="player-name" type="text" maxlength="18" autocomplete="nickname" spellcheck="false" placeholder="PLAYER ONE">
+            <span id="name-status">READY</span>
+          </div>
+          <div class="career-row">
+            <div><small>PB</small><b id="career-best">0</b><span>Top score</span></div>
+            <div><small>&Sigma;</small><b id="career-rounds">0</b><span>Runs logged</span></div>
+          </div>
+          <div class="record-foot"><span>PERSONAL RECORDS</span><i></i><b>AUTOSAVE ACTIVE</b></div>
+        </div>
+      </div>
+
+      <div class="section-heading">
+        <div><p class="kicker">Training library</p><h2>Select a mode</h2></div>
+        <button class="text-button" id="how-to-button" type="button">How to play <span>&rarr;</span></button>
+      </div>
+
+      <div class="mode-grid" id="mode-grid">
+        <button class="mode-card selected" type="button" data-mode="rush">
+          <span class="mode-index">01</span><span class="mode-record" data-record="rush">BEST 0</span>
+          <span class="mode-art rush-art" aria-hidden="true"><i></i><i></i><i></i></span>
+          <strong>RUSH</strong><small>Build speed across a rapid 30-second run.</small>
+          <span class="mode-meta"><b>30 SEC</b><i>Speed</i></span>
+        </button>
+        <button class="mode-card" type="button" data-mode="precision">
+          <span class="mode-index">02</span><span class="mode-record" data-record="precision">BEST 0</span>
+          <span class="mode-art precision-art" aria-hidden="true"><i></i></span>
+          <strong>PRECISION</strong><small>Smaller targets. Every deliberate press matters.</small>
+          <span class="mode-meta"><b>-180 MISS</b><i>Control</i></span>
+        </button>
+        <button class="mode-card" type="button" data-mode="tiny">
+          <span class="mode-index">03</span><span class="mode-record" data-record="tiny">BEST 0</span>
+          <span class="mode-art tiny-art" aria-hidden="true"><i></i><i></i><i></i></span>
+          <strong>TINY</strong><small>Adaptive targets shrink as your streak grows.</small>
+          <span class="mode-meta"><b>ADAPTIVE</b><i>Micro aim</i></span>
+        </button>
+        <button class="mode-card" type="button" data-mode="reaction">
+          <span class="mode-index">04</span><span class="mode-record" data-record="reaction">BEST 0</span>
+          <span class="mode-art reaction-art" aria-hidden="true"><i></i></span>
+          <strong>REACTION</strong><small>Read the signal. Early presses reset momentum.</small>
+          <span class="mode-meta"><b>10 SIGNALS</b><i>Reflex</i></span>
+        </button>
+      </div>
+
+      <button class="play-button" id="play-button" type="button"><span>Begin training</span><b id="play-mode-label">RUSH</b><i aria-hidden="true">&rarr;</i></button>
+    </section>
+
+    <section class="screen game-screen" id="game-screen" aria-label="Aim training arena">
+      <div class="game-topline">
+        <div class="game-id"><span id="game-mode-index">01</span><div><small>ACTIVE DRILL</small><b id="game-mode-name">RUSH</b></div></div>
+        <div class="live-stats" aria-label="Current game statistics">
+          <div class="primary-stat"><small>SCORE</small><b id="stat-score">0</b></div>
+          <div><small>HITS</small><b id="stat-hits">0</b></div>
+          <div><small>MISSES</small><b id="stat-misses">0</b></div>
+          <div><small>ACCURACY</small><b id="stat-accuracy">100%</b></div>
+          <div class="streak-stat"><small>STREAK</small><b id="stat-streak">0</b></div>
+        </div>
+        <button class="pause-button" id="pause-button" type="button" aria-label="Pause game"><i></i><i></i></button>
+      </div>
+
+      <div class="arena-wrap">
+        <div class="arena" id="arena">
+          <div class="arena-grid" aria-hidden="true"></div>
+          <div class="arena-depth" aria-hidden="true"></div>
+          <div class="arena-corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <div class="target" id="target" role="button" tabindex="0" aria-label="Target" hidden><b class="acquisition-halo" aria-hidden="true"></b><span></span><i></i></div>
+          <div class="reaction-wait" id="reaction-wait" hidden><span class="wait-ring"></span><b>STAY READY</b><small>Wait for the visual signal</small></div>
+          <div class="center-message" id="center-message" aria-live="polite"></div>
+          <div class="effects-layer" id="effects-layer" aria-hidden="true"></div>
+        </div>
+        <div class="arena-footer">
+          <div class="timer-block"><span>TIME</span><b id="timer-value">30.0</b><i><em id="timer-bar"></em></i></div>
+          <div class="round-progress" id="round-progress"><span>ELAPSED</span><b id="progress-label">0 / 30 SEC</b></div>
+          <div class="live-reaction"><span>LAST / AVG</span><b><i id="last-reaction">--</i> / <i id="live-average">--</i></b></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="modal" id="how-to-modal" role="dialog" aria-modal="true" aria-labelledby="how-to-title" aria-hidden="true">
+    <div class="modal-card panel">
+      <button class="modal-close" id="how-to-close" type="button" aria-label="Close how to play">&times;</button>
+      <p class="kicker">Quick start</p>
+      <h2 id="how-to-title">HOW TO PLAY</h2>
+      <div class="instruction-grid">
+        <div><span>01</span><b>Choose a drill</b><p>Rush rewards speed. Precision values control. Tiny adapts to your streak. Reaction tests restraint.</p></div>
+        <div><span>02</span><b>Press the targets</b><p>Use mouse, pen, or touch. Clean hits build streaks and reaction averages.</p></div>
+        <div><span>03</span><b>Respect the signal</b><p>In Reaction, wait until the target appears. Early arena presses count as false starts.</p></div>
+        <div><span>04</span><b>Beat your record</b><p>Your display name, settings, run count, and best score per mode stay on this device.</p></div>
+      </div>
+      <button class="modal-action" id="how-to-play" type="button">Start selected mode <span>&rarr;</span></button>
+    </div>
+  </section>
+
+  <section class="modal" id="pause-modal" role="dialog" aria-modal="true" aria-labelledby="pause-title" aria-hidden="true">
+    <div class="modal-card compact-modal panel">
+      <p class="kicker">Session paused</p>
+      <h2 id="pause-title">PAUSED</h2>
+      <p>Timer and target sequence are frozen.</p>
+      <button class="modal-action" id="resume-button" type="button">Resume <span>&rarr;</span></button>
+      <button class="secondary-button" id="restart-button" type="button">Restart Run</button>
+      <button class="secondary-button" id="pause-menu-button" type="button">Exit to menu</button>
+    </div>
+  </section>
+
+  <section class="modal gameover-modal" id="gameover-modal" role="dialog" aria-modal="true" aria-labelledby="gameover-title" aria-hidden="true">
+    <div class="modal-card result-card panel" id="result-card">
+      <div class="result-header"><div><p class="kicker" id="result-kicker">Training complete</p><h2 id="gameover-title">TRAINING REPORT</h2></div><div class="grade-wrap"><small>PERFORMANCE</small><span class="result-grade" id="result-grade">A</span></div></div>
+      <div class="record-banner" id="record-banner" hidden><span>NEW PERSONAL BEST</span><b id="record-score">0</b></div>
+      <div class="final-score"><span>FINAL SCORE</span><b id="final-score">0</b><small id="final-mode">RUSH DRILL</small></div>
+      <div class="report-divider"><span>SESSION METRICS</span><i></i><small>LOCAL RUN</small></div>
+      <div class="result-stats">
+        <div><span>HITS</span><b id="final-hits">0</b></div>
+        <div><span>MISSES</span><b id="final-misses">0</b></div>
+        <div><span>ACCURACY</span><b id="final-accuracy">0%</b></div>
+        <div><span>AVG REACTION</span><b id="final-average">--</b></div>
+        <div><span>FASTEST HIT</span><b id="final-fastest">--</b></div>
+        <div><span>BEST STREAK</span><b id="final-streak">0</b></div>
+      </div>
+      <div class="result-actions">
+        <button class="modal-action" id="replay-button" type="button">Run it again <span>&#8635;</span></button>
+        <button class="secondary-button" id="result-menu-button" type="button">Back to menu</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="assets/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#06111d">
+    <meta name="description" content="Translate English into Ron runes and Ron runes back into English. Works offline as a standalone web app.">
+    <title>Ron Language Translator</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="assets/icons/ron-mark.svg" type="image/svg+xml">
+    <link rel="alternate icon" href="assets/icons/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <section id="music-warning" class="music-warning" aria-labelledby="music-warning-title">
+        <div class="music-warning-card">
+            <div class="warning-runes" aria-hidden="true">ᚱ ✦ ᛟ ✦ ᚾ</div>
+            <h2 id="music-warning-title">Enter the Rune Gate</h2>
+            <p>This translator has ambient Ron music and soft rune sound effects.</p>
+            <p class="warning-small">Choose how you want to enter after the gate opens.</p>
+            <div class="warning-countdown" id="warning-countdown">Preparing options in 4…</div>
+            <div class="music-warning-actions" id="music-warning-actions" hidden>
+                <button type="button" class="music-choice primary" id="enter-with-music">♫ Enter with Music</button>
+                <button type="button" class="music-choice" id="enter-silently">Enter Without Music</button>
+            </div>
+            <a class="lands-back-chip warning-back-chip" href="/" aria-label="Back to Legendary Lands"><span aria-hidden="true">ᚱ</span> Back to Legendary Lands <b aria-hidden="true">←</b></a>
+        </div>
+    </section>
+
+    <div id="loading-screen" aria-hidden="true">
+        <div class="loader-runes"><span class="rune">ᚱ</span><span class="rune">ᛟ</span><span class="rune">ᚾ</span></div>
+        <div class="loading-text">Opening the rune chamber...</div>
+    </div>
+
+    <div class="particles" id="particles"></div>
+    <div class="floating-rune-field" aria-hidden="true"><span>ᚱ</span><span>ᛟ</span><span>ᚾ</span><span>ᚨ</span><span>ᛒ</span><span>ᚲ</span><span>ᛞ</span><span>ᛖ</span><span>ᚠ</span><span>ᚷ</span></div>
+
+    <button class="history-toggle" id="history-toggle" type="button" aria-expanded="false">📜 History</button>
+    <button class="music-toggle" id="music-toggle" type="button" aria-pressed="false" hidden>♫ Music: OFF</button>
+
+    <aside class="history-sidebar" id="history-sidebar">
+        <div class="history-header"><h3>📜 Translation History</h3><div class="history-actions"><button class="clear-history" id="clear-history" type="button">Clear All</button><button class="close-history" id="close-history" type="button" aria-label="Close history">×</button></div></div>
+        <div class="history-list" id="history-list"><div class="empty-history">No translations yet</div></div>
+    </aside>
+
+    <main class="app-stage">
+        <nav class="lands-return" aria-label="Legendary Lands navigation">
+            <a class="lands-back-chip" href="/" aria-label="Back to Legendary Lands"><span aria-hidden="true">ᚱ</span> Back to Legendary Lands <b aria-hidden="true">←</b></a>
+        </nav>
+        <section class="hero-panel">
+            <div class="hero-left">
+                <div class="eyebrow">Ron Script Converter</div>
+                <h1><span>ᚱᛟᚾ</span> Translator</h1>
+                <p>Convert English into glowing Ron runes, or decode Ron runes back into English — all inside a magical offline web app.</p>
+                <div class="example-runes"><span>A→ᚨ</span><span>B→ᛒ</span><span>C→ᚲ</span><span>D→ᛞ</span><span>E→ᛖ</span></div>
+            </div>
+            <div class="hero-orb" aria-hidden="true"><div class="ring"></div><img class="center-rune custom-ron-icon" src="assets/icons/ron-mark.svg" alt=""></div>
+        </section>
+
+        <section class="translator-shell">
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="eng-to-ron-btn" type="button">English → Ron</button>
+                <button class="mode-btn" id="ron-to-eng-btn" type="button">Ron → English</button>
+            </div>
+
+            <section class="translation-area" id="eng-to-ron-area">
+                <div class="translator-grid">
+                    <div class="input-wrapper panel-box">
+                        <label class="input-label" for="english-input">English Text</label>
+                        <textarea id="english-input" placeholder="Type English here..." maxlength="5000"></textarea>
+                        <div class="char-count" id="eng-char-count">0 characters</div>
+                        <div class="translate-row"><button class="translate-btn" id="translate-eng-btn" type="button">⚡ Translate</button><span class="translate-hint">Auto translate is OFF. Press translate when ready.</span></div>
+                        <div class="drop-zone" id="drop-zone-eng"><p>📁 Drop .txt file here</p><small>or</small><br><button class="file-btn" type="button">Choose File</button><input type="file" id="file-input-eng" accept=".txt,text/plain" hidden></div>
+                    </div>
+                    <div class="output-box panel-box">
+                        <div class="output-header"><span class="label">Ron Script</span><div class="action-buttons"><button id="copy-btn-eng" class="copy-btn" type="button"><span class="copy-icon">📋</span><span class="copy-text">Copy</span></button><button id="download-btn-eng" class="download-btn" type="button">⬇️ Download</button></div></div>
+                        <div id="ron-output" class="rune-text">...</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="translation-area hidden" id="ron-to-eng-area">
+                <div class="translator-grid">
+                    <div class="input-wrapper panel-box">
+                        <label class="input-label" for="ron-input">Ron Script</label>
+                        <textarea id="ron-input" placeholder="Paste Ron runes here..." maxlength="5000"></textarea>
+                        <div class="char-count" id="ron-char-count">0 characters</div>
+                        <div class="translate-row"><button class="translate-btn" id="translate-ron-btn" type="button">⚡ Decode</button><span class="translate-hint">Auto translate is OFF. Press decode when ready.</span></div>
+                        <div class="drop-zone" id="drop-zone-ron"><p>📁 Drop .txt file here</p><small>or</small><br><button class="file-btn" type="button">Choose File</button><input type="file" id="file-input-ron" accept=".txt,text/plain" hidden></div>
+                    </div>
+                    <div class="output-box panel-box">
+                        <div class="output-header"><span class="label">English Text</span><div class="action-buttons"><button id="copy-btn-ron" class="copy-btn" type="button"><span class="copy-icon">📋</span><span class="copy-text">Copy</span></button><button id="download-btn-ron" class="download-btn" type="button">⬇️ Download</button></div></div>
+                        <div id="english-output" class="english-text">...</div>
+                    </div>
+                </div>
+            </section>
+        </section>
+    <div class="github-footer" aria-label="GitHub project link">
+        <a class="github-link-bottom" href="https://github.com/mrxavier53/Ron-Translator" target="_blank" rel="noopener">
+            <span class="github-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.42-4.04-1.42-.55-1.38-1.34-1.75-1.34-1.75-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.4 11.4 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.49 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.58A12 12 0 0 0 12 .5Z"/></svg></span>
+            <span>View on GitHub</span><span class="github-spark">✦</span>
+        </a>
+    </div>
+
+    </main>
+
+    <audio id="background-music" loop preload="auto"><source src="assets/audio/ron-ambient.mp3" type="audio/mpeg"></audio>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

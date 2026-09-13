@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= placeholderTitle %> - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+<link rel="icon" type="image/png" href="/favicon.png?v=3.7.0" />
+<link rel="shortcut icon" type="image/png" href="/favicon.png?v=3.7.0" />
+<script src="/dashboard.js"></script>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+
+    <main class="main-content">
+      <%- include("partials/topbar", {
+        pageTitle: placeholderTitle,
+        pageSubtitle: "This section is ready in the dashboard navigation."
+      }) %>
+
+      <section class="hero-card">
+        <div class="hero-text">
+          <div class="hero-icon-wrap">
+            <img src="<%= botAvatar %>" class="hero-bot-avatar" alt="Bot Avatar" />
+          </div>
+          <div>
+            <h2><%= placeholderTitle %></h2>
+            <p><%= placeholderText %></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card">
+        <div class="empty-state">
+          <div class="empty-state-icon">🚧</div>
+          <h3>This page is ready for the next phase</h3>
+          <p>
+            The sidebar and routing are now added. Next, we can build the real controls,
+            forms, switches, and dashboard actions for this module.
+          </p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById("sidebar");
+    const sidebarToggle = document.getElementById("sidebarToggle");
+
+    if (sidebarToggle) {
+      sidebarToggle.addEventListener("click", () => {
+        sidebar.classList.toggle("show");
+      });
+    }
+  </script>
+<script src="/assets/js/site-music.js"></script></body>
+</html>

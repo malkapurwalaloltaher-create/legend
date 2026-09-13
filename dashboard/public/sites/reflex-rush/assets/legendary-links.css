@@ -1,0 +1,25 @@
+/* In-flow navigation stays clear of the game's fixed corner controls. */
+.name-screen{overflow-y:auto}
+.intro-card{margin:auto}
+.lab-return-main{display:flex;justify-content:center;margin:0 120px 20px;transition:opacity .2s ease}
+.name-screen:not(.hidden)~.app-shell .lab-return-main{visibility:hidden}
+.lab-back-link{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:10px 16px;border:1px solid rgba(56,244,101,.48);border-radius:10px;color:#dfffe8;text-decoration:none;font-size:.8rem;font-weight:900;letter-spacing:.055em;text-transform:uppercase;background:linear-gradient(145deg,rgba(4,39,15,.9),rgba(9,74,29,.72));box-shadow:0 0 0 1px rgba(188,255,57,.06) inset,0 0 22px rgba(56,244,101,.14);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;touch-action:manipulation}
+.lab-back-link span{color:var(--lime);font-size:1.1rem;text-shadow:0 0 11px rgba(188,255,57,.7);transition:transform .18s ease}
+.lab-back-welcome{margin-top:17px}
+.lab-back-link:hover{transform:translateY(-2px);border-color:var(--lime);box-shadow:0 0 30px rgba(56,244,101,.27),0 0 0 1px rgba(188,255,57,.12) inset}
+.lab-back-link:hover span{transform:translateX(-3px)}
+.lab-back-link:focus-visible,.profile-cta:focus-visible,footer a:focus-visible{outline:3px solid var(--lime);outline-offset:4px}
+.lab-back-link:active,.profile-cta:active{transform:translateY(1px) scale(.98)}
+.profile-cta{position:relative;overflow:hidden;min-height:48px;display:inline-flex;align-items:center;gap:10px;padding:8px 13px;border:1px solid rgba(56,244,101,.42);border-radius:13px;color:#effff3;text-decoration:none;background:linear-gradient(135deg,rgba(7,54,21,.94),rgba(15,99,38,.7));box-shadow:0 10px 26px rgba(0,0,0,.25),0 0 22px rgba(56,244,101,.13);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;animation:profileLabPulse 2.8s ease-in-out infinite;touch-action:manipulation}
+.profile-cta::before{content:"";position:absolute;inset:-60% -90%;background:linear-gradient(100deg,transparent,rgba(188,255,57,.18),transparent);transform:translateX(-55%);animation:profileLabScan 3s ease-in-out infinite}
+.profile-cta svg,.profile-cta span,.profile-cta b{position:relative;z-index:1}
+.profile-cta svg{width:25px;height:25px;fill:var(--lime);filter:drop-shadow(0 0 8px rgba(188,255,57,.48))}
+.profile-cta span{display:grid;text-align:left;font-weight:900;line-height:1.1}
+.profile-cta small{color:var(--mint);font-size:.56rem;letter-spacing:.14em}
+.profile-cta b{color:var(--lime);font-size:1rem}
+.profile-cta:hover{transform:translateY(-3px);border-color:var(--lime);box-shadow:0 14px 34px rgba(0,0,0,.3),0 0 32px rgba(56,244,101,.24)}
+@keyframes profileLabPulse{0%,100%{box-shadow:0 10px 26px rgba(0,0,0,.25),0 0 16px rgba(56,244,101,.1)}50%{box-shadow:0 10px 26px rgba(0,0,0,.25),0 0 28px rgba(56,244,101,.24)}}
+@keyframes profileLabScan{0%,20%{transform:translateX(-65%);opacity:0}45%{opacity:1}75%,100%{transform:translateX(65%);opacity:0}}
+@media(max-width:700px){.lab-return-main{margin:0 62px 18px}.lab-back-link{font-size:.7rem}.lab-back-welcome{width:100%}footer{gap:12px}.profile-cta{order:3;width:100%;max-width:260px;justify-content:center}}
+@media(max-width:430px){.lab-return-main{margin-inline:50px}.lab-return-main .lab-back-link{width:100%;padding-inline:8px;font-size:.62rem}}
+@media(prefers-reduced-motion:reduce){.lab-return-main,.lab-back-link,.lab-back-link span,.profile-cta{transition:none}.profile-cta,.profile-cta::before{animation:none}}

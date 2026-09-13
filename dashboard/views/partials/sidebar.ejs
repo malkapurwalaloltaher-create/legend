@@ -1,0 +1,452 @@
+<style>
+  /* =========================================================
+     PHASE 16E SIDEBAR — right-side description tooltip + responsive
+     ========================================================= */
+
+  .app-shell {
+    display: grid !important;
+    grid-template-columns: 400px minmax(0, 1fr) !important;
+    min-height: 100vh !important;
+    background: #080723 !important;
+  }
+
+  .sidebar {
+    width: 400px !important;
+    min-width: 400px !important;
+    max-width: 400px !important;
+    height: 100vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 500 !important;
+    background: linear-gradient(180deg, #06051d 0%, #090826 100%) !important;
+    border-right: 1px solid rgba(139, 92, 246, 0.22) !important;
+  }
+
+  .sidebar-inner {
+    width: 100% !important;
+    min-height: 100% !important;
+    padding: 24px 22px 32px !important;
+    position: relative !important;
+  }
+
+  .main-content {
+    min-width: 0 !important;
+  }
+
+  .legendary-brand-card {
+    display: block !important;
+    width: 100% !important;
+    text-decoration: none !important;
+    border-radius: 26px !important;
+    overflow: hidden !important;
+    margin: 0 0 22px !important;
+    border: 1px solid rgba(255, 255, 255, 0.09) !important;
+    background: rgba(20, 22, 48, 0.92) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28) !important;
+  }
+
+  .legendary-brand-banner,
+  .legendary-brand-simple {
+    min-height: 128px !important;
+    padding: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+  }
+
+  .legendary-brand-simple {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.88), rgba(14, 116, 144, 0.76)) !important;
+  }
+
+  .legendary-brand-avatar {
+    width: 64px !important;
+    height: 64px !important;
+    border-radius: 18px !important;
+    object-fit: cover !important;
+    flex: 0 0 auto !important;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.38) !important;
+  }
+
+  .legendary-brand-text {
+    min-width: 0 !important;
+    flex: 1 !important;
+    overflow: hidden !important;
+  }
+
+  .legendary-brand-text h1 {
+    margin: 0 !important;
+    color: #ffffff !important;
+    font-size: 24px !important;
+    line-height: 1.02 !important;
+    font-weight: 1000 !important;
+    letter-spacing: 0.02em !important;
+    text-transform: uppercase !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
+    text-shadow: 0 3px 14px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .legendary-brand-text p {
+    margin: 7px 0 0 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+  }
+
+  .legendary-server-card {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    width: 100% !important;
+    margin: 0 0 28px !important;
+    padding: 18px !important;
+    border-radius: 24px !important;
+    text-decoration: none !important;
+    background: rgba(24, 25, 55, 0.94) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    transition: 0.18s ease !important;
+  }
+
+  .legendary-server-card:hover {
+    border-color: rgba(139, 92, 246, 0.55) !important;
+    background: rgba(33, 34, 72, 0.96) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  .legendary-server-icon {
+    width: 64px !important;
+    height: 64px !important;
+    border-radius: 18px !important;
+    object-fit: cover !important;
+    flex: 0 0 auto !important;
+  }
+
+  .legendary-server-info {
+    min-width: 0 !important;
+    flex: 1 !important;
+  }
+
+  .legendary-server-info h2 {
+    margin: 0 !important;
+    color: #ffffff !important;
+    font-size: 22px !important;
+    line-height: 1.08 !important;
+    font-weight: 950 !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .legendary-server-info p {
+    margin: 6px 0 0 !important;
+    color: #b8b8d8 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+  }
+
+  .legendary-nav {
+    width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .legendary-nav-section {
+    margin-bottom: 30px !important;
+  }
+
+  .legendary-nav-title {
+    margin: 0 0 12px 14px !important;
+    color: #b9b4ff !important;
+    font-size: 13px !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.28em !important;
+  }
+
+  .legendary-nav-item {
+    position: relative !important;
+    display: grid !important;
+    grid-template-columns: 34px minmax(0, 1fr) 54px !important;
+    align-items: center !important;
+    column-gap: 12px !important;
+    min-height: 64px !important;
+    width: 100% !important;
+    padding: 0 16px !important;
+    margin-bottom: 9px !important;
+    border-radius: 20px !important;
+    text-decoration: none !important;
+    color: #f4f1ff !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    transition: 0.18s ease !important;
+  }
+
+  .legendary-nav-item:hover,
+  .legendary-nav-item.active {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.34), rgba(6, 182, 212, 0.16)) !important;
+    border-color: rgba(139, 92, 246, 0.42) !important;
+    transform: translateX(2px) !important;
+  }
+
+  .legendary-nav-icon {
+    font-size: 24px !important;
+    line-height: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+  }
+
+  .legendary-nav-label {
+    min-width: 0 !important;
+    color: #f4f1ff !important;
+    font-size: 16px !important;
+    font-weight: 950 !important;
+    line-height: 1.14 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .legendary-nav-badge {
+    justify-self: end !important;
+    width: 46px !important;
+    min-width: 46px !important;
+    max-width: 46px !important;
+    height: 36px !important;
+    border-radius: 999px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    font-size: 0 !important;
+    font-weight: 950 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+  }
+
+  .legendary-nav-badge.live {
+    width: 62px !important;
+    min-width: 62px !important;
+    max-width: 62px !important;
+    font-size: 12px !important;
+    color: #5cffd6 !important;
+    background: rgba(20, 184, 166, 0.2) !important;
+    border: 1px solid rgba(20, 184, 166, 0.48) !important;
+  }
+
+  .legendary-nav-badge.soon {
+    width: 62px !important;
+    min-width: 62px !important;
+    max-width: 62px !important;
+    font-size: 12px !important;
+    color: #ffd66b !important;
+    background: rgba(245, 158, 11, 0.18) !important;
+    border: 1px solid rgba(245, 158, 11, 0.45) !important;
+  }
+
+  .legendary-nav-badge.premium,
+  .legendary-nav-badge.owner {
+    color: #ffd66b !important;
+    background: rgba(245, 158, 11, 0.18) !important;
+    border: 1px solid rgba(245, 158, 11, 0.45) !important;
+  }
+
+  .legendary-nav-badge.premium::before {
+    content: "🔒" !important;
+    font-size: 15px !important;
+  }
+
+  .legendary-nav-badge.owner::before {
+    content: "👑" !important;
+    font-size: 15px !important;
+  }
+
+  #sidebar-hover-card {
+    position: fixed;
+    left: 414px;
+    top: 180px;
+    width: 330px;
+    padding: 16px 18px;
+    border-radius: 18px;
+    background: rgba(12, 13, 31, 0.98);
+    border: 1px solid rgba(139, 92, 246, 0.42);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.42);
+    color: #fff;
+    z-index: 999999;
+    opacity: 0;
+    transform: translateX(-8px);
+    pointer-events: none;
+    transition: 0.16s ease;
+  }
+
+  #sidebar-hover-card.show {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  #sidebar-hover-card::before {
+    content: "";
+    position: absolute;
+    left: -7px;
+    top: 28px;
+    width: 14px;
+    height: 14px;
+    transform: rotate(45deg);
+    background: rgba(12, 13, 31, 0.98);
+    border-left: 1px solid rgba(139, 92, 246, 0.42);
+    border-bottom: 1px solid rgba(139, 92, 246, 0.42);
+  }
+
+  .sidebar-hover-title {
+    display: block;
+    font-size: 16px;
+    font-weight: 1000;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    color: #ffffff;
+  }
+
+  .sidebar-hover-desc {
+    display: block;
+    font-size: 13px;
+    line-height: 1.5;
+    font-weight: 650;
+    color: #cfcdf6;
+  }
+
+  @media (max-width: 1000px) {
+    .app-shell {
+      display: block !important;
+      min-height: 100vh !important;
+    }
+
+    .sidebar {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: none !important;
+      height: auto !important;
+      max-height: none !important;
+      position: relative !important;
+      overflow-x: hidden !important;
+    }
+
+    .main-content {
+      width: 100% !important;
+      min-width: 0 !important;
+    }
+
+    #sidebar-hover-card {
+      display: none !important;
+    }
+  }
+</style>
+
+<aside class="sidebar">
+  <div class="sidebar-inner legendary-sidebar-wrap">
+    <a href="/dashboard" class="legendary-brand-card">
+      <% if (botBanner) { %>
+        <div
+          class="legendary-brand-banner"
+          style="background-image: url('<%= botBanner %>');"
+        >
+          <img src="<%= botAvatar %>" class="legendary-brand-avatar" alt="Bot Avatar" />
+          <div class="legendary-brand-text">
+            <h1><%= botName || "Legendary Bot" %></h1>
+            <p>Dashboard</p>
+          </div>
+        </div>
+      <% } else { %>
+        <div class="legendary-brand-simple">
+          <img src="<%= botAvatar %>" class="legendary-brand-avatar" alt="Bot Avatar" />
+          <div class="legendary-brand-text">
+            <h1><%= botName || "Legendary Bot" %></h1>
+            <p>Dashboard</p>
+          </div>
+        </div>
+      <% } %>
+    </a>
+
+    <a href="/switch-server" class="legendary-server-card" title="Switch server">
+      <img src="<%= guildIcon %>" class="legendary-server-icon" alt="Server Icon" />
+      <div class="legendary-server-info">
+        <h2><%= guildName || "No Server Selected" %></h2>
+        <p>Connected Server</p>
+      </div>
+    </a>
+
+    <nav class="legendary-nav">
+      <% (navSections || []).forEach(section => { %>
+        <div class="legendary-nav-section">
+          <div class="legendary-nav-title"><%= section.title %></div>
+
+          <% (section.items || []).forEach(item => {
+            const isActive = currentPage === item.key;
+            const tooltipTitle = item.label || "Dashboard Module";
+            const tooltipDesc = item.desc || "Manage this dashboard section.";
+            const badgeText = item.badge || "";
+            let badgeClass = "soon";
+
+            if (badgeText.toLowerCase() === "live") badgeClass = "live";
+            if (badgeText.toLowerCase() === "soon") badgeClass = "soon";
+            if (badgeText.toLowerCase() === "premium") badgeClass = "premium";
+            if (badgeText.toLowerCase() === "owner") badgeClass = "owner";
+          %>
+            <a
+              href="<%= item.href %>"
+              class="legendary-nav-item <%= isActive ? 'active' : '' %>"
+              title="<%= tooltipTitle %>"
+              data-tooltip-title="<%= tooltipTitle %>"
+              data-tooltip-desc="<%= tooltipDesc %>"
+            >
+              <span class="legendary-nav-icon"><%= item.icon %></span>
+              <span class="legendary-nav-label"><%= item.label %></span>
+
+              <% if (badgeText) { %>
+                <span class="legendary-nav-badge <%= badgeClass %>"><%= badgeText %></span>
+              <% } %>
+            </a>
+          <% }) %>
+        </div>
+      <% }) %>
+    </nav>
+  </div>
+</aside>
+
+<div id="sidebar-hover-card">
+  <span class="sidebar-hover-title"></span>
+  <span class="sidebar-hover-desc"></span>
+</div>
+
+<script>
+  (() => {
+    const card = document.getElementById("sidebar-hover-card");
+    if (!card) return;
+
+    const title = card.querySelector(".sidebar-hover-title");
+    const desc = card.querySelector(".sidebar-hover-desc");
+
+    document.querySelectorAll(".legendary-nav-item").forEach((item) => {
+      item.addEventListener("mouseenter", () => {
+        title.textContent = item.dataset.tooltipTitle || "Dashboard Module";
+        desc.textContent = item.dataset.tooltipDesc || "Manage this dashboard section.";
+
+        const rect = item.getBoundingClientRect();
+        const desiredTop = Math.max(18, Math.min(window.innerHeight - 170, rect.top - 6));
+        card.style.top = desiredTop + "px";
+        card.classList.add("show");
+      });
+
+      item.addEventListener("mouseleave", () => {
+        card.classList.remove("show");
+      });
+    });
+
+    window.addEventListener("scroll", () => card.classList.remove("show"), true);
+    window.addEventListener("resize", () => card.classList.remove("show"));
+  })();
+</script>
+

@@ -1,0 +1,71 @@
+const $ = (selector) => document.querySelector(selector);
+
+const STORAGE = { name: 'reflexRushPlayerName', sound: 'reflexRushSound', history: 'reflexRushHistory' };
+const LIVE_URL = 'https://mrxavier53.github.io/Reflex-Rush/';
+const CREATOR_URL = 'https://github.com/mrxavier53';
+
+const state = {
+  playerName: localStorage.getItem(STORAGE.name) || '',
+  soundEnabled: localStorage.getItem(STORAGE.sound) !== 'off',
+  attempts: JSON.parse(localStorage.getItem(STORAGE.history) || '[]'),
+  phase: 'idle', waitTimer: null, goTime: 0, audio: null, lastResult: null
+};
+
+const zone = $('#reaction-zone');
+const zoneIcon = $('#zone-icon');
+const zoneTitle = $('#zone-title');
+const zoneSubtitle = $('#zone-subtitle');
+const resultArea = $('#result-area');
+const nameScreen = $('#name-screen');
+const playerNameInput = $('#player-name');
+const appShell = $('#app-shell');
+const confettiCanvas = $('#confetti-canvas');
+const ctx = confettiCanvas.getContext('2d');
+
+function persist() { localStorage.setItem(STORAGE.name, state.playerName); localStorage.setItem(STORAGE.sound, state.soundEnabled ? 'on' : 'off'); localStorage.setItem(STORAGE.history, JSON.stringify(state.attempts)); }
+
+// Requested ranking: 300–320 ms is the top displayed Elite range.
+// Faster valid scores are also kept in Elite so a lower time is never punished.
+function rankFor(ms) {
+  if (ms <= 320) return { label: 'ELITE', stars: '★★★★★', icon: '⚡', tone: 'elite' };
+  if (ms <= 330) return { label: 'NORMAL', stars: '★★★★☆', icon: '✓', tone: 'normal' };
+  if (ms <= 350) return { label: 'SHARP', stars: '★★★☆☆', icon: '✦', tone: 'sharp' };
+  if (ms <= 380) return { label: 'STEADY', stars: '★★☆☆☆', icon: '◈', tone: 'steady' };
+  if (ms <= 420) return { label: 'TRAINING', stars: '★☆☆☆☆', icon: '◌', tone: 'training' };
+  return { label: 'KEEP PRACTICING', stars: '☆☆☆☆☆', icon: '↻', tone: 'practice' };
+}
+
+function cleanAttempts() { return state.attempts.filter((item) => !item.falseStart); }
+function bestAttempt() { const clean = cleanAttempts(); return clean.length ? clean.reduce((best, item) => item.ms < best.ms ? item : best) : null; }
+function currentAttempt() { return state.lastResult || cleanAttempts()[0] || null; }
+
+function initAudio() { if (!state.soundEnabled) return null; if (!state.audio) state.audio = new (window.AudioContext || window.webkitAudioContext)(); if (state.audio.state === 'suspended') state.audio.resume().catch(() => {}); return state.audio; }
+function tone(freq, duration, volume=.07, type='sine', slide=null) { const audio=initAudio(); if(!audio)return; const now=audio.currentTime; const osc=audio.createOscillator(); const gain=audio.createGain(); osc.type=type; osc.frequency.setValueAtTime(freq,now); if(slide)osc.frequency.exponentialRampToValueAtTime(Math.max(slide,1),now+duration); gain.gain.setValueAtTime(volume,now); gain.gain.exponentialRampToValueAtTime(.00001,now+duration); osc.connect(gain); gain.connect(audio.destination); osc.start(now); osc.stop(now+duration); }
+function sound(kind) { if(!state.soundEnabled)return; if(kind==='start')tone(280,.09,.055,'square',360); if(kind==='go'){tone(620,.12,.08,'sine',850);setTimeout(()=>tone(880,.13,.065,'sine',1080),70)} if(kind==='false')tone(120,.22,.10,'sawtooth',68); if(kind==='result'){tone(560,.09,.06,'triangle',720);setTimeout(()=>tone(760,.15,.06,'triangle',1000),70)} if(kind==='record'){tone(620,.11,.08,'sine',860);setTimeout(()=>tone(880,.13,.08,'sine',1150),95);setTimeout(()=>tone(1110,.20,.08,'sine',1380),195)} }
+
+function setZone(phase) { state.phase=phase; zone.className=`reaction-zone state-${phase}`; const text={idle:['⚡','CLICK TO START','Get ready for the green flash'],waiting:['⏳','WAIT...','Do not click yet'],go:['GO!','CLICK NOW!','React as fast as you can'],false:['✕','FALSE START','You clicked before green — try again']}[phase]; zoneIcon.textContent=text[0]; zoneTitle.textContent=text[1]; zoneSubtitle.textContent=text[2]; }
+function startRound(){clearTimeout(state.waitTimer);setZone('waiting');resultArea.innerHTML='<div class="result-placeholder">Waiting for the green signal...</div>';sound('start');state.waitTimer=setTimeout(()=>{setZone('go');state.goTime=performance.now();sound('go')},1500+Math.random()*3500)}
+function falseStart(){clearTimeout(state.waitTimer);setZone('false');sound('false');resultArea.innerHTML='<div class="result-box record-pop"><div class="result-ms">TOO EARLY</div><div class="result-rank">FALSE START — wait for green.</div></div>';setTimeout(()=>setZone('idle'),1150)}
+function finishRound(){const ms=Math.round(performance.now()-state.goTime);const previousBest=bestAttempt();const isRecord=!previousBest||ms<previousBest.ms;const rank=rankFor(ms);const attempt={id:Date.now(),ms,rank:rank.label,stars:rank.stars,date:new Date().toLocaleString(),falseStart:false};state.attempts.unshift(attempt);state.attempts=state.attempts.slice(0,40);state.lastResult=attempt;persist();setZone('idle');sound(isRecord?'record':'result');resultArea.innerHTML=`<div class="result-box ${isRecord?'record-pop':''}">${isRecord?'<p class="eyebrow">NEW PERSONAL RECORD! 🎉</p>':'<p class="eyebrow">REACTION TIME</p>'}<div class="result-ms">${ms} ms</div><div class="result-rank">${rank.icon} ${rank.label}</div><div class="result-stars">${rank.stars}</div></div>`;$('#certificate-btn').disabled=false;if(isRecord)launchConfetti();renderAll()}
+function handleZoneClick(){initAudio();if(state.phase==='idle'||state.phase==='false')startRound();else if(state.phase==='waiting')falseStart();else if(state.phase==='go')finishRound()}
+
+function renderAll(){const best=bestAttempt();const current=currentAttempt();$('#display-name').textContent=(state.playerName||'PLAYER').toUpperCase();$('#best-score').textContent=best?`${best.ms} ms`:'--';$('#best-rank').textContent=best?`${best.rank} ${best.stars}`:'No score yet';$('#last-score').textContent=current?`${current.ms} ms`:'--';$('#last-rank').textContent=current?current.rank:'Ready when you are';$('#rank-stars').textContent=best?best.stars:'☆☆☆☆☆';$('#rank-label').textContent=best?best.rank:'UNRANKED';$('#attempt-count').textContent=`${state.attempts.length} attempt${state.attempts.length===1?'':'s'}`;$('#sound-toggle').innerHTML=`${state.soundEnabled?'🔊':'🔇'} <span>Sound: ${state.soundEnabled?'ON':'OFF'}</span>`;$('#sound-toggle').setAttribute('aria-pressed',String(state.soundEnabled));const latest=cleanAttempts().slice(0,5);$('#recent-list').innerHTML=latest.length?latest.map(item=>`<div class="attempt-chip"><strong>${item.ms} ms</strong><span>${item.rank} ${item.stars}</span></div>`).join(''):'<div class="empty-attempts">No attempts yet. Click the arena to begin.</div>';$('#history-summary').innerHTML=best?`<strong>${escapeHtml(state.playerName||'Player')}’s best:</strong> ${best.ms} ms — ${best.rank} ${best.stars}`:'Play your first round to create a personal record.';$('#history-list').innerHTML=cleanAttempts().length?cleanAttempts().map(item=>`<div class="history-item"><strong>${item.ms} ms</strong><span>${item.rank} ${item.stars}</span><span>${item.date}</span></div>`).join(''):'<div class="history-empty">No clean attempts recorded yet.</div>'}
+function escapeHtml(value){const d=document.createElement('div');d.textContent=value;return d.innerHTML}
+function openHistory(){$('#history-panel').classList.add('open');$('#panel-overlay').classList.add('visible');$('#history-toggle').setAttribute('aria-expanded','true')}
+function closeHistory(){$('#history-panel').classList.remove('open');$('#panel-overlay').classList.remove('visible');$('#history-toggle').setAttribute('aria-expanded','false')}
+function makeParticles(){const box=$('#particles');for(let i=0;i<42;i++){const el=document.createElement('i');el.className='particle';el.style.left=`${Math.random()*100}%`;el.style.animationDuration=`${8+Math.random()*13}s`;el.style.animationDelay=`${-Math.random()*18}s`;el.style.opacity=`${.22+Math.random()*.7}`;box.appendChild(el)}}
+function launchConfetti(){const ratio=devicePixelRatio||1;confettiCanvas.width=innerWidth*ratio;confettiCanvas.height=innerHeight*ratio;confettiCanvas.style.width=`${innerWidth}px`;confettiCanvas.style.height=`${innerHeight}px`;ctx.setTransform(ratio,0,0,ratio,0,0);const colors=['#38f465','#bcff39','#f4ff70','#8affc0','#ffffff'];const bits=Array.from({length:150},()=>({x:innerWidth/2,y:innerHeight/2,vx:(Math.random()-.5)*16,vy:-4-Math.random()*12,size:4+Math.random()*6,color:colors[Math.floor(Math.random()*colors.length)],rot:Math.random()*Math.PI}));let frame=0;function animate(){ctx.clearRect(0,0,innerWidth,innerHeight);bits.forEach(b=>{b.x+=b.vx;b.y+=b.vy;b.vy+=.28;b.vx*=.992;b.rot+=.15;ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.rot);ctx.fillStyle=b.color;ctx.fillRect(-b.size/2,-b.size/2,b.size,b.size*.65);ctx.restore()});frame++;if(frame<100)requestAnimationFrame(animate);else ctx.clearRect(0,0,innerWidth,innerHeight)}animate()}
+
+function openCertificateChooser(){const best=bestAttempt();const current=currentAttempt();if(!best&&!current)return;const options=[];if(best)options.push({key:'best',label:'Best Result',result:best,extra:'Your fastest saved clean attempt'});if(current && (!best || current.id!==best.id))options.push({key:'current',label:'Current Result',result:current,extra:'Your most recent completed attempt'});const box=$('#certificate-options');box.innerHTML=options.map(opt=>`<button class="certificate-choice" type="button" data-choice="${opt.key}"><b>${opt.label} — ${opt.result.ms} ms</b><span>${opt.result.rank} ${opt.result.stars} · ${opt.extra}</span></button>`).join('');box.querySelectorAll('[data-choice]').forEach(btn=>btn.addEventListener('click',()=>{const option=options.find(o=>o.key===btn.dataset.choice);closeCertificateChooser();downloadCertificate(option.result)}));$('#certificate-modal').classList.add('open');$('#certificate-modal').setAttribute('aria-hidden','false')}
+function closeCertificateChooser(){$('#certificate-modal').classList.remove('open');$('#certificate-modal').setAttribute('aria-hidden','true')}
+function drawStar(c,x,y,r,fill){c.save();c.translate(x,y);c.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5;const rad=i%2? r*.45:r;c.lineTo(Math.cos(a)*rad,Math.sin(a)*rad)}c.closePath();c.fillStyle=fill;c.fill();c.restore()}
+function roundedRect(c,x,y,w,h,r){c.beginPath();c.roundRect(x,y,w,h,r)}
+function downloadCertificate(result){if(!result)return;const canvas=document.createElement('canvas');canvas.width=1800;canvas.height=1200;const c=canvas.getContext('2d');const rank=rankFor(result.ms);const g=c.createLinearGradient(0,0,1800,1200);g.addColorStop(0,'#020e06');g.addColorStop(.5,'#0b3317');g.addColorStop(1,'#020b05');c.fillStyle=g;c.fillRect(0,0,1800,1200);for(let i=0;i<170;i++){c.fillStyle=`rgba(110,255,145,${Math.random()*.07})`;c.fillRect(Math.random()*1800,Math.random()*1200,2,2)};c.strokeStyle='#d9b95a';c.lineWidth=18;c.strokeRect(48,48,1704,1104);c.strokeStyle='rgba(255,230,137,.78)';c.lineWidth=3;c.strokeRect(76,76,1648,1048);c.strokeStyle='rgba(56,244,101,.55)';c.lineWidth=4;c.beginPath();c.moveTo(160,190);c.lineTo(1640,190);c.moveTo(160,1010);c.lineTo(1640,1010);c.stroke();c.textAlign='center';c.fillStyle='#e8c96d';c.font='900 88px Georgia';c.fillText('CERTIFICATE',900,255);c.font='700 32px Georgia';c.fillText('OF REFLEX ACHIEVEMENT',900,305);c.fillStyle='#f1ecd8';c.font='500 30px Georgia';c.fillText('THIS CERTIFIES THAT',900,410);c.fillStyle='#75ff6c';c.font='italic 900 102px Georgia';c.fillText(state.playerName||'Player',900,525);c.fillStyle='#f1ecd8';c.font='500 30px Georgia';c.fillText('HAS ACHIEVED A REACTION TIME OF',900,610);c.fillStyle='#bcff39';c.font='900 124px Arial';c.fillText(`${result.ms} ms`,900,750);roundedRect(c,640,792,520,130,20);c.fillStyle='rgba(1,22,8,.82)';c.fill();c.strokeStyle='#d9b95a';c.lineWidth=4;c.stroke();c.fillStyle='#e8c96d';c.font='800 34px Arial';c.fillText(`${rank.icon}  ${rank.label}`,900,842);c.fillStyle='#f4ff70';c.font='42px Arial';c.fillText(rank.stars,900,890);drawStar(c,250,900,46,'#d9b95a');c.fillStyle='#f1ecd8';c.font='26px Arial';c.fillText(`Completed: ${new Date().toLocaleDateString()}`,900,996);c.font='700 28px Arial';c.fillStyle='#e8c96d';c.fillText('Reflex Rush by Xavier',900,1060);c.fillStyle='#98ffc1';c.font='22px Arial';c.fillText(LIVE_URL,900,1100);const a=document.createElement('a');a.download=`reflex-rush-certificate-${(state.playerName||'player').replace(/[^a-z0-9_-]/gi,'_')}-${result.ms}ms.png`;a.href=canvas.toDataURL('image/png');a.click()}
+
+$('#enter-game').addEventListener('click',()=>{const name=playerNameInput.value.trim();if(!name){playerNameInput.focus();playerNameInput.placeholder='Please enter a name first';return}state.playerName=name;persist();nameScreen.classList.add('hidden');appShell.hidden=false;renderAll()});
+$('#change-name').addEventListener('click',()=>{playerNameInput.value=state.playerName;nameScreen.classList.remove('hidden')});
+$('#history-toggle').addEventListener('click',openHistory);$('#history-close').addEventListener('click',closeHistory);$('#panel-overlay').addEventListener('click',closeHistory);
+$('#sound-toggle').addEventListener('click',()=>{state.soundEnabled=!state.soundEnabled;persist();if(state.soundEnabled){initAudio();tone(660,.08,.06,'sine',850)}renderAll()});
+$('#clear-history').addEventListener('click',()=>{if(confirm('Clear all saved reaction attempts on this device?')){state.attempts=[];state.lastResult=null;persist();$('#certificate-btn').disabled=true;renderAll()}});
+$('#play-again').addEventListener('click',startRound);$('#certificate-btn').addEventListener('click',openCertificateChooser);$('#certificate-close').addEventListener('click',closeCertificateChooser);$('#certificate-cancel').addEventListener('click',closeCertificateChooser);$('#certificate-modal').addEventListener('click',(e)=>{if(e.target.id==='certificate-modal')closeCertificateChooser()});zone.addEventListener('click',handleZoneClick);window.addEventListener('resize',()=>ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height));
+playerNameInput.value=state.playerName;makeParticles();renderAll();if(state.playerName){nameScreen.classList.add('hidden');appShell.hidden=false}if('serviceWorker' in navigator)navigator.serviceWorker.register('service-worker.js').catch(()=>{});

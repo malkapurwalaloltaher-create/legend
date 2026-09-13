@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Legendary Command Center</title>
+  <link rel="icon" type="image/png" href="/favicon.png"/>
+  <link rel="stylesheet" href="/style.css"/>
+  <style>
+    :root {
+      --bg: #080a13;
+      --rail: #060711;
+      --side: #111421;
+      --chat: #0c0f1e;
+      --panel: #15192b;
+      --soft: rgba(255,255,255,0.075);
+      --border: rgba(255,255,255,0.105);
+      --text: #f8fafc;
+      --muted: rgba(226,232,240,0.68);
+      --purple: #8b5cf6;
+      --cyan: #22d3ee;
+      --green: #22c55e;
+      --red: #ef4444;
+      --discord: #5865f2;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input, textarea, select { font: inherit; }
+
+    .lc-app {
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 72px 260px minmax(0, 1fr) 280px;
+      background: var(--bg);
+    }
+
+    .lc-rail {
+      background: #060711;
+      border-right: 1px solid var(--border);
+      padding: 12px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 11px;
+      min-height: 0;
+    }
+
+    .lc-logo, .lc-guild-bubble {
+      width: 50px;
+      height: 50px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 1000;
+      transition: border-radius .18s ease, transform .18s ease;
+    }
+
+    .lc-logo:hover, .lc-guild-bubble:hover {
+      border-radius: 15px;
+      transform: translateY(-1px);
+    }
+
+    .lc-logo {
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      box-shadow: 0 18px 44px rgba(139,92,246,.30);
+      font-size: 24px;
+    }
+
+    .lc-guild-bubble {
+      background: var(--panel);
+      border: 1px solid var(--border);
+    }
+
+    .lc-guild-bubble img { width: 100%; height: 100%; object-fit: cover; }
+
+    .lc-sidebar {
+      min-width: 0;
+      background: #111421;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .lc-guild-head {
+      height: 56px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(0,0,0,.35);
+      box-shadow: 0 1px 0 rgba(255,255,255,.04);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
+    .lc-guild-title {
+      font-size: .94rem;
+      font-weight: 1000;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .lc-guild-sub {
+      color: var(--muted);
+      font-size: .72rem;
+      margin-top: 2px;
+    }
+
+    .lc-channel-search {
+      padding: 10px 10px 8px;
+      flex: 0 0 auto;
+    }
+
+    .lc-search-input {
+      width: 100%;
+      border: 1px solid transparent;
+      background: rgba(0,0,0,.22);
+      color: #fff;
+      outline: none;
+      border-radius: 8px;
+      padding: 9px 10px;
+      font-weight: 800;
+      font-size: .86rem;
+    }
+
+    .lc-channel-list {
+      overflow: auto;
+      flex: 1;
+      min-height: 0;
+      padding: 4px 8px 10px;
+    }
+
+    .lc-category {
+      margin: 13px 0 5px;
+      padding: 0 6px;
+      color: rgba(226,232,240,.48);
+      font-size: .69rem;
+      font-weight: 1000;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .lc-channel {
+      width: 100%;
+      border: 0;
+      border-radius: 7px;
+      padding: 7px 8px;
+      background: transparent;
+      color: rgba(226,232,240,.70);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-align: left;
+      cursor: pointer;
+      font-weight: 800;
+      margin: 2px 0;
+      min-width: 0;
+    }
+
+    .lc-channel span:last-child {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lc-channel:hover { background: rgba(255,255,255,.07); color: #fff; }
+    .lc-channel.active { background: rgba(255,255,255,.11); color: #fff; }
+
+    .lc-main {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: 56px minmax(0, 1fr) auto;
+      background: #0c0f1e;
+      min-height: 0;
+    }
+
+    .lc-chat-head {
+      border-bottom: 1px solid var(--border);
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #0f1324;
+      min-width: 0;
+    }
+
+    .lc-chat-title { min-width: 0; flex: 1; }
+    .lc-chat-title strong { display: block; font-size: 1rem; font-weight: 1000; }
+    .lc-chat-title span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: .78rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lc-actions { display: flex; gap: 8px; }
+    .lc-btn {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.075);
+      color: #fff;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: .84rem;
+    }
+    .lc-btn:hover { border-color: rgba(34,211,238,.55); background: rgba(34,211,238,.12); }
+
+    .lc-icon-btn {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color: #fff;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 1000;
+    }
+
+    .lc-messages {
+      overflow: auto;
+      padding: 12px 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-height: 0;
+    }
+
+    .lc-empty {
+      margin: auto;
+      max-width: 560px;
+      text-align: center;
+      color: var(--muted);
+    }
+    .lc-empty h2 {
+      margin: 0 0 10px;
+      color: #fff;
+      font-size: clamp(2rem, 3.7vw, 4.3rem);
+      letter-spacing: -.08em;
+      line-height: .9;
+    }
+
+    .lc-load-older {
+      align-self: center;
+      margin-bottom: 10px;
+      border: 1px solid rgba(139,92,246,.36);
+      background: rgba(139,92,246,.13);
+      color: #fff;
+      border-radius: 999px;
+      padding: 8px 13px;
+      cursor: pointer;
+      font-weight: 1000;
+      font-size: .82rem;
+    }
+
+    .lc-message {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      gap: 10px;
+      padding: 7px 8px;
+      border-radius: 8px;
+      position: relative;
+    }
+    .lc-message:hover { background: rgba(255,255,255,.045); }
+    .lc-message:hover .lc-msg-buttons { opacity: 1; }
+
+    .lc-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(139,92,246,.48), rgba(34,211,238,.35));
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      font-weight: 1000;
+      cursor: pointer;
+    }
+    .lc-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .lc-msg-top {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      min-width: 0;
+    }
+    .lc-author { color: #fff; font-weight: 1000; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+    .lc-bot { font-size: .65rem; padding: 2px 5px; border-radius: 5px; background: var(--discord); color: #fff; font-weight: 1000; }
+    .lc-time { color: rgba(226,232,240,.40); font-size: .72rem; white-space: nowrap; }
+    .lc-content { margin-top: 2px; white-space: pre-wrap; word-break: break-word; line-height: 1.42; color: rgba(248,250,252,.90); }
+
+    .lc-msg-buttons {
+      position: absolute;
+      right: 10px;
+      top: -10px;
+      display: flex;
+      gap: 6px;
+      opacity: 0;
+      background: #111421;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 4px;
+      box-shadow: 0 12px 26px rgba(0,0,0,.25);
+    }
+    .lc-msg-buttons .lc-btn { padding: 5px 8px; border-radius: 7px; font-size: .72rem; }
+
+    .lc-attachments { margin-top: 7px; display: flex; flex-wrap: wrap; gap: 7px; }
+    .lc-attachment {
+      color: #bfdbfe;
+      text-decoration: none;
+      border: 1px solid rgba(59,130,246,.25);
+      background: rgba(59,130,246,.10);
+      border-radius: 8px;
+      padding: 7px 9px;
+      font-weight: 850;
+      max-width: 260px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .lc-composer {
+      border-top: 1px solid var(--border);
+      padding: 10px 14px 14px;
+      background: #0f1324;
+      position: relative;
+    }
+
+    .lc-reply-box {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      border: 1px solid rgba(34,211,238,.25);
+      background: rgba(34,211,238,.08);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: .82rem;
+      font-weight: 850;
+      color: rgba(226,232,240,.86);
+    }
+    .lc-reply-box.show { display: flex; }
+
+    .lc-slash-menu {
+      display: none;
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: calc(100% - 4px);
+      max-height: 260px;
+      overflow: auto;
+      background: #15192b;
+      border: 1px solid rgba(139,92,246,.35);
+      border-radius: 14px;
+      box-shadow: 0 22px 60px rgba(0,0,0,.42);
+      padding: 8px;
+      z-index: 80;
+    }
+    .lc-slash-menu.show { display: block; }
+
+    .lc-command-item {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 9px;
+      border-radius: 10px;
+      cursor: pointer;
+      color: rgba(248,250,252,.92);
+    }
+    .lc-command-item:hover, .lc-command-item.active { background: rgba(88,101,242,.26); }
+    .lc-command-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(88,101,242,.28);
+      font-weight: 1000;
+    }
+    .lc-command-name { font-weight: 1000; }
+    .lc-command-desc { color: var(--muted); font-size: .78rem; margin-top: 2px; }
+
+    .lc-compose-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .lc-input {
+      width: 100%;
+      min-height: 48px;
+      max-height: 120px;
+      resize: vertical;
+      border: 1px solid transparent;
+      border-radius: 13px;
+      background: rgba(255,255,255,.075);
+      color: #fff;
+      outline: none;
+      padding: 13px 14px;
+      font-weight: 750;
+      line-height: 1.4;
+    }
+    .lc-input:focus { border-color: rgba(34,211,238,.50); }
+
+    .lc-send {
+      border: 0;
+      border-radius: 13px;
+      min-height: 48px;
+      padding: 0 16px;
+      background: var(--discord);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 1000;
+      box-shadow: 0 14px 30px rgba(88,101,242,.23);
+    }
+    .lc-send:disabled { opacity: .45; cursor: not-allowed; }
+
+    .lc-right {
+      min-width: 0;
+      background: #111421;
+      border-left: 1px solid var(--border);
+      display: grid;
+      grid-template-rows: 56px minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .lc-members-head {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 1000;
+    }
+
+    .lc-members-body {
+      min-height: 0;
+      overflow: auto;
+      padding: 10px;
+    }
+
+    .lc-card {
+      margin-bottom: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.045);
+      border: 1px solid var(--border);
+    }
+    .lc-card h3 { margin: 0 0 7px; font-size: .92rem; }
+    .lc-card p { margin: 0; color: var(--muted); font-size: .80rem; line-height: 1.4; }
+
+    .lc-member-row {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      padding: 8px;
+      border-radius: 9px;
+      cursor: pointer;
+      margin-top: 4px;
+      background: transparent;
+    }
+    .lc-member-row:hover, .lc-member-row.active { background: rgba(255,255,255,.075); }
+    .lc-member-row img { width: 34px; height: 34px; border-radius: 50%; }
+    .lc-member-name { min-width: 0; flex: 1; font-weight: 900; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .lc-member-sub { font-size: .72rem; color: var(--muted); }
+
+    .lc-field {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.075);
+      color: #fff;
+      outline: none;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-weight: 800;
+      margin-top: 7px;
+      font-size: .83rem;
+    }
+
+    .lc-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 9px; }
+    .lc-danger { background: rgba(239,68,68,.14); border-color: rgba(239,68,68,.35); }
+    .lc-good { background: rgba(34,197,94,.14); border-color: rgba(34,197,94,.35); }
+
+    .lc-tools-drawer {
+      display: none;
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: min(420px, calc(100vw - 40px));
+      max-height: min(640px, calc(100vh - 40px));
+      overflow: auto;
+      z-index: 100;
+      background: #111421;
+      border: 1px solid rgba(139,92,246,.35);
+      border-radius: 18px;
+      box-shadow: 0 30px 90px rgba(0,0,0,.55);
+      padding: 14px;
+    }
+    .lc-tools-drawer.show { display: block; }
+
+    .lc-popout {
+      display: none;
+      position: fixed;
+      right: 310px;
+      top: 72px;
+      width: 340px;
+      max-height: calc(100vh - 95px);
+      overflow: auto;
+      z-index: 110;
+      background: #111421;
+      border: 1px solid rgba(139,92,246,.35);
+      border-radius: 18px;
+      box-shadow: 0 30px 90px rgba(0,0,0,.55);
+    }
+    .lc-popout.show { display: block; }
+    .lc-popout-banner { height: 78px; background: linear-gradient(135deg, var(--purple), var(--cyan)); }
+    .lc-popout-content { padding: 0 14px 14px; }
+    .lc-popout-avatar {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      margin-top: -38px;
+      border: 6px solid #111421;
+      overflow: hidden;
+      background: var(--panel);
+    }
+    .lc-popout-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .lc-profile-name { font-size: 1.1rem; font-weight: 1000; margin-top: 8px; }
+    .lc-profile-id { color: var(--muted); font-size: .75rem; margin-top: 2px; }
+    .lc-role-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .lc-role-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.075);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: .76rem;
+      font-weight: 850;
+    }
+    .lc-role-remove {
+      border: 0;
+      background: transparent;
+      color: rgba(255,255,255,.70);
+      cursor: pointer;
+      font-weight: 1000;
+      padding: 0;
+    }
+
+    .lc-context-menu {
+      display: none;
+      position: fixed;
+      z-index: 140;
+      min-width: 190px;
+      background: #111421;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 6px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.45);
+    }
+    .lc-context-menu.show { display: block; }
+    .lc-context-menu button {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: #fff;
+      text-align: left;
+      border-radius: 8px;
+      padding: 9px 10px;
+      cursor: pointer;
+      font-weight: 850;
+      font-size: .84rem;
+    }
+    .lc-context-menu button:hover { background: rgba(255,255,255,.08); }
+    .lc-context-menu button.danger { color: #fecaca; }
+
+    .lc-toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 99999;
+      display: none;
+      min-width: 280px;
+      max-width: 440px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(15,23,42,.97);
+      border: 1px solid var(--border);
+      color: #fff;
+      font-weight: 900;
+      box-shadow: 0 20px 60px rgba(0,0,0,.34);
+    }
+    .lc-toast.show { display: block; }
+    .lc-toast.error { border-color: rgba(239,68,68,.58); background: rgba(69,10,10,.97); }
+    .lc-toast.success { border-color: rgba(34,197,94,.58); background: rgba(5,46,22,.97); }
+
+
+    .lc-server-menu { position: relative; min-width: 0; flex: 1; }
+    .lc-server-menu-btn { width: 100%; border: 0; background: transparent; color: #fff; text-align: left; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .lc-server-menu-panel { display: none; position: absolute; top: calc(100% + 10px); left: 0; width: 235px; background: #15192b; border: 1px solid rgba(139, 92, 246, .35); border-radius: 14px; padding: 7px; box-shadow: 0 24px 70px rgba(0,0,0,.50); z-index: 120; }
+    .lc-server-menu-panel.show { display: block; }
+    .lc-server-menu-panel button { width: 100%; border: 0; background: transparent; color: #fff; text-align: left; border-radius: 9px; padding: 10px 11px; cursor: pointer; font-weight: 850; }
+    .lc-server-menu-panel button:hover { background: rgba(255,255,255,.08); }
+    .lc-member-section { margin: 13px 0 5px; padding: 0 8px; color: rgba(226,232,240,.48); font-size: .68rem; font-weight: 1000; letter-spacing: .08em; text-transform: uppercase; display: flex; justify-content: space-between; gap: 8px; }
+    .lc-member-color-dot { width: 9px; height: 9px; border-radius: 99px; flex: 0 0 auto; box-shadow: 0 0 12px currentColor; }
+    .lc-mention-menu { display: none; position: absolute; left: 14px; right: 14px; bottom: calc(100% - 4px); max-height: 280px; overflow: auto; background: #15192b; border: 1px solid rgba(88,101,242,.40); border-radius: 14px; box-shadow: 0 22px 60px rgba(0,0,0,.42); padding: 8px; z-index: 85; }
+    .lc-mention-menu.show { display: block; }
+    .lc-mention-item { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center; padding: 8px; border-radius: 10px; cursor: pointer; color: rgba(248,250,252,.92); }
+    .lc-mention-item:hover { background: rgba(88,101,242,.26); }
+    .lc-mention-avatar { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; background: rgba(88,101,242,.25); display: grid; place-items: center; font-weight: 1000; }
+    .lc-mention-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .lc-dm-thread { max-height: 220px; overflow: auto; margin-top: 10px; padding: 8px; border: 1px solid var(--border); background: rgba(0,0,0,.16); border-radius: 12px; }
+    .lc-dm-line { padding: 7px 8px; border-radius: 9px; margin-bottom: 5px; background: rgba(255,255,255,.045); font-size: .8rem; line-height: 1.35; }
+
+    @media (max-width: 1180px) {
+      .lc-app { grid-template-columns: 72px 240px minmax(0,1fr); }
+      .lc-right { display: none; }
+      .lc-popout { right: 20px; }
+    }
+    @media (max-width: 760px) {
+      body { overflow: auto; }
+      .lc-app { height: auto; min-height: 100vh; grid-template-columns: 1fr; }
+      .lc-rail { display: none; }
+      .lc-sidebar { min-height: 280px; }
+      .lc-main { min-height: 720px; }
+      .lc-popout { left: 12px; right: 12px; width: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="lc-app">
+    <aside class="lc-rail">
+      <a class="lc-logo" href="<%= routeBase %>/dashboard" title="Dashboard">⚡</a>
+      <div class="lc-guild-bubble" title="<%= guildName %>">
+        <% if (guildIcon) { %><img src="<%= guildIcon %>" alt="<%= guildName %>"/><% } else { %><span>L</span><% } %>
+      </div>
+      <button class="lc-icon-btn" id="lcOpenTools" title="Server Builder">＋</button>
+    </aside>
+
+    <aside class="lc-sidebar">
+      <div class="lc-guild-head">
+        <div class="lc-server-menu">
+          <button class="lc-server-menu-btn" id="lcServerMenuBtn" type="button">
+            <div style="min-width:0;">
+              <div class="lc-guild-title"><%= guildName %></div>
+              <div class="lc-guild-sub">Legendary Bot</div>
+            </div>
+            <span>⌄</span>
+          </button>
+          <div class="lc-server-menu-panel" id="lcServerMenuPanel">
+            <button type="button" id="lcMenuCreateChannel">Create Channel</button>
+            <button type="button" id="lcMenuCreateCategory">Create Category</button>
+            <button type="button" id="lcMenuCreateRole">Create Role</button>
+            <button type="button" id="lcMenuServerSettings">Server Settings</button>
+          </div>
+        </div>
+        <button class="lc-icon-btn" id="lcBackBtn" type="button">⌂</button>
+      </div>
+      <div class="lc-channel-search">
+        <input id="lcChannelSearch" class="lc-search-input" placeholder="Find channel"/>
+      </div>
+      <div class="lc-channel-list" id="lcChannelList">
+        <div class="lc-category">Loading channels...</div>
+      </div>
+    </aside>
+
+    <main class="lc-main">
+      <header class="lc-chat-head">
+        <div class="lc-chat-title">
+          <strong id="lcChannelTitle"># select-a-channel</strong>
+          <span id="lcChannelTopic">Choose a channel to view messages and send as <%= botName %>.</span>
+        </div>
+        <div class="lc-actions">
+          <button class="lc-btn" id="lcRefreshBtn" type="button">Refresh</button>
+          <button class="lc-btn" id="lcOpenToolsTop" type="button">Tools</button>
+        </div>
+      </header>
+
+      <section class="lc-messages" id="lcMessages">
+        <div class="lc-empty">
+          <h2>Legendary Command Center</h2>
+          <p>Pick a channel. Type <b>/</b> to open the command list. Right-click a member for quick actions.</p>
+        </div>
+      </section>
+
+      <section class="lc-composer">
+        <div class="lc-slash-menu" id="lcSlashMenu"></div>
+        <div class="lc-mention-menu" id="lcMentionMenu"></div>
+        <div class="lc-reply-box" id="lcReplyBox">
+          <span id="lcReplyText">Replying...</span>
+          <button class="lc-btn" id="lcCancelReply" type="button">Cancel</button>
+        </div>
+        <div class="lc-compose-row">
+          <textarea class="lc-input" id="lcMessageInput" placeholder="Message #channel as <%= botName %>..." disabled></textarea>
+          <button class="lc-send" id="lcSendBtn" type="button" disabled>Send</button>
+        </div>
+      </section>
+    </main>
+
+    <aside class="lc-right">
+      <div class="lc-members-head">
+        <span>Members</span>
+        <button class="lc-icon-btn" id="lcRefreshMembers" type="button">↻</button>
+      </div>
+      <div class="lc-members-body">
+        <div class="lc-card">
+          <h3>Member Search</h3>
+          <input id="lcMemberSearch" class="lc-field" placeholder="Search username / ID..."/>
+        </div>
+        <div id="lcMemberResults"></div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="lc-tools-drawer" id="lcToolsDrawer">
+    <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:10px;">
+      <strong>Server Builder</strong>
+      <button class="lc-icon-btn" id="lcCloseTools">×</button>
+    </div>
+
+    <div class="lc-card">
+      <h3>DM Selected Member</h3>
+      <p id="lcSelectedMemberText">No member selected.</p>
+      <textarea id="lcDmText" class="lc-field" placeholder="DM this member as bot..."></textarea>
+      <button id="lcSendDmBtn" class="lc-btn lc-good" type="button" style="width:100%; margin-top:8px;">Send DM</button>
+    </div>
+
+    <div class="lc-card">
+      <h3>Moderation</h3>
+      <input id="lcReason" class="lc-field" placeholder="Reason..."/>
+      <select id="lcRoleSelect" class="lc-field"><option value="">Select role...</option></select>
+      <div class="lc-grid2">
+        <button class="lc-btn" data-member-action="timeout" type="button">Timeout</button>
+        <button class="lc-btn" data-member-action="untimeout" type="button">Untimeout</button>
+        <button class="lc-btn" data-member-action="addRole" type="button">Add Role</button>
+        <button class="lc-btn" data-member-action="removeRole" type="button">Remove Role</button>
+        <button class="lc-btn lc-danger" data-member-action="kick" type="button">Kick</button>
+        <button class="lc-btn lc-danger" data-member-action="ban" type="button">Ban</button>
+      </div>
+    </div>
+
+    <div class="lc-card">
+      <h3>Create Server Items</h3>
+      <input id="lcNewCategoryName" class="lc-field" placeholder="New category name..."/>
+      <button id="lcCreateCategoryBtn" class="lc-btn" type="button" style="width:100%; margin-top:8px;">Create Category</button>
+      <input id="lcNewChannelName" class="lc-field" placeholder="New channel name..."/>
+      <select id="lcNewChannelParent" class="lc-field"><option value="">No category</option></select>
+      <select id="lcNewChannelType" class="lc-field"><option value="text">Text Channel</option><option value="voice">Voice Channel</option></select>
+      <button id="lcCreateChannelBtn" class="lc-btn" type="button" style="width:100%; margin-top:8px;">Create Channel</button>
+      <input id="lcNewRoleName" class="lc-field" placeholder="New role name..."/>
+      <input id="lcNewRoleColor" class="lc-field" placeholder="#8b5cf6"/>
+      <button id="lcCreateRoleBtn" class="lc-btn" type="button" style="width:100%; margin-top:8px;">Create Role</button>
+    </div>
+
+    <div class="lc-card">
+      <h3>Voice / Music</h3>
+      <p id="lcVoiceStatus">Voice controls placeholder is ready. Full music engine needs the next dedicated music build.</p>
+    </div>
+  </div>
+
+  <div class="lc-popout" id="lcProfilePopout"></div>
+
+  <div class="lc-context-menu" id="lcContextMenu">
+    <button data-context-action="profile">View Profile</button>
+    <button data-context-action="dm">DM as Bot</button>
+    <button data-context-action="timeout">Timeout 10 min</button>
+    <button data-context-action="addRole">Add Selected Role</button>
+    <button data-context-action="removeRole">Remove Selected Role</button>
+    <button class="danger" data-context-action="kick">Kick</button>
+    <button class="danger" data-context-action="ban">Ban</button>
+  </div>
+
+  <div class="lc-toast" id="lcToast"></div>
+
+  <script type="application/json" id="ejs-data-dashboard-views-command-center-ejs-999-legendary-cc"><%- JSON.stringify({ routeBase: routeBase || "", guildId: guildId || "", botName: botName || "Legendary Bot" }).replace(/</g, "\u003c") %></script>
+
+  <script>
+    window.LEGENDARY_CC = JSON.parse(document.getElementById("ejs-data-dashboard-views-command-center-ejs-999-legendary-cc").textContent || "{}");
+  </script>
+
+  <script>
+    (() => {
+      const slashCommands = [
+        { name: "/weather", icon: "🌦️", usage: "/weather Dubai", desc: "Post weather request in public chat" },
+        { name: "/say", icon: "💬", usage: "/say hello everyone", desc: "Send a clean bot message" },
+        { name: "/ping", icon: "🏓", usage: "/ping", desc: "Show bot online status" },
+        { name: "/help", icon: "⚡", usage: "/help", desc: "Show Command Center commands" },
+      ];
+
+      const state = {
+        channelGroups: [],
+        roles: [],
+        commands: [],
+        memberGroups: [],
+        flatMembers: [],
+        selectedChannel: null,
+        selectedMember: null,
+        contextMember: null,
+        messages: new Map(),
+        newestId: "",
+        oldestId: "",
+        liveTimer: null,
+        replyToMessageId: "",
+        loading: false,
+      };
+
+      const el = (id) => document.getElementById(id);
+      const channelList = el("lcChannelList");
+      const channelSearch = el("lcChannelSearch");
+      const messagesEl = el("lcMessages");
+      const input = el("lcMessageInput");
+      const sendBtn = el("lcSendBtn");
+      const refreshBtn = el("lcRefreshBtn");
+      const backBtn = el("lcBackBtn");
+      const titleEl = el("lcChannelTitle");
+      const topicEl = el("lcChannelTopic");
+      const replyBox = el("lcReplyBox");
+      const replyText = el("lcReplyText");
+      const cancelReply = el("lcCancelReply");
+      const toast = el("lcToast");
+      const memberSearch = el("lcMemberSearch");
+      const memberResults = el("lcMemberResults");
+      const selectedMemberText = el("lcSelectedMemberText");
+      const dmText = el("lcDmText");
+      const sendDmBtn = el("lcSendDmBtn");
+      const reasonInput = el("lcReason");
+      const roleSelect = el("lcRoleSelect");
+      const voiceStatus = el("lcVoiceStatus");
+      const newCategoryName = el("lcNewCategoryName");
+      const createCategoryBtn = el("lcCreateCategoryBtn");
+      const newChannelName = el("lcNewChannelName");
+      const newChannelParent = el("lcNewChannelParent");
+      const newChannelType = el("lcNewChannelType");
+      const createChannelBtn = el("lcCreateChannelBtn");
+      const newRoleName = el("lcNewRoleName");
+      const newRoleColor = el("lcNewRoleColor");
+      const createRoleBtn = el("lcCreateRoleBtn");
+      const toolsDrawer = el("lcToolsDrawer");
+      const openTools = el("lcOpenTools");
+      const openToolsTop = el("lcOpenToolsTop");
+      const closeTools = el("lcCloseTools");
+      const profilePopout = el("lcProfilePopout");
+      const contextMenu = el("lcContextMenu");
+      const slashMenu = el("lcSlashMenu");
+      const mentionMenu = el("lcMentionMenu");
+      const refreshMembers = el("lcRefreshMembers");
+      const serverMenuBtn = el("lcServerMenuBtn");
+      const serverMenuPanel = el("lcServerMenuPanel");
+      const menuCreateChannel = el("lcMenuCreateChannel");
+      const menuCreateCategory = el("lcMenuCreateCategory");
+      const menuCreateRole = el("lcMenuCreateRole");
+      const menuServerSettings = el("lcMenuServerSettings");
+
+      function showToast(message, type = "success") {
+        toast.textContent = message;
+        toast.className = `lc-toast show ${type}`;
+        setTimeout(() => toast.classList.remove("show"), 3800);
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function formatTime(timestamp) {
+        try { return new Date(timestamp).toLocaleString(); } catch { return ""; }
+      }
+
+      async function api(path, options = {}) {
+        const response = await fetch(path, {
+          credentials: "same-origin",
+          headers: {
+            "Accept": "application/json",
+            ...(options.body ? { "Content-Type": "application/json" } : {}),
+            ...(options.headers || {}),
+          },
+          ...options,
+        });
+        const data = await response.json().catch(() => ({ ok: false, message: "Invalid server response" }));
+        if (!response.ok || data.ok === false) throw new Error(data.message || "Request failed");
+        return data;
+      }
+
+      function visibleChannel(channel) {
+        const q = channelSearch.value.trim().toLowerCase();
+        if (!q) return true;
+        return channel.name.toLowerCase().includes(q);
+      }
+
+      function renderChannels() {
+        channelList.innerHTML = "";
+        for (const group of state.channelGroups) {
+          const filtered = (group.channels || []).filter(visibleChannel);
+          if (!filtered.length && channelSearch.value.trim()) continue;
+
+          const cat = document.createElement("div");
+          cat.className = "lc-category";
+          cat.innerHTML = `<span>${escapeHtml(group.name)}</span><span>${filtered.length}</span>`;
+          channelList.appendChild(cat);
+
+          if (!filtered.length) {
+            const empty = document.createElement("div");
+            empty.className = "lc-channel";
+            empty.style.opacity = ".45";
+            empty.textContent = "— empty —";
+            channelList.appendChild(empty);
+            continue;
+          }
+
+          for (const channel of filtered) {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "lc-channel";
+            btn.dataset.channelId = channel.id;
+            btn.innerHTML = `<span>#</span><span>${escapeHtml(channel.name)}</span>`;
+            btn.addEventListener("click", () => selectChannel(channel));
+            channelList.appendChild(btn);
+          }
+        }
+        setActiveChannelButton();
+        renderCategoryOptions();
+      }
+
+      function setActiveChannelButton() {
+        document.querySelectorAll(".lc-channel").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.channelId === state.selectedChannel?.id);
+        });
+      }
+
+      function renderRoles() {
+        roleSelect.innerHTML = `<option value="">Select role...</option>` + state.roles.map((role) => (
+          `<option value="${escapeHtml(role.id)}">${escapeHtml(role.name)}</option>`
+        )).join("");
+      }
+
+      function renderCategoryOptions() {
+        const categories = state.channelGroups.filter((group) => group.id !== "no-category");
+        newChannelParent.innerHTML = `<option value="">No category</option>` + categories.map((group) => (
+          `<option value="${escapeHtml(group.id)}">${escapeHtml(group.name)}</option>`
+        )).join("");
+      }
+
+      function getCurrentToken() {
+        const beforeCursor = input.value.slice(0, input.selectionStart || input.value.length);
+        const match = beforeCursor.match(/(^|\s)([@#\/][^\s]*)$/);
+        if (!match) return null;
+        return {
+          token: match[2],
+          start: beforeCursor.length - match[2].length,
+          end: input.selectionStart || input.value.length,
+        };
+      }
+
+      function replaceCurrentToken(value) {
+        const token = getCurrentToken();
+        if (!token) return;
+        input.value = input.value.slice(0, token.start) + value + " " + input.value.slice(token.end);
+        const pos = token.start + value.length + 1;
+        input.setSelectionRange(pos, pos);
+        input.focus();
+      }
+
+      function renderSlashMenu() {
+        const token = getCurrentToken();
+        if (!token || !token.token.startsWith("/")) {
+          slashMenu.classList.remove("show");
+          return;
+        }
+
+        const query = token.token.toLowerCase();
+        const dynamicCommands = (state.commands || []).map((cmd) => ({
+          name: `/${cmd.name}`,
+          icon: "⚡",
+          usage: `/${cmd.name}`,
+          desc: cmd.description || "Legendary Bot command",
+        }));
+
+        const builtIns = slashCommands;
+        const merged = [...builtIns, ...dynamicCommands].filter((cmd, index, arr) =>
+          arr.findIndex((item) => item.name === cmd.name) === index
+        );
+
+        const list = merged.filter((cmd) => cmd.name.toLowerCase().includes(query)).slice(0, 25);
+
+        slashMenu.innerHTML = list.map((cmd) => `
+          <div class="lc-command-item" data-command="${escapeHtml(cmd.usage)}">
+            <div class="lc-command-icon">${escapeHtml(cmd.icon || "⚡")}</div>
+            <div>
+              <div class="lc-command-name">${escapeHtml(cmd.name)}</div>
+              <div class="lc-command-desc">${escapeHtml(cmd.desc || "Legendary Bot command")} • ${escapeHtml(cmd.usage)}</div>
+            </div>
+          </div>
+        `).join("");
+
+        slashMenu.querySelectorAll(".lc-command-item").forEach((item) => {
+          item.addEventListener("click", () => {
+            replaceCurrentToken(item.dataset.command || "");
+            slashMenu.classList.remove("show");
+            input.focus();
+          });
+        });
+
+        slashMenu.classList.toggle("show", Boolean(list.length));
+      }
+
+      function renderMentionMenu() {
+        const token = getCurrentToken();
+        if (!token || (!token.token.startsWith("@") && !token.token.startsWith("#"))) {
+          mentionMenu.classList.remove("show");
+          return;
+        }
+
+        const query = token.token.slice(1).toLowerCase();
+        let html = "";
+
+        if (token.token.startsWith("@")) {
+          const members = (state.flatMembers || [])
+            .filter((member) =>
+              !query ||
+              String(member.displayName || "").toLowerCase().includes(query) ||
+              String(member.username || "").toLowerCase().includes(query) ||
+              String(member.id || "").includes(query)
+            )
+            .slice(0, 15);
+
+          const roles = (state.roles || [])
+            .filter((role) => !query || String(role.name || "").toLowerCase().includes(query))
+            .slice(0, 10);
+
+          html += members.map((member) => `
+            <div class="lc-mention-item" data-insert="<@${escapeHtml(member.id)}>" data-kind="member">
+              <div class="lc-mention-avatar">${member.avatar ? `<img src="${escapeHtml(member.avatar)}" alt="avatar"/>` : escapeHtml((member.displayName || "?").slice(0,1))}</div>
+              <div>
+                <div class="lc-command-name" style="color:${escapeHtml(member.color || "#fff")}">${escapeHtml(member.displayName || member.username)}</div>
+                <div class="lc-command-desc">Member</div>
+              </div>
+              <span>@</span>
+            </div>
+          `).join("");
+
+          html += roles.map((role) => `
+            <div class="lc-mention-item" data-insert="<@&${escapeHtml(role.id)}>" data-kind="role">
+              <div class="lc-mention-avatar" style="color:${escapeHtml(role.color || "#99aab5")}">●</div>
+              <div>
+                <div class="lc-command-name" style="color:${escapeHtml(role.color || "#fff")}">${escapeHtml(role.name)}</div>
+                <div class="lc-command-desc">Role</div>
+              </div>
+              <span>@</span>
+            </div>
+          `).join("");
+        }
+
+        if (token.token.startsWith("#")) {
+          const channels = state.channelGroups
+            .flatMap((group) => group.channels || [])
+            .filter((channel) => !query || String(channel.name || "").toLowerCase().includes(query))
+            .slice(0, 20);
+
+          html += channels.map((channel) => `
+            <div class="lc-mention-item" data-insert="<#${escapeHtml(channel.id)}>" data-kind="channel">
+              <div class="lc-mention-avatar">#</div>
+              <div>
+                <div class="lc-command-name">${escapeHtml(channel.name)}</div>
+                <div class="lc-command-desc">Channel</div>
+              </div>
+              <span>#</span>
+            </div>
+          `).join("");
+        }
+
+        mentionMenu.innerHTML = html || `<div class="lc-command-desc" style="padding:10px;">No results found.</div>`;
+
+        mentionMenu.querySelectorAll(".lc-mention-item").forEach((item) => {
+          item.addEventListener("click", () => {
+            replaceCurrentToken(item.dataset.insert || "");
+            mentionMenu.classList.remove("show");
+            input.focus();
+          });
+        });
+
+        mentionMenu.classList.add("show");
+      }
+
+      function memberFromMessageAuthor(message) {
+        const author = message.author || {};
+        return {
+          id: author.id || "",
+          displayName: author.username || "Unknown",
+          username: author.username || "Unknown",
+          avatar: author.avatar || "",
+          roles: [],
+          bot: Boolean(author.bot),
+        };
+      }
+
+      function messageHtml(message) {
+        const author = message.author || {};
+        const avatar = author.avatar ? `<img src="${escapeHtml(author.avatar)}" alt="avatar"/>` : escapeHtml((author.username || "?").slice(0,1).toUpperCase());
+        const attachments = (message.attachments || []).length
+          ? `<div class="lc-attachments">${message.attachments.map(a => `<a class="lc-attachment" href="${escapeHtml(a.url)}" target="_blank" rel="noreferrer">${escapeHtml(a.name || "Attachment")}</a>`).join("")}</div>`
+          : "";
+        const content = message.cleanContent || message.content || (attachments ? "" : "[no text content]");
+
+        return `
+          <article class="lc-message" data-message-id="${escapeHtml(message.id)}" data-author-id="${escapeHtml(author.id || "")}" data-author-name="${escapeHtml(author.username || "Unknown")}" data-author-avatar="${escapeHtml(author.avatar || "")}">
+            <div class="lc-avatar lc-author-open">${avatar}</div>
+            <div>
+              <div class="lc-msg-top">
+                <span class="lc-author lc-author-open">${escapeHtml(author.username || "Unknown")}</span>
+                ${author.bot ? `<span class="lc-bot">BOT</span>` : ""}
+                <span class="lc-time">${escapeHtml(formatTime(message.createdTimestamp))}</span>
+              </div>
+              <div class="lc-content">${escapeHtml(content)}</div>
+              ${attachments}
+              <div class="lc-msg-buttons">
+                <button class="lc-btn lc-reply-btn" type="button" data-message-id="${escapeHtml(message.id)}" data-author="${escapeHtml(author.username || "Unknown")}">Reply</button>
+                <button class="lc-btn lc-delete-btn" type="button" data-message-id="${escapeHtml(message.id)}">Delete</button>
+              </div>
+            </div>
+          </article>`;
+      }
+
+      function mergeMessages(messages) {
+        for (const message of messages || []) state.messages.set(message.id, message);
+        const sorted = [...state.messages.values()].sort((a, b) => a.createdTimestamp - b.createdTimestamp);
+        state.oldestId = sorted[0]?.id || "";
+        state.newestId = sorted[sorted.length - 1]?.id || "";
+      }
+
+      function renderMessages({ keepScroll = false } = {}) {
+        const beforeHeight = messagesEl.scrollHeight;
+        const beforeScroll = messagesEl.scrollTop;
+        const messages = [...state.messages.values()].sort((a, b) => a.createdTimestamp - b.createdTimestamp);
+
+        if (!state.selectedChannel) {
+          messagesEl.innerHTML = `<div class="lc-empty"><h2>Legendary Command Center</h2><p>Pick a channel from the left.</p></div>`;
+          return;
+        }
+
+        messagesEl.innerHTML = `
+          <button class="lc-load-older" id="lcLoadOlderBtn" type="button">Load older messages</button>
+          ${messages.length ? messages.map(messageHtml).join("") : `<div class="lc-empty"><h2>#${escapeHtml(state.selectedChannel.name)}</h2><p>No messages found yet, or the bot cannot read message history.</p></div>`}
+        `;
+
+        el("lcLoadOlderBtn")?.addEventListener("click", loadOlderMessages);
+        messagesEl.querySelectorAll(".lc-reply-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            state.replyToMessageId = btn.dataset.messageId || "";
+            replyText.textContent = `Replying to ${btn.dataset.author || "message"}`;
+            replyBox.classList.add("show");
+            input.focus();
+          });
+        });
+        messagesEl.querySelectorAll(".lc-delete-btn").forEach((btn) => {
+          btn.addEventListener("click", () => deleteMessage(btn.dataset.messageId || ""));
+        });
+        messagesEl.querySelectorAll(".lc-message").forEach((row) => {
+          row.addEventListener("contextmenu", (event) => {
+            event.preventDefault();
+            const member = {
+              id: row.dataset.authorId,
+              displayName: row.dataset.authorName,
+              username: row.dataset.authorName,
+              avatar: row.dataset.authorAvatar,
+              roles: [],
+            };
+            openContextMenu(event.clientX, event.clientY, member);
+          });
+          row.querySelectorAll(".lc-author-open").forEach((item) => {
+            item.addEventListener("click", () => {
+              const member = {
+                id: row.dataset.authorId,
+                displayName: row.dataset.authorName,
+                username: row.dataset.authorName,
+                avatar: row.dataset.authorAvatar,
+                roles: [],
+              };
+              selectMember(member);
+              openProfile(member);
+            });
+          });
+        });
+
+        if (keepScroll) {
+          const afterHeight = messagesEl.scrollHeight;
+          messagesEl.scrollTop = beforeScroll + (afterHeight - beforeHeight);
+        } else {
+          messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+      }
+
+      async function selectChannel(channel) {
+        state.selectedChannel = channel;
+        state.messages.clear();
+        state.newestId = "";
+        state.oldestId = "";
+        state.replyToMessageId = "";
+        setActiveChannelButton();
+        titleEl.textContent = `# ${channel.name}`;
+        topicEl.textContent = channel.topic || "Live channel viewer powered by Legendary Bot.";
+        input.disabled = false;
+        sendBtn.disabled = false;
+        replyBox.classList.remove("show");
+        messagesEl.innerHTML = `<div class="lc-empty"><h2>Loading...</h2><p>Fetching recent messages.</p></div>`;
+        await loadRecentMessages();
+        startLivePolling();
+      }
+
+      async function loadRecentMessages() {
+        if (!state.selectedChannel) return;
+        try {
+          const data = await api(`/api/command-center/messages?channelId=${encodeURIComponent(state.selectedChannel.id)}&limit=35`);
+          mergeMessages(data.messages || []);
+          renderMessages();
+        } catch (error) {
+          showToast(error.message, "error");
+          messagesEl.innerHTML = `<div class="lc-empty"><h2>Could not load</h2><p>${escapeHtml(error.message)}</p></div>`;
+        }
+      }
+
+      async function loadOlderMessages() {
+        if (!state.selectedChannel || !state.oldestId || state.loading) return;
+        state.loading = true;
+        try {
+          const data = await api(`/api/command-center/messages?channelId=${encodeURIComponent(state.selectedChannel.id)}&before=${encodeURIComponent(state.oldestId)}&limit=50`);
+          mergeMessages(data.messages || []);
+          renderMessages({ keepScroll: true });
+        } catch (error) {
+          showToast(error.message, "error");
+        } finally {
+          state.loading = false;
+        }
+      }
+
+      async function checkNewMessages() {
+        if (!state.selectedChannel || !state.newestId || state.loading) return;
+        try {
+          const data = await api(`/api/command-center/messages?channelId=${encodeURIComponent(state.selectedChannel.id)}&after=${encodeURIComponent(state.newestId)}&limit=50`);
+          if ((data.messages || []).length) {
+            const nearBottom = messagesEl.scrollTop + messagesEl.clientHeight >= messagesEl.scrollHeight - 120;
+            mergeMessages(data.messages || []);
+            renderMessages({ keepScroll: !nearBottom });
+            if (nearBottom) messagesEl.scrollTop = messagesEl.scrollHeight;
+          }
+        } catch {}
+      }
+
+      function startLivePolling() {
+        if (state.liveTimer) clearInterval(state.liveTimer);
+        state.liveTimer = setInterval(checkNewMessages, 2800);
+      }
+
+      async function sendMessage() {
+        if (!state.selectedChannel) return;
+        const content = input.value.trim();
+        if (!content) return;
+
+        sendBtn.disabled = true;
+        sendBtn.textContent = "Sending...";
+
+        try {
+          if (content.startsWith("/")) {
+            const data = await api("/api/command-center/slash-command", {
+              method: "POST",
+              body: JSON.stringify({ channelId: state.selectedChannel.id, command: content }),
+            });
+            if (data.sent) mergeMessages([data.sent]);
+          } else {
+            const data = await api("/api/command-center/send-message", {
+              method: "POST",
+              body: JSON.stringify({ channelId: state.selectedChannel.id, content, replyToMessageId: state.replyToMessageId || "" }),
+            });
+            if (data.sent) mergeMessages([data.sent]);
+          }
+
+          renderMessages();
+          input.value = "";
+          state.replyToMessageId = "";
+          replyBox.classList.remove("show");
+          slashMenu.classList.remove("show");
+          mentionMenu.classList.remove("show");
+          showToast("Message sent", "success");
+        } catch (error) {
+          showToast(error.message, "error");
+        } finally {
+          sendBtn.disabled = false;
+          sendBtn.textContent = "Send";
+        }
+      }
+
+      async function deleteMessage(messageId) {
+        if (!state.selectedChannel || !messageId) return;
+        if (!confirm("Delete this message as the bot?")) return;
+        try {
+          await api("/api/command-center/delete-message", {
+            method: "POST",
+            body: JSON.stringify({ channelId: state.selectedChannel.id, messageId }),
+          });
+          state.messages.delete(messageId);
+          renderMessages({ keepScroll: true });
+          showToast("Message deleted", "success");
+        } catch (error) {
+          showToast(error.message, "error");
+        }
+      }
+
+      function selectMember(member) {
+        state.selectedMember = member;
+        selectedMemberText.textContent = `${member.displayName || member.username || "Unknown"} • ${member.id || "unknown"}`;
+      }
+
+      function renderMemberRows(groupsOrMembers) {
+        const groups = Array.isArray(groupsOrMembers) && groupsOrMembers[0]?.members
+          ? groupsOrMembers
+          : [{ id: "members", name: "Members", color: "#99aab5", members: groupsOrMembers || [] }];
+
+        state.memberGroups = groups;
+        state.flatMembers = groups.flatMap((group) => group.members || []);
+
+        memberResults.innerHTML = groups.map((group) => `
+          <div class="lc-member-section">
+            <span style="display:flex; align-items:center; gap:7px;">
+              <span class="lc-member-color-dot" style="color:${escapeHtml(group.color || "#99aab5")}; background:${escapeHtml(group.color || "#99aab5")}"></span>
+              ${escapeHtml(group.name || "Members")}
+            </span>
+            <span>${(group.members || []).length}</span>
+          </div>
+          ${(group.members || []).map((member) => `
+            <div class="lc-member-row" data-member='${escapeHtml(JSON.stringify(member))}'>
+              <img src="${escapeHtml(member.avatar)}" alt="avatar"/>
+              <div style="min-width:0; flex:1;">
+                <div class="lc-member-name" style="color:${escapeHtml(member.color || group.color || "#fff")}">${escapeHtml(member.displayName)}</div>
+                <div class="lc-member-sub">${member.bot ? "Bot" : (member.topRole?.name || "Member")}</div>
+              </div>
+            </div>
+          `).join("")}
+        `).join("") || `<p style="color:var(--muted); padding:8px;">No members found.</p>`;
+
+        memberResults.querySelectorAll(".lc-member-row").forEach((row) => {
+          const member = JSON.parse(row.dataset.member || "{}");
+          row.addEventListener("click", () => {
+            memberResults.querySelectorAll(".lc-member-row").forEach((r) => r.classList.remove("active"));
+            row.classList.add("active");
+            selectMember(member);
+            openProfile(member);
+          });
+          row.addEventListener("contextmenu", (event) => {
+            event.preventDefault();
+            selectMember(member);
+            openContextMenu(event.clientX, event.clientY, member);
+          });
+        });
+      }
+
+      async function searchMembers(forceAll = false) {
+        const q = forceAll ? "" : memberSearch.value.trim();
+        try {
+          const data = await api(`/api/command-center/members?q=${encodeURIComponent(q)}`);
+          renderMemberRows(data.groups || data.members || []);
+        } catch (error) {
+          showToast(error.message, "error");
+        }
+      }
+
+      function openProfile(member) {
+        const roles = member.roles || [];
+        const roleOptions = state.roles
+          .filter((role) => !roles.some((r) => r.id === role.id))
+          .map((role) => `<option value="${escapeHtml(role.id)}">${escapeHtml(role.name)}</option>`)
+          .join("");
+
+        profilePopout.innerHTML = `
+          <div class="lc-popout-banner"></div>
+          <div class="lc-popout-content">
+            <div class="lc-popout-avatar">${member.avatar ? `<img src="${escapeHtml(member.avatar)}" alt="avatar"/>` : ""}</div>
+            <div class="lc-profile-name">${escapeHtml(member.displayName || member.username || "Unknown")}</div>
+            <div class="lc-profile-id">${escapeHtml(member.id || "Unknown ID")}</div>
+            <div class="lc-role-pills">
+              ${roles.length ? roles.map((role) => `
+                <span class="lc-role-pill" title="${escapeHtml(role.id)}">
+                  <span>${escapeHtml(role.name)}</span>
+                  <button class="lc-role-remove" data-remove-role="${escapeHtml(role.id)}">×</button>
+                </span>
+              `).join("") : `<span class="lc-role-pill">No roles loaded</span>`}
+            </div>
+            <select id="lcProfileAddRole" class="lc-field">
+              <option value="">+ Add role...</option>
+              ${roleOptions}
+            </select>
+            <textarea id="lcProfileDmText" class="lc-field" placeholder="DM ${escapeHtml(member.displayName || "member")} as bot..."></textarea>
+            <button id="lcProfileDmBtn" class="lc-btn lc-good" style="width:100%; margin-top:8px;">Send DM</button>
+            <button id="lcLoadDmBtn" class="lc-btn" style="width:100%; margin-top:8px;">Open Bot DM Thread</button>
+            <div id="lcProfileDmThread" class="lc-dm-thread" style="display:none;"></div>
+            <div class="lc-grid2">
+              <button class="lc-btn" data-profile-action="timeout">Timeout</button>
+              <button class="lc-btn" data-profile-action="untimeout">Untimeout</button>
+              <button class="lc-btn lc-danger" data-profile-action="kick">Kick</button>
+              <button class="lc-btn lc-danger" data-profile-action="ban">Ban</button>
+            </div>
+          </div>
+        `;
+
+        profilePopout.classList.add("show");
+
+        profilePopout.querySelectorAll("[data-remove-role]").forEach((btn) => {
+          btn.addEventListener("click", () => updateMemberRole(member, btn.dataset.removeRole, "remove"));
+        });
+
+        profilePopout.querySelector("#lcProfileAddRole")?.addEventListener("change", (event) => {
+          if (event.target.value) updateMemberRole(member, event.target.value, "add");
+        });
+
+        profilePopout.querySelector("#lcProfileDmBtn")?.addEventListener("click", async () => {
+          const text = profilePopout.querySelector("#lcProfileDmText")?.value?.trim() || "";
+          if (!text) return showToast("Write a DM message first", "error");
+          await sendDmTo(member, text);
+          profilePopout.querySelector("#lcProfileDmText").value = "";
+          await loadDmThread(member);
+        });
+
+        profilePopout.querySelector("#lcLoadDmBtn")?.addEventListener("click", () => loadDmThread(member));
+
+        profilePopout.querySelectorAll("[data-profile-action]").forEach((btn) => {
+          btn.addEventListener("click", () => runMemberAction(btn.dataset.profileAction, member));
+        });
+      }
+
+      function openContextMenu(x, y, member) {
+        state.contextMember = member;
+        contextMenu.style.left = `${Math.min(x, window.innerWidth - 210)}px`;
+        contextMenu.style.top = `${Math.min(y, window.innerHeight - 260)}px`;
+        contextMenu.classList.add("show");
+      }
+
+      async function loadDmThread(member) {
+        if (!member?.id) return showToast("Select a member first", "error");
+        const thread = profilePopout.querySelector("#lcProfileDmThread");
+        if (!thread) return;
+
+        thread.style.display = "block";
+        thread.innerHTML = `<div class="lc-dm-line">Loading bot DM thread...</div>`;
+
+        try {
+          const data = await api(`/api/command-center/dm-messages?memberId=${encodeURIComponent(member.id)}`);
+          const lines = (data.messages || []).map((message) => `
+            <div class="lc-dm-line">
+              <strong>${escapeHtml(message.author?.username || "Unknown")}</strong>
+              <span style="color:var(--muted); font-size:.72rem;">${escapeHtml(formatTime(message.createdTimestamp))}</span>
+              <div>${escapeHtml(message.cleanContent || message.content || "[no text content]")}</div>
+            </div>
+          `).join("");
+
+          thread.innerHTML = lines || `<div class="lc-dm-line">No bot DM messages found with this member yet.</div>`;
+          thread.scrollTop = thread.scrollHeight;
+        } catch (error) {
+          thread.innerHTML = `<div class="lc-dm-line">${escapeHtml(error.message)}</div>`;
+        }
+      }
+
+      async function sendDmTo(member, content) {
+        if (!member?.id) return showToast("Select a member first", "error");
+        await api("/api/command-center/dm", {
+          method: "POST",
+          body: JSON.stringify({ memberId: member.id, content }),
+        });
+        showToast("DM sent as bot", "success");
+      }
+
+      async function sendDm() {
+        if (!state.selectedMember) return showToast("Select a member first", "error");
+        const content = dmText.value.trim();
+        if (!content) return showToast("Write a DM message first", "error");
+        try {
+          await sendDmTo(state.selectedMember, content);
+          dmText.value = "";
+        } catch (error) {
+          showToast(error.message, "error");
+        }
+      }
+
+      async function updateMemberRole(member, roleId, mode) {
+        if (!member?.id) return showToast("Select a member first", "error");
+        if (!roleId) return showToast("Select a role first", "error");
+
+        try {
+          const data = await api("/api/command-center/member-role", {
+            method: "POST",
+            body: JSON.stringify({ memberId: member.id, roleId, mode }),
+          });
+          if (data.member) {
+            selectMember(data.member);
+            openProfile(data.member);
+          }
+          showToast(data.message || "Role updated", "success");
+          await searchMembers(true);
+        } catch (error) {
+          showToast(error.message, "error");
+        }
+      }
+
+      async function runMemberAction(action, member = state.selectedMember) {
+        if (!member?.id) return showToast("Select a member first", "error");
+        if ((action === "kick" || action === "ban") && !confirm(`Are you sure you want to ${action} ${member.displayName || member.username}?`)) return;
+        try {
+          await api("/api/command-center/member-action", {
+            method: "POST",
+            body: JSON.stringify({
+              memberId: member.id,
+              action,
+              reason: reasonInput.value.trim() || "Legendary Command Center action",
+              roleId: roleSelect.value,
+              minutes: 10,
+            }),
+          });
+          showToast(`Action completed: ${action}`, "success");
+        } catch (error) {
+          showToast(error.message, "error");
+        }
+      }
+
+      async function createCategory() {
+        const name = newCategoryName.value.trim();
+        if (!name) return showToast("Write category name first", "error");
+        try {
+          await api("/api/command-center/create-category", { method: "POST", body: JSON.stringify({ name }) });
+          newCategoryName.value = "";
+          showToast("Category created", "success");
+          await init(true);
+        } catch (error) {
+          showToast(error.message, "error");
+        }
+      }
+
+      async function createChannel() {
+        const name = newChannelName.value.trim();
+        if (!name) return showToast("Write channel name first", "error");
+        try {
+          await api("/api/command-center/create-channel", {
+            method: "POST",
+            body: JSON.stringify({ name, parentId: newChannelParent.value, type: newChannelType.value }),
+          });
+          newChannelName.value = "";
+          showToast("Channel created", "success");
+          await init(true);
+        } catch (error) {
+          showToast(error.message, "error");
+        }
+      }
+
+      async function createRole() {
+        const name = newRoleName.value.trim();
+        const color = newRoleColor.value.trim() || "#8b5cf6";
+        if (!name) return showToast("Write role name first", "error");
+        try {
+          await api("/api/command-center/create-role", { method: "POST", body: JSON.stringify({ name, color }) });
+          newRoleName.value = "";
+          showToast("Role created", "success");
+          await init(true);
+        } catch (error) {
+          showToast(error.message, "error");
+        }
+      }
+
+      async function initVoiceStatus() {
+        try {
+          const data = await api("/api/command-center/voice-status");
+          voiceStatus.textContent = data.message || "Voice status loaded.";
+        } catch {}
+      }
+
+      async function init(keepSelected = false) {
+        try {
+          const oldSelectedId = state.selectedChannel?.id || "";
+          const data = await api("/api/command-center/bootstrap");
+          state.channelGroups = data.channelGroups || [];
+          state.roles = data.roles || [];
+
+          try {
+            const commandData = await api("/api/command-center/commands");
+            state.commands = commandData.commands || [];
+          } catch {
+            state.commands = [];
+          }
+          renderChannels();
+          renderRoles();
+          initVoiceStatus();
+          await searchMembers(true);
+          const allChannels = state.channelGroups.flatMap((group) => group.channels || []);
+          const nextChannel = keepSelected ? allChannels.find((channel) => channel.id === oldSelectedId) : null;
+          const firstChannel = nextChannel || allChannels[0];
+          if (firstChannel && (!state.selectedChannel || !keepSelected)) await selectChannel(firstChannel);
+        } catch (error) {
+          showToast(error.message, "error");
+          channelList.innerHTML = `<div class="lc-category">Error</div><button class="lc-channel">${escapeHtml(error.message)}</button>`;
+        }
+      }
+
+      let memberSearchTimer = null;
+      channelSearch.addEventListener("input", renderChannels);
+      memberSearch.addEventListener("input", () => {
+        clearTimeout(memberSearchTimer);
+        memberSearchTimer = setTimeout(() => searchMembers(false), 350);
+      });
+      input.addEventListener("input", () => { renderSlashMenu(); renderMentionMenu(); });
+      input.addEventListener("focus", () => { renderSlashMenu(); renderMentionMenu(); });
+
+      contextMenu.querySelectorAll("[data-context-action]").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const action = btn.dataset.contextAction;
+          const member = state.contextMember;
+          contextMenu.classList.remove("show");
+          if (!member) return;
+          selectMember(member);
+          if (action === "profile") return openProfile(member);
+          if (action === "dm") {
+            toolsDrawer.classList.add("show");
+            dmText.focus();
+            return;
+          }
+          if (action === "addRole") return updateMemberRole(member, roleSelect.value, "add");
+          if (action === "removeRole") return updateMemberRole(member, roleSelect.value, "remove");
+          return runMemberAction(action, member);
+        });
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest("#lcContextMenu")) contextMenu.classList.remove("show");
+        if (!event.target.closest("#lcProfilePopout") && !event.target.closest(".lc-member-row") && !event.target.closest(".lc-author-open")) {
+          profilePopout.classList.remove("show");
+        }
+      });
+
+      serverMenuBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        serverMenuPanel.classList.toggle("show");
+      });
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest("#lcServerMenuPanel") && !event.target.closest("#lcServerMenuBtn")) {
+          serverMenuPanel.classList.remove("show");
+        }
+      });
+      menuCreateChannel.addEventListener("click", () => {
+        serverMenuPanel.classList.remove("show");
+        toolsDrawer.classList.add("show");
+        newChannelName.focus();
+      });
+      menuCreateCategory.addEventListener("click", () => {
+        serverMenuPanel.classList.remove("show");
+        toolsDrawer.classList.add("show");
+        newCategoryName.focus();
+      });
+      menuCreateRole.addEventListener("click", () => {
+        serverMenuPanel.classList.remove("show");
+        toolsDrawer.classList.add("show");
+        newRoleName.focus();
+      });
+      menuServerSettings.addEventListener("click", () => {
+        serverMenuPanel.classList.remove("show");
+        toolsDrawer.classList.add("show");
+        showToast("Server Settings drawer is planned next. Basic create/edit tools are here now.", "success");
+      });
+
+      openTools.addEventListener("click", () => toolsDrawer.classList.add("show"));
+      openToolsTop.addEventListener("click", () => toolsDrawer.classList.add("show"));
+      closeTools.addEventListener("click", () => toolsDrawer.classList.remove("show"));
+      refreshMembers.addEventListener("click", () => searchMembers(true));
+      sendDmBtn.addEventListener("click", sendDm);
+      document.querySelectorAll("[data-member-action]").forEach((btn) => {
+        btn.addEventListener("click", () => runMemberAction(btn.dataset.memberAction));
+      });
+      createCategoryBtn.addEventListener("click", createCategory);
+      createChannelBtn.addEventListener("click", createChannel);
+      createRoleBtn.addEventListener("click", createRole);
+      sendBtn.addEventListener("click", sendMessage);
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          sendMessage();
+        }
+        if (event.key === "Escape") {
+          slashMenu.classList.remove("show");
+          mentionMenu.classList.remove("show");
+        }
+      });
+      refreshBtn.addEventListener("click", loadRecentMessages);
+      backBtn.addEventListener("click", () => window.location.href = `${window.LEGENDARY_CC.routeBase}/dashboard`);
+      cancelReply.addEventListener("click", () => {
+        state.replyToMessageId = "";
+        replyBox.classList.remove("show");
+      });
+
+      init();
+    })();
+  </script>
+<script src="/assets/js/site-music.js"></script></body>
+</html>

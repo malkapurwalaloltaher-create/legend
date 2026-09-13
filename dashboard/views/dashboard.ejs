@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Legendary Bot Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+<link rel="icon" type="image/png" href="/favicon.png?v=3.7.0" />
+<link rel="shortcut icon" type="image/png" href="/favicon.png?v=3.7.0" />
+<script src="/dashboard.js"></script>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+
+    <main class="main-content">
+      <%- include("partials/topbar", {
+        pageTitle: "Dashboard",
+        pageSubtitle: "Main control panel for your bot systems."
+      }) %>
+
+      <section class="hero-card">
+        <div class="hero-text">
+          <div class="hero-icon-wrap">
+            <img src="<%= botAvatar %>" class="hero-bot-avatar" alt="Bot Avatar" />
+          </div>
+          <div>
+            <h2>Welcome to Legendary Bot Dashboard</h2>
+            <p>
+              Manage your server tools, messages, embeds, confessions, sports systems,
+              and automation from one clean control panel.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🤖</div>
+          <div class="stat-value"><%= stats.status %></div>
+          <div class="stat-label">Bot Status</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">🏰</div>
+          <div class="stat-value"><%= stats.guildCount %></div>
+          <div class="stat-label">Connected Servers</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">⚙️</div>
+          <div class="stat-value"><%= stats.commandCount %></div>
+          <div class="stat-label">Loaded Commands</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">⏱️</div>
+          <div class="stat-value"><%= stats.uptime %></div>
+          <div class="stat-label">Current Uptime</div>
+        </div>
+      </section>
+
+      <section class="section-card">
+        <div class="section-header">
+          <h2>Plugins</h2>
+          <p>Choose a module to configure. Locked modules require Premium for this selected server.</p>
+        </div>
+
+        <div class="plugin-grid">
+          <% pluginCards.forEach(card => { %>
+            <a href="<%= card.href %>" class="plugin-card <%= card.locked ? 'locked' : '' %>">
+              <div class="plugin-top">
+                <div class="plugin-icon"><%= card.icon %></div>
+                <span class="plugin-status <%= card.locked ? 'badge-premium' : (card.status.toLowerCase() === 'live' ? 'badge-live' : 'badge-soon') %>">
+                  <%= card.locked ? '🔒' : card.status %>
+                </span>
+              </div>
+              <h3><%= card.title %></h3>
+              <p><%= card.desc %></p>
+            </a>
+          <% }) %>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById("sidebar");
+    const sidebarToggle = document.getElementById("sidebarToggle");
+
+    if (sidebarToggle) {
+      sidebarToggle.addEventListener("click", () => {
+        sidebar.classList.toggle("show");
+      });
+    }
+  </script>
+<script src="/assets/js/site-music.js"></script></body>
+</html>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Owner Command Center - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+
+  <style>
+    .command-runner-form select.input,
+    .command-runner-form .premium-select {
+      appearance: none;
+      -webkit-appearance: none;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.97), rgba(235,237,250,0.97)) !important;
+      color: #11122d !important;
+      border: 1px solid rgba(139,92,246,0.28) !important;
+      box-shadow: 0 12px 26px rgba(0,0,0,0.18) !important;
+      background-image:
+        linear-gradient(45deg, transparent 50%, #6d5dfc 50%),
+        linear-gradient(135deg, #6d5dfc 50%, transparent 50%) !important;
+      background-position:
+        calc(100% - 22px) calc(50% - 4px),
+        calc(100% - 14px) calc(50% - 4px) !important;
+      background-size: 8px 8px, 8px 8px !important;
+      background-repeat: no-repeat !important;
+    }
+
+    .command-runner-form select.input:focus,
+    .command-runner-form .premium-select:focus {
+      outline: none !important;
+      box-shadow: 0 0 0 4px rgba(139,92,246,0.20), 0 12px 26px rgba(0,0,0,0.18) !important;
+    }
+
+    @media (max-width: 1000px) {
+      .command-grid-top,
+      .command-extra-grid,
+      .member-results,
+      .command-category-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      .command-runner-form,
+      .member-picker-card,
+      .command-action-summary,
+      .loaded-command-details {
+        margin-left: 14px !important;
+        margin-right: 14px !important;
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+      }
+    }
+  </style>
+
+
+  <style>
+    /* =========================================================
+       PHASE 16F — Command Center Beautiful Select Fix
+       Fixes dark invisible select text and makes closed fields premium.
+       Note: the opened native dropdown is controlled by the browser/OS,
+       so it may still appear white. The closed dashboard field is fixed.
+       ========================================================= */
+
+    .command-runner-form .form-group span,
+    .command-runner-form label span {
+      color: #f4f1ff !important;
+      text-shadow: none !important;
+    }
+
+    .command-runner-form select.input,
+    .command-runner-form .premium-select {
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      width: 100% !important;
+      min-height: 70px !important;
+      border-radius: 24px !important;
+      border: 1px solid rgba(139, 92, 246, 0.55) !important;
+      color: #ffffff !important;
+      background:
+        linear-gradient(135deg, rgba(42, 29, 93, 0.92), rgba(17, 24, 63, 0.92)) !important;
+      box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+      font-size: 17px !important;
+      font-weight: 950 !important;
+      padding: 0 56px 0 24px !important;
+      cursor: pointer !important;
+      background-image:
+        linear-gradient(45deg, transparent 50%, #9b8cff 50%),
+        linear-gradient(135deg, #9b8cff 50%, transparent 50%),
+        linear-gradient(135deg, rgba(42, 29, 93, 0.92), rgba(17, 24, 63, 0.92)) !important;
+      background-position:
+        calc(100% - 30px) calc(50% - 4px),
+        calc(100% - 20px) calc(50% - 4px),
+        center !important;
+      background-size:
+        10px 10px,
+        10px 10px,
+        100% 100% !important;
+      background-repeat: no-repeat !important;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.28) !important;
+    }
+
+    .command-runner-form select.input:hover,
+    .command-runner-form .premium-select:hover {
+      border-color: rgba(34, 211, 238, 0.55) !important;
+      transform: translateY(-1px);
+      box-shadow:
+        0 22px 46px rgba(0, 0, 0, 0.28),
+        0 0 0 4px rgba(34, 211, 238, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .command-runner-form select.input:focus,
+    .command-runner-form .premium-select:focus {
+      outline: none !important;
+      border-color: rgba(34, 211, 238, 0.72) !important;
+      box-shadow:
+        0 0 0 4px rgba(34, 211, 238, 0.16),
+        0 22px 46px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .command-runner-form select.input option,
+    .command-runner-form .premium-select option {
+      color: #11122d !important;
+      background: #ffffff !important;
+      font-weight: 850 !important;
+      padding: 12px !important;
+    }
+
+    .command-runner-form .input:not(select),
+    .command-runner-form textarea.input {
+      color: #ffffff !important;
+      background: rgba(13, 14, 36, 0.76) !important;
+      border: 1px solid rgba(139, 92, 246, 0.42) !important;
+    }
+
+    .command-runner-form .input:not(select)::placeholder,
+    .command-runner-form textarea.input::placeholder {
+      color: rgba(244, 241, 255, 0.54) !important;
+    }
+
+    .member-picker-card,
+    .command-action-summary,
+    .loaded-command-details {
+      border-color: rgba(139, 92, 246, 0.22) !important;
+      background:
+        linear-gradient(135deg, rgba(18, 18, 48, 0.92), rgba(11, 14, 35, 0.92)) !important;
+    }
+
+    .member-result {
+      background: rgba(139, 92, 246, 0.14) !important;
+      border-color: rgba(139, 92, 246, 0.3) !important;
+    }
+
+    .member-result:hover,
+    .member-result.active {
+      background: rgba(34, 211, 238, 0.15) !important;
+      border-color: rgba(34, 211, 238, 0.6) !important;
+    }
+
+    @media (max-width: 1000px) {
+      .command-grid-top,
+      .command-extra-grid,
+      .member-results,
+      .command-category-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      .command-runner-form {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+      }
+    }
+  </style>
+
+</head>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+
+    <main class="main-content">
+      <%- include("partials/topbar", {
+        pageTitle: "Owner Command Center",
+        pageSubtitle: "Run bot commands from the dashboard with searchable users, channels, roles, logs, and safety checks."
+      }) %>
+
+      <% if (success) { %><div class="alert success"><%= success %></div><% } %>
+      <% if (error) { %><div class="alert error"><%= error %></div><% } %>
+
+      <section class="hero-card owner-command-hero">
+        <div class="hero-text">
+          <div class="hero-icon-wrap">👑</div>
+          <div>
+            <h2>Full Dashboard Command Runner</h2>
+            <p>
+              Selected server: <strong><%= guildName %></strong>. Use categories below to run moderation, message, setup,
+              voice, notes, role, invite, security, info, fun, and utility commands without typing slash commands manually.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card command-center-card">
+        <div class="section-header">
+          <h2>Choose Action</h2>
+          <p>Pick a category, choose a command, search/select users, and run the action safely from your dashboard.</p>
+        </div>
+
+        <form method="POST" action="/owner-command-center" class="command-runner-form" id="commandRunnerForm">
+          <input type="hidden" name="userId" id="selectedUserId" />
+
+          <div class="command-grid-top">
+            <label class="form-group">
+              <span>Category</span>
+              <select class="input premium-select" id="categorySelect">
+                <% (catalog || []).forEach(category => { %>
+                  <option value="<%= category.id %>"><%= category.icon %> <%= category.label %></option>
+                <% }) %>
+              </select>
+            </label>
+
+            <label class="form-group">
+              <span>Command / Action</span>
+              <select class="input premium-select" name="action" id="actionSelect" required></select>
+            </label>
+
+            <label class="form-group command-field field-channel">
+              <span>Channel</span>
+              <select class="input premium-select" name="channelId">
+                <option value="">No channel needed</option>
+                <% (channels || []).forEach(channel => { %>
+                  <option value="<%= channel.id %>"># <%= channel.name %></option>
+                <% }) %>
+              </select>
+            </label>
+
+            <label class="form-group command-field field-role">
+              <span>Role</span>
+              <select class="input premium-select" name="roleId" id="roleSelect">
+                <option value="">No role needed</option>
+                <% (roles || []).forEach(role => { %>
+                  <option value="<%= role.id %>"><%= role.name %></option>
+                <% }) %>
+              </select>
+            </label>
+          </div>
+
+          <div class="command-field field-member member-picker-card">
+            <div class="member-picker-head">
+              <div>
+                <label>Member Search</label>
+                <p>Search by username, display name, or ID. Select a result to target that member.</p>
+              </div>
+              <span class="status-pill" id="selectedUserPill">No member selected</span>
+            </div>
+
+            <input class="input" id="memberSearchInput" placeholder="Search member..." autocomplete="off" />
+
+            <div class="member-results" id="memberResults">
+              <% (starterMembers || []).forEach(member => { %>
+                <button type="button" class="member-result" data-user-id="<%= member.id %>" data-label="<%= member.displayName %>">
+                  <img src="<%= member.avatar %>" alt="" />
+                  <span>
+                    <strong><%= member.displayName %></strong>
+                    <small><%= member.username %> • <%= member.id %></small>
+                  </span>
+                </button>
+              <% }) %>
+            </div>
+          </div>
+
+          <div class="command-extra-grid">
+            <label class="form-group command-field field-user-id">
+              <span>User ID</span>
+              <input class="input" name="userIdText" placeholder="Discord user ID for hackban/unban" />
+            </label>
+
+            <label class="form-group command-field field-user-ids">
+              <span>User IDs</span>
+              <textarea class="input textarea mini-textarea" name="userIds" placeholder="Multiple user IDs separated by commas or spaces"></textarea>
+            </label>
+
+            <label class="form-group command-field field-amount">
+              <span>Amount</span>
+              <input class="input" type="number" name="amount" min="1" max="100" placeholder="Example: 10" />
+            </label>
+
+            <label class="form-group command-field field-duration">
+              <span>Seconds</span>
+              <input class="input" type="number" name="seconds" min="0" placeholder="Slowmode or timeout seconds" />
+            </label>
+
+            <label class="form-group command-field field-hex">
+              <span>Hex Color</span>
+              <input class="input" name="hexColor" placeholder="#8b5cf6" />
+            </label>
+
+            <label class="form-group command-field field-text">
+              <span>Text / Nickname / Options</span>
+              <input class="input" name="text" placeholder="Text needed for this action" />
+            </label>
+
+            <label class="form-group command-field field-message full">
+              <span>Message</span>
+              <textarea class="input textarea" name="message" placeholder="Message to send when using Send Message"></textarea>
+            </label>
+
+            <label class="form-group command-field field-reason full">
+              <span>Reason</span>
+              <input class="input" name="reason" placeholder="Reason for logs and moderation cases" />
+            </label>
+
+            <label class="form-group command-field field-confirm full danger-confirm-box">
+              <span>Danger Confirmation</span>
+              <input class="input" name="confirmText" id="confirmTextInput" placeholder="Type required confirmation text" />
+            </label>
+          </div>
+
+          <div class="command-action-summary" id="actionSummary">
+            Choose a command to see what fields are needed.
+          </div>
+
+          <div class="button-row preview-button-row">
+            <button class="primary-btn" type="submit">Run Dashboard Command</button>
+            <a class="secondary-btn" href="/owner-command-center">Reset</a>
+          </div>
+        </form>
+      </section>
+
+      <section class="section-card command-center-card">
+        <div class="section-header">
+          <h2>Command Categories</h2>
+          <p>All major commands are available through organized dashboard tools instead of one messy command wall.</p>
+        </div>
+
+        <div class="command-category-grid">
+          <% (catalog || []).forEach(category => { %>
+            <button class="command-category-card" type="button" data-category-jump="<%= category.id %>">
+              <span class="category-icon"><%= category.icon %></span>
+              <strong><%= category.label %></strong>
+              <small><%= category.actions.length %> actions</small>
+            </button>
+          <% }) %>
+        </div>
+      </section>
+
+      <section class="section-card command-center-card">
+        <div class="section-header">
+          <h2>Recent Dashboard Actions</h2>
+          <p>Latest owner dashboard command actions saved to MongoDB.</p>
+        </div>
+
+        <% if (!recentLogs || !recentLogs.length) { %>
+          <div class="empty-mini">No dashboard action logs yet.</div>
+        <% } else { %>
+          <div class="action-log-list">
+            <% recentLogs.forEach(log => { %>
+              <div class="action-log-item">
+                <span class="status-pill <%= log.status === 'success' ? 'good' : 'danger' %>"><%= log.status %></span>
+                <div>
+                  <strong><%= log.action %></strong>
+                  <p><%= log.reason || "No reason" %></p>
+                  <small><%= log.createdAt ? new Date(log.createdAt).toLocaleString() : "" %></small>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+      </section>
+
+      <section class="section-card command-center-card">
+        <div class="section-header">
+          <h2>Loaded Bot Commands</h2>
+          <p>Detected from your bot command collection. This is now collapsed into clean tags.</p>
+        </div>
+
+        <details class="loaded-command-details">
+          <summary>Show loaded command tags (<%= (loadedCommands || []).length %>)</summary>
+          <div class="command-chip-grid-v16 clean">
+            <% if (!loadedCommands || !loadedCommands.length) { %>
+              <span class="command-chip-v16">No commands loaded</span>
+            <% } %>
+            <% (loadedCommands || []).forEach(command => { %>
+              <span class="command-chip-v16"><%= command %></span>
+            <% }) %>
+          </div>
+        </details>
+      </section>
+    </main>
+  </div>
+
+  
+    <script type="application/json" id="ejs-data-dashboard-views-owner-command-center-ejs-0-catalog"><%- JSON.stringify(catalog || []).replace(/</g, "\\u003c") %></script>
+
+<script>
+    const catalog = JSON.parse(document.getElementById("ejs-data-dashboard-views-owner-command-center-ejs-0-catalog").textContent || "null");
+    const categorySelect = document.getElementById("categorySelect");
+    const actionSelect = document.getElementById("actionSelect");
+    const actionSummary = document.getElementById("actionSummary");
+    const selectedUserId = document.getElementById("selectedUserId");
+    const selectedUserPill = document.getElementById("selectedUserPill");
+    const memberSearchInput = document.getElementById("memberSearchInput");
+    const memberResults = document.getElementById("memberResults");
+    const confirmTextInput = document.getElementById("confirmTextInput");
+
+    const fieldClassMap = {
+      needsChannel: ".field-channel",
+      needsRole: ".field-role",
+      needsUser: ".field-member",
+      needsUserIdText: ".field-user-id",
+      needsUserIdsText: ".field-user-ids",
+      needsAmount: ".field-amount",
+      needsDuration: ".field-duration",
+      needsHex: ".field-hex",
+      needsText: ".field-text",
+      needsMessage: ".field-message",
+      needsReason: ".field-reason",
+    };
+
+    function getCategory() {
+      return catalog.find((category) => category.id === categorySelect.value) || catalog[0];
+    }
+
+    function getAction() {
+      const category = getCategory();
+      return (category.actions || []).find((action) => action.id === actionSelect.value);
+    }
+
+    function renderActions() {
+      const category = getCategory();
+      actionSelect.innerHTML = "";
+
+      (category.actions || []).forEach((action) => {
+        const option = document.createElement("option");
+        option.value = action.id;
+        option.textContent = action.dangerous ? `⚠️ ${action.label}` : action.label;
+        actionSelect.appendChild(option);
+      });
+
+      updateFields();
+    }
+
+    function updateFields() {
+      document.querySelectorAll(".command-field").forEach((el) => el.classList.add("hidden"));
+
+      const action = getAction();
+      if (!action) return;
+
+      Object.entries(fieldClassMap).forEach(([key, selector]) => {
+        if (action[key]) {
+          document.querySelectorAll(selector).forEach((el) => el.classList.remove("hidden"));
+        }
+      });
+
+      if (action.resultChannelOptional) {
+        document.querySelectorAll(".field-channel").forEach((el) => el.classList.remove("hidden"));
+      }
+
+      if (action.confirmText) {
+        document.querySelectorAll(".field-confirm").forEach((el) => el.classList.remove("hidden"));
+        confirmTextInput.placeholder = `Type ${action.confirmText} to confirm`;
+      }
+
+      actionSummary.innerHTML = `
+        <strong>${action.dangerous ? "⚠️ " : ""}${action.label}</strong>
+        <span>${action.note || "Ready to run from the dashboard."}</span>
+      `;
+    }
+
+    function selectMember(button) {
+      const id = button.dataset.userId;
+      const label = button.dataset.label || id;
+      selectedUserId.value = id;
+      selectedUserPill.textContent = label;
+      document.querySelectorAll(".member-result").forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
+    }
+
+    memberResults.addEventListener("click", (event) => {
+      const button = event.target.closest(".member-result");
+      if (button) selectMember(button);
+    });
+
+    let memberSearchTimer = null;
+    memberSearchInput.addEventListener("input", () => {
+      clearTimeout(memberSearchTimer);
+      memberSearchTimer = setTimeout(async () => {
+        const q = memberSearchInput.value.trim();
+        const res = await fetch(`/owner-command-center/api/members?q=${encodeURIComponent(q)}`);
+        const data = await res.json().catch(() => ({ ok: false, members: [] }));
+
+        memberResults.innerHTML = "";
+
+        (data.members || []).forEach((member) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "member-result";
+          btn.dataset.userId = member.id;
+          btn.dataset.label = member.displayName || member.username || member.id;
+          btn.innerHTML = `
+            <img src="${member.avatar}" alt="" />
+            <span>
+              <strong>${member.displayName}</strong>
+              <small>${member.username} • ${member.id}</small>
+            </span>
+          `;
+          memberResults.appendChild(btn);
+        });
+
+        if (!memberResults.innerHTML) {
+          memberResults.innerHTML = `<div class="empty-mini">No members found.</div>`;
+        }
+      }, 300);
+    });
+
+    document.querySelectorAll("[data-category-jump]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        categorySelect.value = btn.dataset.categoryJump;
+        renderActions();
+        document.querySelector(".command-center-card").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    categorySelect.addEventListener("change", renderActions);
+    actionSelect.addEventListener("change", updateFields);
+
+    renderActions();
+  </script>
+<script src="/assets/js/site-music.js"></script></body>
+</html>

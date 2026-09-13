@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reaction Roles - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" type="image/png" href="/favicon.png?v=7.3.0" />
+  <link rel="shortcut icon" type="image/png" href="/favicon.png?v=7.3.0" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+
+    <main class="main-content rr-page">
+      <%- include("partials/topbar", {
+        pageTitle: "Reaction Roles",
+        pageSubtitle: "Create, edit, refresh, and manage advanced button role panels."
+      }) %>
+
+      <% if (success) { %>
+        <div class="alert success"><%= success %></div>
+      <% } %>
+
+      <% if (error) { %>
+        <div class="alert error"><%= error %></div>
+      <% } %>
+
+      <section class="hero-card">
+        <div class="hero-text">
+          <div class="hero-icon-wrap">
+            <img src="<%= botAvatar %>" class="hero-bot-avatar" alt="Bot Avatar" />
+          </div>
+          <div>
+            <h2>Advanced Reaction Roles Builder</h2>
+            <p>
+              Create button panels with up to 25 role buttons. Use Add, Delete,
+              Next, Previous, and Search to manage buttons cleanly.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="builder-grid">
+        <section class="section-card">
+          <div class="section-header">
+            <h2>Create Panel</h2>
+            <p>Build and send a reaction role panel to a channel.</p>
+          </div>
+
+          <form method="POST" action="/reaction-roles/create" class="form-stack" id="reactionRoleForm">
+            <input type="hidden" name="buttonsJson" id="buttonsJson" value="[]" />
+
+            <label class="form-group">
+              <span>Panel Name</span>
+              <input name="name" class="input" placeholder="Example: Color Roles" required />
+            </label>
+
+            <label class="form-group">
+              <span>Channel</span>
+              <select name="channelId" class="input" required>
+                <option value="">Select a channel</option>
+
+                <% channelGroups.forEach(group => { %>
+                  <optgroup label="📁 <%= group.name %>">
+                    <% group.channels.forEach(channel => { %>
+                      <option value="<%= channel.id %>"># <%= channel.name %></option>
+                    <% }) %>
+                  </optgroup>
+                <% }) %>
+              </select>
+            </label>
+
+            <label class="form-group">
+              <span>Normal Message Content</span>
+              <textarea
+                name="content"
+                id="content"
+                class="input textarea"
+                placeholder="Optional text above the reaction role panel..."
+              ></textarea>
+            </label>
+
+            <label class="toggle-line">
+              <input type="checkbox" name="embedEnabled" id="embedEnabled" checked />
+              <span>Send Embed</span>
+            </label>
+
+            <div id="embedFields">
+              <label class="form-group">
+                <span>Embed Title</span>
+                <input name="title" id="title" class="input" value="Reaction Roles" />
+              </label>
+
+              <label class="form-group">
+                <span>Embed Description</span>
+                <textarea name="description" id="description" class="input textarea">Click a button below to get or remove a role.</textarea>
+              </label>
+
+              <div class="form-group">
+                <span>Embed Color</span>
+                <div class="color-row">
+                  <input type="color" id="colorPicker" class="color-picker" value="#8b5cf6" />
+                  <input name="color" id="color" class="input color-hex-input" value="#8b5cf6" />
+                </div>
+              </div>
+
+              <label class="form-group">
+                <span>Footer</span>
+                <input name="footer" id="footer" class="input" value="Click again to remove the role." />
+              </label>
+
+              <label class="form-group">
+                <span>Thumbnail URL</span>
+                <input name="thumbnail" id="thumbnail" class="input" placeholder="https://..." />
+              </label>
+
+              <label class="form-group">
+                <span>Image URL</span>
+                <input name="image" id="image" class="input" placeholder="https://..." />
+              </label>
+            </div>
+
+            <section class="template-save-box">
+              <div class="section-header compact-header">
+                <h2>Button Manager</h2>
+                <p>Manage up to 25 role buttons without making the page messy.</p>
+              </div>
+
+              <div class="button-manager-top">
+                <span class="status-pill good" id="buttonCounter">Button 1 / 1</span>
+                <span class="status-pill" id="buttonSavedStatus">Unsaved</span>
+              </div>
+
+              <label class="form-group">
+                <span>Button Label</span>
+                <input id="buttonLabel" class="input" placeholder="Example: Gamer" />
+              </label>
+
+              <label class="form-group">
+                <span>Emoji</span>
+                <input id="buttonEmoji" class="input" placeholder="🎮" />
+              </label>
+
+              <label class="form-group">
+                <span>Search Roles</span>
+                <input id="roleSearch" class="input" placeholder="Type to search roles..." />
+              </label>
+
+              <label class="form-group">
+                <span>Role</span>
+                <select id="buttonRoleId" class="input">
+                  <option value="">No role</option>
+
+                  <% roles.forEach(role => { %>
+                    <option value="<%= role.id %>"><%= role.name %></option>
+                  <% }) %>
+                </select>
+              </label>
+
+              <label class="form-group">
+                <span>Button Style</span>
+                <select id="buttonStyle" class="input">
+                  <option value="Secondary">Gray</option>
+                  <option value="Primary">Blue</option>
+                  <option value="Success">Green</option>
+                  <option value="Danger">Red</option>
+                </select>
+              </label>
+
+              <div class="button-row">
+                <button type="button" class="mini-btn" id="prevButton">Previous</button>
+                <button type="button" class="mini-btn" id="nextButton">Next</button>
+                <button type="button" class="mini-btn" id="addButton">Add</button>
+                <button type="button" class="mini-btn danger" id="deleteButton">Delete</button>
+              </div>
+
+              <div class="rr-all-buttons" id="allButtonsList"></div>
+            </section>
+
+            <button type="submit" class="primary-btn">Send Reaction Role Panel</button>
+          </form>
+        </section>
+
+        <section class="section-card preview-panel">
+          <div class="section-header">
+            <h2>Live Preview</h2>
+            <p>Preview of your reaction role panel.</p>
+          </div>
+
+          <div class="preview-normal" id="previewNormal"></div>
+
+          <div class="discord-preview" id="embedPreviewBox">
+            <div class="discord-embed">
+              <div class="discord-embed-border" id="embedBorder"></div>
+
+              <div class="discord-embed-content">
+                <div class="discord-title" id="previewTitle">Reaction Roles</div>
+                <div class="discord-description" id="previewDescription">
+                  Click a button below to get or remove a role.
+                </div>
+
+                <img id="previewThumbnail" class="preview-thumbnail hidden" alt="Thumbnail" />
+                <img id="previewImage" class="preview-image hidden" alt="Image" />
+
+                <div class="discord-footer" id="previewFooter">Click again to remove the role.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="empty-mini hidden" id="embedOffNote">
+            Embed is turned off. The panel will send normal message content with buttons only.
+          </div>
+
+          <div class="rr-preview-buttons" id="rrPreviewButtons"></div>
+        </section>
+      </div>
+
+      <section class="section-card">
+        <div class="section-header">
+          <h2>Saved Panels</h2>
+          <p>Edit, refresh, disable, or delete panels saved for this selected server.</p>
+        </div>
+
+        <div class="template-grid">
+          <% if (!panels.length) { %>
+            <div class="empty-mini">No reaction role panels created yet.</div>
+          <% } %>
+
+          <% panels.forEach(panel => { %>
+            <div class="template-card">
+              <div class="template-card-top">
+                <div>
+                  <h3><%= panel.name %></h3>
+                  <p>#<%= panel.channelName || "unknown-channel" %></p>
+
+                  <% if (panel.messageId) { %>
+                    <p class="template-source-label">Discord Message ID: <%= panel.messageId %></p>
+                  <% } else { %>
+                    <p class="template-source-label">No Discord message saved yet</p>
+                  <% } %>
+                </div>
+
+                <span class="status-pill <%= panel.active ? 'good' : 'bad' %>">
+                  <%= panel.active ? "Active" : "Disabled" %>
+                </span>
+              </div>
+
+              <% if (panel.content) { %>
+                <div class="template-normal"><%= panel.content %></div>
+              <% } %>
+
+              <% if (panel.embedEnabled !== false) { %>
+                <div class="template-embed" data-embed-border-color="<%= panel.color || '#8b5cf6' %>">
+                  <div class="template-embed-title"><%= panel.title || "Reaction Roles" %></div>
+
+                  <% if (panel.description) { %>
+                    <div class="template-embed-desc"><%= panel.description %></div>
+                  <% } %>
+
+                  <% if (panel.thumbnail) { %>
+                    <div class="template-media-note">Thumbnail: <%= panel.thumbnail %></div>
+                  <% } %>
+
+                  <% if (panel.image) { %>
+                    <div class="template-media-note">Image: <%= panel.image %></div>
+                  <% } %>
+
+                  <% if (panel.footer) { %>
+                    <div class="template-embed-footer"><%= panel.footer %></div>
+                  <% } %>
+
+                  <div class="template-embed-footer">
+                    Buttons: <%= panel.buttons.length %>
+                  </div>
+                </div>
+              <% } else { %>
+                <div class="empty-mini">Embed disabled for this panel.</div>
+              <% } %>
+
+              <% if (panel.buttons && panel.buttons.length) { %>
+                <div class="rr-saved-buttons">
+                  <% panel.buttons.forEach(button => { %>
+                    <span class="rr-saved-pill">
+                      <%= button.emoji ? button.emoji + " " : "" %><%= button.label || button.roleName || "Role" %>
+                    </span>
+                  <% }) %>
+                </div>
+              <% } %>
+
+              <div class="action-row">
+                <a class="mini-link-btn" href="/reaction-roles/edit/<%= panel._id %>">Edit</a>
+
+                <form method="POST" action="/reaction-roles/refresh/<%= panel._id %>">
+                  <button class="mini-btn" type="submit">Refresh</button>
+                </form>
+
+               <form method="POST" action="/reaction-roles/resend/<%= panel._id %>">
+                  <button class="mini-btn" type="submit">Resend</button>
+               </form>
+
+                <form method="POST" action="/reaction-roles/toggle/<%= panel._id %>">
+                  <button class="mini-btn" type="submit">
+                    <%= panel.active ? "Disable" : "Enable" %>
+                  </button>
+                </form>
+
+                <form method="POST" action="/reaction-roles/delete/<%= panel._id %>">
+                  <button class="mini-btn danger" type="submit">Delete</button>
+                </form>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/dashboard.js"></script>
+
+  <script>
+    document.querySelectorAll("[data-embed-border-color]").forEach((embed) => {
+      embed.style.borderLeftColor = embed.dataset.embedBorderColor || "#8b5cf6";
+    });
+  </script>
+
+  
+    <script type="application/json" id="ejs-data-dashboard-views-reaction-roles-ejs-0-roleOptions"><%- JSON.stringify(roles || []).replace(/</g, "\\u003c") %></script>
+
+<script>
+    const roleOptions = JSON.parse(document.getElementById("ejs-data-dashboard-views-reaction-roles-ejs-0-roleOptions").textContent || "null");
+    const form = document.getElementById("reactionRoleForm");
+    const buttonsJson = document.getElementById("buttonsJson");
+
+    const content = document.getElementById("content");
+    const embedEnabled = document.getElementById("embedEnabled");
+    const embedFields = document.getElementById("embedFields");
+    const embedPreviewBox = document.getElementById("embedPreviewBox");
+    const embedOffNote = document.getElementById("embedOffNote");
+
+    const title = document.getElementById("title");
+    const description = document.getElementById("description");
+    const color = document.getElementById("color");
+    const colorPicker = document.getElementById("colorPicker");
+    const footer = document.getElementById("footer");
+    const thumbnail = document.getElementById("thumbnail");
+    const image = document.getElementById("image");
+
+    const previewNormal = document.getElementById("previewNormal");
+    const previewTitle = document.getElementById("previewTitle");
+    const previewDescription = document.getElementById("previewDescription");
+    const embedBorder = document.getElementById("embedBorder");
+    const previewFooter = document.getElementById("previewFooter");
+    const previewThumbnail = document.getElementById("previewThumbnail");
+    const previewImage = document.getElementById("previewImage");
+    const rrPreviewButtons = document.getElementById("rrPreviewButtons");
+
+    const buttonCounter = document.getElementById("buttonCounter");
+    const buttonSavedStatus = document.getElementById("buttonSavedStatus");
+    const buttonLabel = document.getElementById("buttonLabel");
+    const buttonEmoji = document.getElementById("buttonEmoji");
+    const roleSearch = document.getElementById("roleSearch");
+    const buttonRoleId = document.getElementById("buttonRoleId");
+    const buttonStyle = document.getElementById("buttonStyle");
+    const prevButton = document.getElementById("prevButton");
+    const nextButton = document.getElementById("nextButton");
+    const addButton = document.getElementById("addButton");
+    const deleteButton = document.getElementById("deleteButton");
+    const allButtonsList = document.getElementById("allButtonsList");
+
+    let buttons = [
+      {
+        label: "",
+        emoji: "",
+        roleId: "",
+        style: "Secondary",
+      },
+    ];
+
+    let currentIndex = 0;
+
+    function validHex(value) {
+      return /^#[0-9A-Fa-f]{6}$/.test(value);
+    }
+
+    function getRoleName(roleId) {
+      const role = roleOptions.find((item) => String(item.id) === String(roleId));
+      return role?.name || "";
+    }
+
+    function saveCurrentButton() {
+      buttons[currentIndex] = {
+        label: buttonLabel.value.trim(),
+        emoji: buttonEmoji.value.trim(),
+        roleId: buttonRoleId.value,
+        style: buttonStyle.value || "Secondary",
+      };
+
+      buttonsJson.value = JSON.stringify(buttons.filter((btn) => btn.roleId));
+      buttonSavedStatus.textContent = "Saved";
+      buttonSavedStatus.classList.add("good");
+    }
+
+    function loadCurrentButton() {
+      const btn = buttons[currentIndex] || {
+        label: "",
+        emoji: "",
+        roleId: "",
+        style: "Secondary",
+      };
+
+      buttonLabel.value = btn.label || "";
+      buttonEmoji.value = btn.emoji || "";
+      buttonRoleId.value = btn.roleId || "";
+      buttonStyle.value = btn.style || "Secondary";
+      buttonCounter.textContent = `Button ${currentIndex + 1} / ${buttons.length}`;
+      buttonSavedStatus.textContent = "Saved";
+      buttonSavedStatus.classList.add("good");
+
+      updatePreview();
+      renderAllButtonsList();
+    }
+
+    function filterRoles() {
+      const query = roleSearch.value.toLowerCase().trim();
+      const currentValue = buttonRoleId.value;
+
+      buttonRoleId.innerHTML = `<option value="">No role</option>`;
+
+      roleOptions
+        .filter((role) => !query || role.name.toLowerCase().includes(query))
+        .forEach((role) => {
+          const option = document.createElement("option");
+          option.value = role.id;
+          option.textContent = role.name;
+          buttonRoleId.appendChild(option);
+        });
+
+      if ([...buttonRoleId.options].some((opt) => opt.value === currentValue)) {
+        buttonRoleId.value = currentValue;
+      }
+    }
+
+    function updateImage(input, imageEl) {
+      if (input.value.trim()) {
+        imageEl.src = input.value.trim();
+        imageEl.classList.remove("hidden");
+      } else {
+        imageEl.classList.add("hidden");
+      }
+    }
+
+    function updatePreview() {
+      previewNormal.textContent = content.value.trim() || "";
+
+      if (embedEnabled.checked) {
+        embedFields.classList.remove("hidden");
+        embedPreviewBox.classList.remove("hidden");
+        embedOffNote.classList.add("hidden");
+      } else {
+        embedFields.classList.add("hidden");
+        embedPreviewBox.classList.add("hidden");
+        embedOffNote.classList.remove("hidden");
+      }
+
+      previewTitle.textContent = title.value.trim() || "Reaction Roles";
+      previewDescription.textContent =
+        description.value.trim() || "Click a button below to get or remove a role.";
+      previewFooter.textContent = footer.value.trim() || "Click again to remove the role.";
+      embedBorder.style.background = validHex(color.value.trim()) ? color.value.trim() : "#8b5cf6";
+
+      updateImage(thumbnail, previewThumbnail);
+      updateImage(image, previewImage);
+
+      rrPreviewButtons.innerHTML = "";
+
+      buttons.forEach((btn) => {
+        const roleName = getRoleName(btn.roleId);
+        const label = btn.label || roleName;
+        const emoji = btn.emoji || "";
+
+        if (!btn.roleId) return;
+
+        const previewBtn = document.createElement("button");
+        previewBtn.type = "button";
+        previewBtn.className = "mini-btn";
+        previewBtn.textContent = `${emoji ? emoji + " " : ""}${label || "Role"}`;
+        rrPreviewButtons.appendChild(previewBtn);
+      });
+
+      buttonsJson.value = JSON.stringify(buttons.filter((btn) => btn.roleId));
+    }
+
+    function renderAllButtonsList() {
+      allButtonsList.innerHTML = "";
+
+      buttons.forEach((btn, index) => {
+        const roleName = getRoleName(btn.roleId);
+        const label = btn.label || roleName || "No role selected";
+
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = `rr-button-index ${index === currentIndex ? "active" : ""}`;
+        item.textContent = `${index + 1}. ${btn.emoji ? btn.emoji + " " : ""}${label}`;
+
+        item.addEventListener("click", () => {
+          saveCurrentButton();
+          currentIndex = index;
+          loadCurrentButton();
+        });
+
+        allButtonsList.appendChild(item);
+      });
+    }
+
+    colorPicker.addEventListener("input", () => {
+      color.value = colorPicker.value;
+      updatePreview();
+    });
+
+    color.addEventListener("input", () => {
+      if (validHex(color.value.trim())) {
+        colorPicker.value = color.value.trim();
+      }
+
+      updatePreview();
+    });
+
+    [content, embedEnabled, title, description, footer, thumbnail, image].forEach((el) => {
+      el.addEventListener("input", updatePreview);
+      el.addEventListener("change", updatePreview);
+    });
+
+    [buttonLabel, buttonEmoji, buttonRoleId, buttonStyle].forEach((el) => {
+      el.addEventListener("input", () => {
+        buttonSavedStatus.textContent = "Unsaved";
+        buttonSavedStatus.classList.remove("good");
+        saveCurrentButton();
+        updatePreview();
+        renderAllButtonsList();
+      });
+
+      el.addEventListener("change", () => {
+        buttonSavedStatus.textContent = "Unsaved";
+        buttonSavedStatus.classList.remove("good");
+        saveCurrentButton();
+        updatePreview();
+        renderAllButtonsList();
+      });
+    });
+
+    roleSearch.addEventListener("input", () => {
+      filterRoles();
+      updatePreview();
+    });
+
+    prevButton.addEventListener("click", () => {
+      saveCurrentButton();
+      currentIndex = Math.max(0, currentIndex - 1);
+      loadCurrentButton();
+    });
+
+    nextButton.addEventListener("click", () => {
+      saveCurrentButton();
+      currentIndex = Math.min(buttons.length - 1, currentIndex + 1);
+      loadCurrentButton();
+    });
+
+    addButton.addEventListener("click", () => {
+      saveCurrentButton();
+
+      if (buttons.length >= 25) {
+        alert("Discord supports a maximum of 25 buttons per message.");
+        return;
+      }
+
+      buttons.push({
+        label: "",
+        emoji: "",
+        roleId: "",
+        style: "Secondary",
+      });
+
+      currentIndex = buttons.length - 1;
+      roleSearch.value = "";
+      filterRoles();
+      loadCurrentButton();
+    });
+
+    deleteButton.addEventListener("click", () => {
+      if (buttons.length <= 1) {
+        buttons[0] = {
+          label: "",
+          emoji: "",
+          roleId: "",
+          style: "Secondary",
+        };
+        currentIndex = 0;
+        loadCurrentButton();
+        return;
+      }
+
+      buttons.splice(currentIndex, 1);
+      currentIndex = Math.max(0, currentIndex - 1);
+      loadCurrentButton();
+    });
+
+    form.addEventListener("submit", () => {
+      saveCurrentButton();
+    });
+
+    filterRoles();
+    loadCurrentButton();
+    updatePreview();
+  </script>
+<script src="/assets/js/site-music.js"></script></body>
+</html>

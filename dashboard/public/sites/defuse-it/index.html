@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#071320" />
+  <meta name="description" content="Defuse It! is a fictional sci-fi arcade puzzle about stabilizing a runaway star-core simulation." />
+  <title>Defuse It! | Sci-Fi Arcade Puzzle</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="space-noise" aria-hidden="true"></div>
+  <div id="spark-field" class="spark-field" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="back-link" href="/" aria-label="Back to Legendary Lands"><i aria-hidden="true">&lt;</i><span><small>EXIT SIM</small>Legendary Lands</span></a>
+    <div class="mini-brand"><i></i> DEFUSE IT!</div>
+    <div class="topbar-actions">
+      <a class="github-cta" href="https://github.com/mrxavier53" target="_blank" rel="noopener noreferrer" aria-label="Visit mrxavier53 on GitHub (opens in a new tab)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .7a11.5 11.5 0 0 0-3.64 22.4c.58.1.79-.25.79-.56v-2.23c-3.22.7-3.9-1.37-3.9-1.37-.52-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.72 1.27 3.38.97.1-.75.4-1.27.74-1.56-2.57-.29-5.27-1.28-5.27-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.05 0 0 .97-.31 3.16 1.18a10.9 10.9 0 0 1 5.75 0c2.2-1.5 3.16-1.18 3.16-1.18.63 1.58.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.71 5.38-5.29 5.67.42.36.79 1.06.79 2.15v3.19c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z"/></svg>
+        <span>mrxavier53</span><i aria-hidden="true">&#8599;</i>
+      </a>
+      <button id="audio-toggle" class="control-btn" type="button" aria-pressed="true" aria-label="Turn music and sound effects off">
+        <span id="audio-icon" aria-hidden="true">AUDIO</span>
+        <span id="audio-label">Music + SFX: On</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section id="menu-screen" class="screen active" aria-labelledby="game-title">
+      <div class="hero-copy">
+        <p class="eyebrow">DEEP-SPACE ARCADE // SECTOR 09</p>
+        <h1 id="game-title" tabindex="-1">DEFUSE<br /><span>IT!</span></h1>
+        <p class="hero-text">The fictional Nova Core is losing coherence. Solve its abstract logic modules before the simulation glitches out.</p>
+        <div class="hero-warning"><i aria-hidden="true"></i><span>TRAINING ENVIRONMENT</span><strong>IMAGINARY ENERGY ONLY</strong></div>
+        <div class="record-row" aria-label="Local records">
+          <div><span>BEST SCORE</span><strong id="menu-best-score">0</strong></div>
+          <div><span>BEST STAGE</span><strong id="menu-best-stage">0</strong></div>
+        </div>
+      </div>
+
+      <div class="core-card panel">
+        <div class="card-status"><span>CORE LINK // READY</span><i aria-hidden="true"></i></div>
+        <div class="core-visual" aria-hidden="true"><div class="core-halo"></div><div class="core-ring ring-one"></div><div class="core-ring ring-two"></div><div class="core-axis axis-one"></div><div class="core-axis axis-two"></div><div class="core-orb"></div><span class="core-readout">COHERENCE<br />42.09%</span></div>
+        <label for="operator-name">OPERATOR CALLSIGN</label>
+        <input id="operator-name" maxlength="18" autocomplete="nickname" placeholder="NOVA-7" aria-describedby="name-hint" />
+        <p id="name-hint" class="input-hint" aria-live="polite">Saved locally on this device.</p>
+        <button id="play-btn" class="primary-btn" type="button">Initialize Run <span>&gt;&gt;</span></button>
+        <button id="howto-btn" class="text-btn" type="button">How to stabilize the core</button>
+      </div>
+    </section>
+
+    <section id="howto-screen" class="screen" aria-labelledby="howto-title">
+      <div class="wide-panel panel">
+        <p class="eyebrow">OPERATOR BRIEFING</p>
+        <h2 id="howto-title" tabindex="-1">Read the signal. Solve the rule.</h2>
+        <p>Each module states its complete rule. Finish eight modules over four stages. Timers tighten gradually, but every puzzle has one clear solution.</p>
+        <p><strong>One-strike run:</strong> one wrong answer or an expired timer ends the run. Each solved module scores 650 points, plus 180 per current stage, plus up to 700 based on the exact fraction of module time remaining.</p>
+        <div class="brief-warning"><span>SIMULATION NOTICE</span> All systems, signals, and energy channels are fictional arcade constructs.</div>
+        <div class="brief-grid">
+          <article><b>01</b><h3>Decode</h3><p>Complete color and number patterns.</p></article>
+          <article><b>02</b><h3>Align</h3><p>Match glyphs and switch targets.</p></article>
+          <article><b>03</b><h3>Route</h3><p>Follow fictional energy paths in order.</p></article>
+          <article><b>04</b><h3>Recall</h3><p>Repeat short light-code sequences.</p></article>
+        </div>
+        <div class="key-guide"><span><kbd>1-9</kbd> Select when numbered</span><span><kbd>Tab</kbd> Move between controls</span><span><kbd>Space</kbd> Activate a control</span><span><kbd>Enter</kbd> Submit switch grids</span><span><kbd>P</kbd> or <kbd>Esc</kbd> Pause</span></div>
+        <div class="panel-actions"><button id="brief-play-btn" class="primary-btn" type="button">Begin Mission</button><button id="brief-back-btn" class="secondary-btn" type="button">Back</button></div>
+      </div>
+    </section>
+
+    <section id="game-screen" class="screen game-screen" aria-label="Active stabilization run">
+      <div class="game-frame panel">
+        <div class="game-header">
+          <div class="mission-id"><span>OPERATOR</span><strong id="hud-name">NOVA-7</strong></div>
+          <div class="hud-cluster">
+            <div><span>STAGE</span><strong id="stage-display">1 / 4</strong></div>
+            <div><span>MODULES</span><strong id="module-display">0 / 8</strong></div>
+            <div><span>SCORE</span><strong id="score-display">0</strong></div>
+          </div>
+          <button id="pause-btn" class="pause-btn" type="button" aria-label="Pause game">II <span>Pause</span></button>
+        </div>
+
+        <div class="stability-track" role="progressbar" aria-label="Core stabilization progress" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0" aria-valuetext="0 of 8 modules stabilized"><div id="stability-fill"></div></div>
+
+        <div class="module-meta">
+          <div><p id="module-kicker" class="eyebrow">SIGNAL ACQUISITION</p><h2 id="module-title" tabindex="-1">Module loading</h2></div>
+          <div class="timer-console"><small>WINDOW</small><div id="timer-ring" class="timer-ring" role="timer" aria-label="Time remaining"><strong id="timer-display">--</strong><span>SEC</span></div></div>
+        </div>
+
+        <p id="module-rule" class="module-rule">Stand by for a fictional system signal.</p>
+        <div id="module-board" class="module-board" aria-live="polite"></div>
+        <p id="module-feedback" class="feedback" aria-live="assertive" aria-atomic="true"></p>
+        <div class="game-footer"><span id="stage-note">STAGE 1 // CALIBRATION</span><span>Use numbered keys when shown <i>//</i> P pauses</span></div>
+      </div>
+    </section>
+
+    <section id="failure-screen" class="screen end-screen" aria-labelledby="failure-title">
+      <div class="end-card panel failure-card">
+        <div class="shutdown-visual" aria-hidden="true"><div class="shutdown-core"></div><i></i><i></i><i></i></div>
+        <div class="glitch-mark" aria-hidden="true" data-text="ERR_09">ERR_09</div>
+        <p class="eyebrow">HARMLESS ENERGY SHUTDOWN // SIMULATION GLITCH</p>
+        <h2 id="failure-title" tabindex="-1">Core signal scrambled.</h2>
+        <p>No damage, no drama. The arcade simulation safely reset its imaginary energy matrix.</p>
+        <div class="end-stats"><div><span>SCORE</span><strong id="failure-score">0</strong></div><div><span>STAGE REACHED</span><strong id="failure-stage">1</strong></div><div><span>MODULES</span><strong id="failure-modules">0</strong></div></div>
+        <div class="panel-actions"><button id="failure-replay" class="primary-btn" type="button">Reinitialize</button><button id="failure-menu" class="secondary-btn" type="button">Main Menu</button></div>
+      </div>
+    </section>
+
+    <section id="success-screen" class="screen end-screen" aria-labelledby="success-title">
+      <canvas id="success-canvas" aria-hidden="true"></canvas>
+      <div class="end-card panel success-card">
+        <div class="stable-core" aria-hidden="true"><i></i></div>
+        <p class="eyebrow">MISSION COMPLETE // NOVA CORE STABILIZED</p>
+        <h2 id="success-title" tabindex="-1">Signal locked, <span id="success-name">Operator</span>.</h2>
+        <p>Every fictional energy channel is glowing in perfect arcade harmony.</p>
+        <div class="final-score"><span>FINAL SCORE</span><strong id="success-score">0</strong><small id="record-note">RUN COMPLETE</small></div>
+        <div class="panel-actions"><button id="success-replay" class="primary-btn" type="button">Run It Again</button><button id="success-menu" class="secondary-btn" type="button">Main Menu</button></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="pause-overlay" class="pause-overlay" role="dialog" aria-modal="true" aria-labelledby="pause-title" aria-describedby="pause-description pause-shortcut" aria-hidden="true">
+    <div class="pause-card panel">
+      <p class="eyebrow">SIMULATION SUSPENDED</p>
+      <h2 id="pause-title">Core on standby.</h2>
+      <p id="pause-description">Your timer and signal sequence are frozen.</p>
+      <button id="resume-btn" class="primary-btn" type="button">Resume</button>
+      <button id="pause-menu-btn" class="secondary-btn" type="button">Exit to Menu</button>
+      <small id="pause-shortcut">Press P or Escape to continue</small>
+    </div>
+  </div>
+
+  <script src="assets/main.js"></script>
+</body>
+</html>

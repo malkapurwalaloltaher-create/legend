@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#08051b" />
+  <meta name="description" content="Sequence Shock, a glowing memory sequence challenge." />
+  <title>Sequence Shock</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="backdrop" aria-hidden="true">
+    <div class="grid"></div>
+    <div class="orb orb-one"></div>
+    <div class="orb orb-two"></div>
+  </div>
+
+  <header class="topbar">
+    <nav class="site-nav" aria-label="Site navigation">
+      <a class="back-link" href="/" aria-label="Back to Legendary Lands">
+        <span class="back-grid" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span class="back-copy"><small>Return to</small>Legendary Lands</span>
+      </a>
+      <a class="github-cta" href="https://github.com/mrxavier53" target="_blank" rel="noopener noreferrer" aria-label="Visit mrxavier53 on GitHub (opens in a new tab)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .7A11.5 11.5 0 0 0 8.36 23.1c.58.1.79-.25.79-.56v-2.02c-3.22.7-3.9-1.37-3.9-1.37-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.57-.3-5.27-1.29-5.27-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.16 1.18A11 11 0 0 1 12 6.32c.98 0 1.96.13 2.88.39 2.2-1.5 3.16-1.18 3.16-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.71 5.39-5.29 5.68.42.36.79 1.07.79 2.16v3.03c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z"/></svg>
+        <span>GitHub</span><i aria-hidden="true">&nearr;</i>
+      </a>
+    </nav>
+    <div class="brand-mini"><i></i> SEQUENCE SHOCK</div>
+    <div class="audio-controls" aria-label="Audio settings">
+      <button id="sound-toggle" class="control-button" type="button" aria-pressed="true">
+        <span class="control-icon" aria-hidden="true">SFX</span><span id="sound-label">On</span>
+      </button>
+      <button id="music-toggle" class="control-button" type="button" aria-pressed="true">
+        <span class="control-icon" aria-hidden="true">MUSIC</span><span id="music-label">On</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section id="menu-screen" class="screen menu-screen" aria-labelledby="game-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> Neural memory protocol</p>
+        <h1 id="game-title">SEQUENCE<br><em>SHOCK</em></h1>
+        <p class="hero-description">Watch the grid come alive. Hold the pattern in your mind. Return every pulse in perfect order.</p>
+        <div class="neural-preview" aria-hidden="true">
+          <div class="preview-meta"><span>Pattern simulation</span><i>Link stable</i></div>
+          <div class="preview-chamber">
+            <span class="preview-scan"></span>
+            <div class="preview-grid">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <b>09 NODE ARRAY</b>
+          </div>
+        </div>
+        <div class="menu-records" aria-label="Local records">
+          <div><span>Best round</span><strong id="menu-best">0</strong></div>
+          <div><span>Longest seen</span><strong id="menu-longest">0</strong></div>
+          <div><span>Runs</span><strong id="menu-runs">0</strong></div>
+        </div>
+      </div>
+
+      <div class="menu-panel glass-panel">
+        <div class="panel-heading">
+          <span>01</span>
+          <div><p class="eyebrow">Configure run</p><h2>Choose your shock</h2></div>
+        </div>
+
+        <label class="field-label" for="player-name">Player name</label>
+        <input id="player-name" class="name-input" maxlength="20" autocomplete="nickname" placeholder="PLAYER ONE" />
+        <p id="name-error" class="field-error" role="status"></p>
+
+        <fieldset class="mode-fieldset">
+          <legend>Game mode</legend>
+          <div class="mode-grid">
+            <label class="mode-card selected" data-mode-card="classic">
+              <input type="radio" name="mode" value="classic" checked />
+              <span class="mode-symbol">01</span>
+              <strong>Classic</strong>
+              <small>One error ends the run.</small>
+            </label>
+            <label class="mode-card" data-mode-card="lives">
+              <input type="radio" name="mode" value="lives" />
+              <span class="mode-symbol">03</span>
+              <strong>Lives</strong>
+              <small>Three chances to hold on.</small>
+            </label>
+            <label class="mode-card" data-mode-card="speed">
+              <input type="radio" name="mode" value="speed" />
+              <span class="mode-symbol">&gt;&gt;</span>
+              <strong>Speed Shock</strong>
+              <small>Playback accelerates hard.</small>
+            </label>
+          </div>
+        </fieldset>
+
+        <button id="play-button" class="primary-button" type="button"><span>Initialize sequence</span><b aria-hidden="true">&rarr;</b></button>
+        <button id="how-to-button" class="text-button" type="button">How to play <span aria-hidden="true">?</span></button>
+      </div>
+    </section>
+
+    <section id="game-screen" class="screen game-screen" aria-labelledby="game-heading" tabindex="-1" hidden>
+      <div class="game-header">
+        <div>
+          <p class="eyebrow"><span></span> Live memory link</p>
+          <h2 id="game-heading">Stay in sequence, <strong id="hud-name">Player</strong></h2>
+        </div>
+        <div class="game-actions">
+          <div id="mode-badge" class="mode-badge">Classic</div>
+          <button id="pause-button" class="pause-button" type="button" aria-label="Pause game"><span aria-hidden="true">II</span> Pause</button>
+        </div>
+      </div>
+
+      <div class="hud" aria-label="Game statistics">
+        <div class="hud-item featured"><span>Round</span><strong id="round-stat">1</strong></div>
+        <div class="hud-item"><span>Best round</span><strong id="best-stat">0</strong></div>
+        <div class="hud-item"><span>Longest sequence</span><strong id="longest-stat">0</strong></div>
+        <div class="hud-item"><span>Accuracy</span><strong id="accuracy-stat">100%</strong></div>
+        <div class="hud-item"><span>Mistakes</span><strong id="mistakes-stat">0</strong></div>
+        <div id="lives-hud" class="hud-item lives-stat" hidden><span>Lives</span><strong id="lives-stat">3</strong></div>
+      </div>
+
+      <div class="play-area">
+        <div class="status-wrap" aria-live="polite">
+          <span id="turn-indicator" class="turn-indicator system">System</span>
+          <strong id="status-title">Observe the signal</strong>
+          <small id="status-detail">Input is locked during playback.</small>
+        </div>
+
+        <div id="tile-grid" class="tile-grid" role="group" aria-label="Sequence tiles">
+          <button class="shock-tile tile-1" type="button" data-tile="0" aria-label="Tile 1"><span>1</span></button>
+          <button class="shock-tile tile-2" type="button" data-tile="1" aria-label="Tile 2"><span>2</span></button>
+          <button class="shock-tile tile-3" type="button" data-tile="2" aria-label="Tile 3"><span>3</span></button>
+          <button class="shock-tile tile-4" type="button" data-tile="3" aria-label="Tile 4"><span>4</span></button>
+          <button class="shock-tile tile-5" type="button" data-tile="4" aria-label="Tile 5"><span>5</span></button>
+          <button class="shock-tile tile-6" type="button" data-tile="5" aria-label="Tile 6"><span>6</span></button>
+          <button class="shock-tile tile-7" type="button" data-tile="6" aria-label="Tile 7"><span>7</span></button>
+          <button class="shock-tile tile-8" type="button" data-tile="7" aria-label="Tile 8"><span>8</span></button>
+          <button class="shock-tile tile-9" type="button" data-tile="8" aria-label="Tile 9"><span>9</span></button>
+        </div>
+
+        <div class="sequence-progress" aria-label="Sequence progress">
+          <div class="progress-copy"><span>Recall progress</span><strong id="progress-text">0 / 1</strong></div>
+          <div class="progress-track"><i id="progress-fill"></i></div>
+          <p>Keyboard: <kbd>1</kbd>-<kbd>9</kbd> <span></span> Pause: <kbd>P</kbd> or <kbd>Esc</kbd></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section id="how-to-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="how-to-title" hidden>
+    <div class="modal-card glass-panel">
+      <button class="modal-close" data-close-how-to type="button" aria-label="Close how to play">&times;</button>
+      <p class="eyebrow">Memory protocol</p>
+      <h2 id="how-to-title">How to survive the shock</h2>
+      <div class="instruction-list">
+        <div><b>1</b><p><strong>Observe</strong><span>The system illuminates a growing sequence. Input stays locked.</span></p></div>
+        <div><b>2</b><p><strong>Repeat</strong><span>Tap the same tiles in the exact order, or use keys 1 through 9.</span></p></div>
+        <div><b>3</b><p><strong>Adapt</strong><span>Every cleared round adds a tile and speeds up playback.</span></p></div>
+      </div>
+      <button class="primary-button" data-close-how-to type="button"><span>Understood</span><b aria-hidden="true">&check;</b></button>
+    </div>
+  </section>
+
+  <section id="pause-modal" class="modal pause-modal" role="dialog" aria-modal="true" aria-labelledby="pause-title" hidden>
+    <div class="modal-card glass-panel compact-modal">
+      <p class="eyebrow">Signal suspended</p>
+      <h2 id="pause-title">Sequence paused</h2>
+      <p id="pause-reason">Your place is safe. Resume when your focus is back.</p>
+      <button id="resume-button" class="primary-button" type="button"><span>Resume link</span><b aria-hidden="true">&rarr;</b></button>
+      <button id="pause-menu-button" class="text-button" type="button">Return to menu</button>
+    </div>
+  </section>
+
+  <section id="gameover-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="gameover-title" hidden>
+    <div class="modal-card glass-panel result-modal">
+      <p class="eyebrow">Run terminated</p>
+      <h2 id="gameover-title">Sequence broken</h2>
+      <p id="gameover-copy">The grid caught the mismatch. Recalibrate and go again.</p>
+      <div id="record-banner" class="record-banner" hidden>New neural record</div>
+      <div class="result-stage">
+        <div id="record-effects" class="record-effects" aria-hidden="true"></div>
+        <div class="result-round"><span id="result-round">0</span><small>Rounds cleared</small></div>
+      </div>
+      <div class="result-grid">
+        <div><span>Accuracy</span><strong id="result-accuracy">0%</strong></div>
+        <div><span>Mistakes</span><strong id="result-mistakes">0</strong></div>
+        <div><span>Longest seen</span><strong id="result-longest">0</strong></div>
+      </div>
+      <button id="replay-button" class="primary-button" type="button"><span>Replay mode</span><b aria-hidden="true">&orarr;</b></button>
+      <button id="menu-button" class="text-button" type="button">Change mode / menu</button>
+    </div>
+  </section>
+
+  <script src="assets/main.js"></script>
+</body>
+</html>

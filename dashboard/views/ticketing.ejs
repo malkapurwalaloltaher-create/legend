@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ticketing V2 - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" type="image/png" href="/favicon.png?v=12.0.0" />
+
+  <style>
+    .ticket-page{display:grid;gap:22px}.ticket-hero{position:relative;overflow:hidden;border:1px solid rgba(139,92,246,.34);background:radial-gradient(circle at 14% 20%,rgba(139,92,246,.34),transparent 32rem),radial-gradient(circle at 86% 12%,rgba(34,211,238,.18),transparent 30rem),linear-gradient(135deg,rgba(15,23,42,.94),rgba(30,27,75,.88))}.ticket-hero::after{content:"";position:absolute;width:340px;height:340px;right:-130px;bottom:-170px;border-radius:999px;background:rgba(34,211,238,.12);filter:blur(12px);pointer-events:none}.ticket-hero .hero-text{position:relative;z-index:1}.ticket-overview-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.ticket-stat{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.055);border-radius:22px;padding:17px;box-shadow:0 16px 36px rgba(0,0,0,.16)}.ticket-stat strong{display:block;font-size:1.65rem;line-height:1;margin-bottom:8px}.ticket-stat span{color:rgba(237,233,254,.70);font-weight:850;font-size:.88rem}.ticket-layout{display:grid;grid-template-columns:minmax(0,1fr) 410px;gap:20px;align-items:start}.ticket-stack,.ticket-side{display:grid;gap:18px}.ticket-side{position:sticky;top:18px}.ticket-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}.ticket-tab{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;border-radius:999px;padding:10px 13px;font-weight:1000;cursor:pointer;transition:.18s}.ticket-tab:hover,.ticket-tab.active{transform:translateY(-2px);border-color:rgba(34,211,238,.55);background:rgba(34,211,238,.14);box-shadow:0 12px 28px rgba(34,211,238,.10)}.ticket-panel-section{display:none}.ticket-panel-section.active{display:block;animation:ticketFadeUp .22s ease both}@keyframes ticketFadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.ticket-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.ticket-form-grid .full{grid-column:1/-1}.ticket-mini-note{color:rgba(237,233,254,.62);font-size:.83rem;line-height:1.45;margin-top:7px}.ticket-toggle-box{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.ticket-toggle-card{display:flex;align-items:center;gap:10px;padding:13px;border-radius:17px;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.052);font-weight:950}.ticket-toggle-card input{width:19px;height:19px;accent-color:#22d3ee}.ticket-preview-shell{border:1px solid rgba(255,255,255,.10);background:rgba(9,12,31,.58);border-radius:22px;padding:16px}.ticket-discord-message{display:grid;gap:12px}.ticket-preview-normal{color:rgba(255,255,255,.82);white-space:pre-wrap;line-height:1.45}.ticket-embed{display:grid;grid-template-columns:5px minmax(0,1fr);overflow:hidden;border-radius:16px;background:rgba(15,23,42,.88);border:1px solid rgba(255,255,255,.09)}.ticket-embed-border{background:#8b5cf6}.ticket-embed-body{padding:14px;min-width:0}.ticket-embed-title{font-weight:1000;font-size:1.04rem;margin-bottom:8px}.ticket-embed-desc{color:rgba(237,233,254,.78);line-height:1.48;white-space:pre-wrap}.ticket-embed-footer{margin-top:12px;color:rgba(237,233,254,.54);font-size:.82rem}.ticket-button-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.ticket-button-preview{display:inline-flex;width:fit-content;align-items:center;gap:7px;border:0;border-radius:10px;padding:9px 12px;font-weight:1000;color:#fff;background:#5865f2;box-shadow:0 10px 25px rgba(88,101,242,.24)}.ticket-button-preview.Secondary{background:#4b5563}.ticket-button-preview.Success{background:#22c55e;color:#052e16}.ticket-button-preview.Danger{background:#ef4444}.ticket-launch-card{border:1px solid rgba(34,211,238,.18);background:linear-gradient(145deg,rgba(34,211,238,.08),rgba(139,92,246,.07))}.ticket-checklist{display:grid;gap:9px;margin-top:12px}.ticket-check{display:flex;gap:9px;align-items:flex-start;color:rgba(237,233,254,.76);font-weight:820;line-height:1.35}.ticket-check b{color:#a7f3d0}.ticket-list{display:grid;gap:12px}.ticket-item{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.052);border-radius:18px;padding:14px}.ticket-item-top{display:flex;justify-content:space-between;gap:10px;align-items:start}.ticket-item h3{margin:0 0 5px}.ticket-item p{margin:0;color:rgba(237,233,254,.70);line-height:1.45}.ticket-pill{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(34,211,238,.25);background:rgba(34,211,238,.09);color:#cffafe;border-radius:999px;padding:6px 9px;font-size:.75rem;font-weight:1000}.ticket-action-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.ticket-danger{border-color:rgba(239,68,68,.35)!important;background:rgba(239,68,68,.12)!important}.ticket-button-builder{display:grid;gap:12px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.045);border-radius:20px;padding:14px}.ticket-button-editor{display:grid;grid-template-columns:1fr 90px 140px 1fr auto;gap:8px;align-items:end}.ticket-button-editor .mini-btn{height:42px}.ticket-hidden{display:none!important}@media(max-width:1120px){.ticket-layout,.ticket-overview-grid{grid-template-columns:1fr 1fr}.ticket-side{position:static}.ticket-button-editor{grid-template-columns:1fr 1fr}}@media(max-width:720px){.ticket-layout,.ticket-overview-grid,.ticket-form-grid,.ticket-toggle-box,.ticket-button-editor{grid-template-columns:1fr}.ticket-side{position:static}}
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+
+    <main class="main-content ticket-page">
+      <%- include("partials/topbar", {
+        pageTitle: "Ticketing V2",
+        pageSubtitle: "Create ticket categories, build visual panels, and prepare the Discord ticket workflow."
+      }) %>
+
+      <% if (success) { %><div class="alert success"><%= success %></div><% } %>
+      <% if (error) { %><div class="alert error"><%= error %></div><% } %>
+
+      <section class="hero-card ticket-hero">
+        <div class="hero-text">
+          <div class="hero-icon-wrap"><img src="<%= botAvatar %>" class="hero-bot-avatar" alt="Bot Avatar" /></div>
+          <div><h2>🎫 Ticketing System V2</h2><p>Build categories, panels, buttons, permissions, welcome messages, transcripts, and automation from one polished dashboard.</p></div>
+        </div>
+      </section>
+
+      <section class="ticket-overview-grid">
+        <div class="ticket-stat"><strong><%= config.enabled !== false ? "ON" : "OFF" %></strong><span>Legacy Panel Status</span></div>
+        <div class="ticket-stat"><strong><%= (ticketPanels || []).length %></strong><span>Saved Panels</span></div>
+        <div class="ticket-stat"><strong><%= (ticketCategories || []).length %></strong><span>Ticket Categories</span></div>
+        <div class="ticket-stat"><strong><%= config.transcriptEnabled !== false ? "Ready" : "Off" %></strong><span>Global Transcripts</span></div>
+      </section>
+
+      <div class="ticket-layout">
+        <div class="ticket-stack">
+          <section class="section-card">
+            <div class="section-header"><h2>Phase 2 Builder</h2><p>Create ticket categories and panel button layouts. Phase 3 will connect these buttons to real Discord channel creation.</p></div>
+            <div class="ticket-tabs" role="tablist" aria-label="Ticket builder tabs">
+              <button class="ticket-tab active" type="button" data-ticket-tab="panel">🎛 Panel Builder</button>
+              <button class="ticket-tab" type="button" data-ticket-tab="categories">📂 Categories</button>
+              <button class="ticket-tab" type="button" data-ticket-tab="legacy">⚙ Legacy Settings</button>
+            </div>
+
+            <div class="ticket-panel-section active" data-ticket-section="panel">
+              <form method="POST" action="/ticketing/panels/create" class="dashboard-ajax-form" id="ticketPanelForm">
+                <input type="hidden" name="buttonsJson" id="ticketButtonsJson" value="[]" />
+                <div class="ticket-form-grid">
+                  <label class="form-group full"><span>Panel Name</span><input class="input" name="panelName" id="panelName" value="Support Panel" required /></label>
+                  <label class="form-group full"><span>Send Panel To Channel</span><select class="input" name="panelChannelId"><option value="">Select channel later</option><% channelGroups.forEach(group => { %><optgroup label="📁 <%= group.name %>"><% group.channels.forEach(channel => { %><option value="<%= channel.id %>"># <%= channel.name %></option><% }) %></optgroup><% }) %></select></label>
+                  <label class="form-group full"><span>Normal Text Above Embed</span><textarea class="input textarea" name="panelContent" id="panelContent" placeholder="Optional text above the panel..."></textarea></label>
+                  <label class="toggle-line full"><input type="checkbox" name="panelEmbedEnabled" id="panelEmbedEnabled" checked value="on" /><span>Send Embed Panel</span></label>
+                  <label class="form-group full"><span>Embed Title</span><input class="input" name="panelTitle" id="builderPanelTitle" value="🎫 Need Help?" /></label>
+                  <label class="form-group full"><span>Embed Description</span><textarea class="input textarea" name="panelDescription" id="builderPanelDescription">Choose a button below to open the right ticket.</textarea></label>
+                  <div class="form-group"><span>Embed Color</span><div class="color-row"><input type="color" class="color-picker" id="builderPanelColorPicker" value="#8b5cf6" /><input class="input color-hex-input" name="panelColor" id="builderPanelColor" value="#8b5cf6" /></div></div>
+                  <label class="form-group"><span>Footer</span><input class="input" name="panelFooter" id="builderPanelFooter" value="Legendary Bot Ticket System" /></label>
+                  <label class="form-group"><span>Thumbnail URL</span><input class="input" name="panelThumbnail" placeholder="https://..." /></label>
+                  <label class="form-group"><span>Image URL</span><input class="input" name="panelImage" placeholder="https://..." /></label>
+                </div>
+
+                <div class="ticket-button-builder" style="margin-top:16px;">
+                  <div class="section-header compact-header"><h2>Button Manager</h2><p>Add up to 25 ticket buttons. Each button can point to a saved category.</p></div>
+                  <div class="ticket-button-editor">
+                    <label class="form-group"><span>Label</span><input class="input" id="buttonLabelInput" value="Support" /></label>
+                    <label class="form-group"><span>Emoji</span><input class="input" id="buttonEmojiInput" value="🎫" /></label>
+                    <label class="form-group"><span>Style</span><select class="input" id="buttonStyleInput"><option>Primary</option><option>Secondary</option><option>Success</option><option>Danger</option></select></label>
+                    <label class="form-group"><span>Category</span><select class="input" id="buttonCategoryInput"><option value="">No category yet</option><% (ticketCategories || []).forEach(category => { %><option value="<%= category._id %>"><%= category.emoji || "🎫" %> <%= category.name %></option><% }) %></select></label>
+                    <button type="button" class="mini-btn" id="addTicketButtonBtn">Add</button>
+                  </div>
+                  <div class="ticket-action-row" id="ticketButtonList"></div>
+                </div>
+
+                <div class="button-row preview-button-row"><button type="submit" class="primary-btn">Save Ticket Panel</button></div>
+              </form>
+            </div>
+
+            <div class="ticket-panel-section" data-ticket-section="categories">
+              <form method="POST" action="/ticketing/categories/create" class="dashboard-ajax-form">
+                <div class="ticket-form-grid">
+                  <label class="form-group"><span>Category Name</span><input class="input" name="categoryName" value="Support" required /></label>
+                  <label class="form-group"><span>Emoji</span><input class="input" name="categoryEmoji" value="🎫" /></label>
+                  <label class="form-group full"><span>Description</span><textarea class="input textarea" name="categoryDescription">General support tickets.</textarea></label>
+                  <label class="form-group"><span>Discord Category</span><select class="input" name="discordCategoryId"><option value="">No Discord category</option><% channelGroups.forEach(group => { %><option value="<%= group.id %>">📁 <%= group.name %></option><% }) %></select></label>
+                  <label class="form-group"><span>Staff Role</span><select class="input" name="categoryStaffRoleId"><option value="">No staff role</option><% roles.forEach(role => { %><option value="<%= role.id %>"><%= role.name %></option><% }) %></select></label>
+                  <label class="form-group"><span>Log Channel</span><select class="input" name="categoryLogChannelId"><option value="">No log channel</option><% channelGroups.forEach(group => { %><optgroup label="📁 <%= group.name %>"><% group.channels.forEach(channel => { %><option value="<%= channel.id %>"># <%= channel.name %></option><% }) %></optgroup><% }) %></select></label>
+                  <label class="form-group"><span>Transcript Channel</span><select class="input" name="categoryTranscriptChannelId"><option value="">No transcript channel</option><% channelGroups.forEach(group => { %><optgroup label="📁 <%= group.name %>"><% group.channels.forEach(channel => { %><option value="<%= channel.id %>"># <%= channel.name %></option><% }) %></optgroup><% }) %></select></label>
+                  <label class="form-group"><span>Auto Close Hours</span><input class="input" type="number" min="0" max="720" name="categoryAutoCloseHours" value="0" /></label>
+                  <label class="form-group"><span>Welcome Title</span><input class="input" name="categoryWelcomeTitle" value="Welcome to your ticket" /></label>
+                  <label class="form-group full"><span>Welcome Message</span><textarea class="input textarea" name="categoryWelcomeMessage">Thanks for opening a ticket! Please explain your issue clearly.</textarea></label>
+                  <div class="ticket-toggle-box full"><label class="ticket-toggle-card"><input type="checkbox" name="categoryTranscriptEnabled" checked /><span>Enable Transcript</span></label><label class="ticket-toggle-card"><input type="checkbox" name="categoryAiEnabled" /><span>Enable AI Helper Later</span></label></div>
+                </div>
+                <div class="button-row preview-button-row"><button type="submit" class="primary-btn">Create Category</button></div>
+              </form>
+            </div>
+
+            <div class="ticket-panel-section" data-ticket-section="legacy">
+              <form method="POST" action="/ticketing/save" class="dashboard-ajax-form" id="ticketingForm">
+                <div class="ticket-form-grid">
+                  <label class="toggle-line full"><input type="checkbox" name="enabled" <%= config.enabled !== false ? "checked" : "" %> /><span>Enable Legacy Single Ticket Panel</span></label>
+                  <label class="form-group full"><span>Panel Channel</span><select name="panelChannelId" class="input"><option value="">Select channel</option><% channelGroups.forEach(group => { %><optgroup label="📁 <%= group.name %>"><% group.channels.forEach(channel => { %><option value="<%= channel.id %>" <%= config.panelChannelId === channel.id ? "selected" : "" %>># <%= channel.name %></option><% }) %></optgroup><% }) %></select></label>
+                  <label class="form-group full"><span>Panel Title</span><input name="panelTitle" id="panelTitle" class="input" value="<%= config.panelTitle || '🎫 Open a Ticket' %>" /></label>
+                  <label class="form-group full"><span>Panel Description</span><textarea name="panelDescription" id="panelDescription" class="input textarea"><%= config.panelDescription || 'Click the button below to open a support ticket.' %></textarea></label>
+                  <div class="form-group"><span>Panel Color</span><div class="color-row"><input type="color" id="panelColorPicker" class="color-picker" value="<%= config.panelColor || '#8b5cf6' %>" /><input name="panelColor" id="panelColor" class="input color-hex-input" value="<%= config.panelColor || '#8b5cf6' %>" /></div></div>
+                  <label class="form-group"><span>Support Role</span><select name="supportRoleId" class="input"><option value="">No support role</option><% roles.forEach(role => { %><option value="<%= role.id %>" <%= config.supportRoleId === role.id ? "selected" : "" %>><%= role.name %></option><% }) %></select></label>
+                  <label class="form-group"><span>Log Channel</span><select name="logChannelId" class="input"><option value="">No log channel</option><% channelGroups.forEach(group => { %><optgroup label="📁 <%= group.name %>"><% group.channels.forEach(channel => { %><option value="<%= channel.id %>" <%= config.logChannelId === channel.id ? "selected" : "" %>># <%= channel.name %></option><% }) %></optgroup><% }) %></select></label>
+                  <label class="form-group"><span>Ticket Name Format</span><input name="ticketNameFormat" class="input" value="<%= config.ticketNameFormat || 'ticket-{username}' %>" /></label>
+                  <label class="form-group"><span>Button Emoji</span><input name="buttonEmoji" id="buttonEmoji" class="input" value="<%= config.buttonEmoji || '🎫' %>" /></label>
+                  <label class="form-group"><span>Button Label</span><input name="buttonLabel" id="buttonLabel" class="input" value="<%= config.buttonLabel || 'Open Ticket' %>" /></label>
+                  <label class="form-group"><span>Button Style</span><select name="buttonStyle" id="buttonStyle" class="input"><% ["Primary","Secondary","Success","Danger"].forEach(style => { %><option value="<%= style %>" <%= (config.buttonStyle || 'Primary') === style ? "selected" : "" %>><%= style %></option><% }) %></select></label>
+                  <label class="form-group"><span>Auto Close Hours</span><input type="number" min="0" max="720" name="autoCloseHours" class="input" value="<%= config.autoCloseHours || 0 %>" /></label>
+                  <label class="form-group"><span>Max Open Tickets/User</span><input type="number" min="1" max="20" name="maxOpenTicketsPerUser" class="input" value="<%= config.maxOpenTicketsPerUser || 1 %>" /></label>
+                  <label class="form-group full"><span>Welcome Title</span><input name="ticketWelcomeTitle" class="input" value="<%= config.ticketWelcomeTitle || 'Welcome to your ticket' %>" /></label>
+                  <label class="form-group full"><span>Welcome Message</span><textarea name="ticketWelcomeMessage" class="input textarea"><%= config.ticketWelcomeMessage || 'Thanks for opening a ticket! Please explain your issue clearly and staff will help you soon.' %></textarea></label>
+                  <input type="hidden" name="categoryId" value="<%= config.categoryId || '' %>" /><input type="hidden" name="panelFooter" value="<%= config.panelFooter || 'Legendary Bot Ticket System' %>" /><input type="hidden" name="panelThumbnail" value="<%= config.panelThumbnail || '' %>" /><input type="hidden" name="panelImage" value="<%= config.panelImage || '' %>" />
+                  <div class="ticket-toggle-box full"><label class="ticket-toggle-card"><input type="checkbox" name="transcriptEnabled" <%= config.transcriptEnabled !== false ? "checked" : "" %> /><span>Transcript</span></label><label class="ticket-toggle-card"><input type="checkbox" name="dmUserOnOpen" <%= config.dmUserOnOpen !== false ? "checked" : "" %> /><span>DM on Open</span></label><label class="ticket-toggle-card"><input type="checkbox" name="dmUserOnClose" <%= config.dmUserOnClose !== false ? "checked" : "" %> /><span>DM on Close</span></label><label class="ticket-toggle-card"><input type="checkbox" name="staffPingOnOpen" <%= config.staffPingOnOpen !== false ? "checked" : "" %> /><span>Ping Staff</span></label><label class="ticket-toggle-card"><input type="checkbox" name="aiPrecheckEnabled" <%= config.aiPrecheckEnabled ? "checked" : "" %> /><span>AI Precheck Later</span></label></div>
+                </div>
+                <div class="button-row preview-button-row"><button type="submit" class="primary-btn">Save Legacy Settings</button><button type="submit" formaction="/ticketing/send-panel" formmethod="POST" class="secondary-btn">Send Legacy Panel</button></div>
+              </form>
+            </div>
+          </section>
+
+          <section class="section-card">
+            <div class="section-header"><h2>Saved Panels</h2><p>These are dashboard-built panel templates for Phase 3 ticket creation.</p></div>
+            <div class="ticket-list">
+              <% if (!(ticketPanels || []).length) { %><div class="empty-mini">No panel templates yet. Create one above.</div><% } %>
+              <% (ticketPanels || []).forEach(panel => { %>
+                <div class="ticket-item">
+                  <div class="ticket-item-top"><div><h3><%= panel.name %></h3><p>#<%= panel.channelName || "not selected" %> • <%= (panel.buttons || []).length %> button(s)</p></div><span class="ticket-pill"><%= panel.active !== false ? "Active" : "Disabled" %></span></div>
+                  <p style="margin-top:8px;"><%= panel.title || "Ticket Panel" %></p>
+                  <div class="ticket-action-row"><form method="POST" action="/ticketing/panels/duplicate/<%= panel._id %>"><button class="mini-btn" type="submit">Duplicate</button></form><form method="POST" action="/ticketing/panels/delete/<%= panel._id %>"><button class="mini-btn ticket-danger" type="submit">Delete</button></form></div>
+                </div>
+              <% }) %>
+            </div>
+          </section>
+
+          <section class="section-card">
+            <div class="section-header"><h2>Saved Categories</h2><p>Ticket types with their own staff role, channels, welcome message, transcript, and automation.</p></div>
+            <div class="ticket-list">
+              <% if (!(ticketCategories || []).length) { %><div class="empty-mini">No categories yet. Create Support, Purchase, Bug Report, etc.</div><% } %>
+              <% (ticketCategories || []).forEach(category => { %>
+                <div class="ticket-item">
+                  <div class="ticket-item-top"><div><h3><%= category.emoji || "🎫" %> <%= category.name %></h3><p><%= category.description || "No description" %></p></div><span class="ticket-pill"><%= category.staffRoleName || "No role" %></span></div>
+                  <p style="margin-top:8px;">Category: <%= category.discordCategoryName || "Not set" %> • Logs: <%= category.logChannelName || "Off" %> • Transcript: <%= category.transcriptEnabled !== false ? "On" : "Off" %></p>
+                  <div class="ticket-action-row"><form method="POST" action="/ticketing/categories/delete/<%= category._id %>"><button class="mini-btn ticket-danger" type="submit">Delete</button></form></div>
+                </div>
+              <% }) %>
+            </div>
+          </section>
+        </div>
+
+        <aside class="ticket-side">
+          <section class="section-card ticket-preview-card">
+            <div class="section-header"><h2>Live Panel Preview</h2><p>Updates while you type.</p></div>
+            <div class="ticket-preview-shell"><div class="ticket-discord-message"><div class="ticket-preview-normal" id="ticketPreviewNormal"></div><div class="ticket-embed" id="ticketEmbedBox"><div class="ticket-embed-border" id="ticketEmbedBorder"></div><div class="ticket-embed-body"><div class="ticket-embed-title" id="ticketPreviewTitle">🎫 Need Help?</div><div class="ticket-embed-desc" id="ticketPreviewDesc">Choose a button below to open the right ticket.</div><div class="ticket-embed-footer" id="ticketPreviewFooter">Legendary Bot Ticket System</div></div></div><div class="ticket-button-row" id="ticketPreviewButtons"><button class="ticket-button-preview Primary" type="button">🎫 Support</button></div></div></div>
+          </section>
+
+          <section class="section-card ticket-launch-card">
+            <div class="section-header"><h2>Phase 2 Includes</h2><p>This update prepares the real ticket flow.</p></div>
+            <div class="ticket-checklist"><div class="ticket-check"><b>✓</b> MongoDB panel templates</div><div class="ticket-check"><b>✓</b> MongoDB ticket categories</div><div class="ticket-check"><b>✓</b> Multi-button panel builder</div><div class="ticket-check"><b>✓</b> Live Discord-style preview</div><div class="ticket-check"><b>✓</b> Delete + duplicate panel actions</div><div class="ticket-check"><b>→</b> Phase 3 creates real Discord ticket channels</div></div>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <script type="application/json" id="ticketCategoryData"><%- JSON.stringify((ticketCategories || []).map(category => ({ id: String(category._id), name: category.name, emoji: category.emoji }))).replace(/</g, "\\u003c") %></script>
+  <script src="/dashboard.js"></script>
+  <script>
+    const ticketTabs = document.querySelectorAll("[data-ticket-tab]");
+    const ticketSections = document.querySelectorAll("[data-ticket-section]");
+    ticketTabs.forEach((tab) => tab.addEventListener("click", () => { ticketTabs.forEach((item) => item.classList.remove("active")); ticketSections.forEach((item) => item.classList.remove("active")); tab.classList.add("active"); document.querySelector(`[data-ticket-section="${tab.dataset.ticketTab}"]`)?.classList.add("active"); }));
+
+    const panelContent = document.getElementById("panelContent");
+    const panelEmbedEnabled = document.getElementById("panelEmbedEnabled");
+    const builderPanelTitle = document.getElementById("builderPanelTitle");
+    const builderPanelDescription = document.getElementById("builderPanelDescription");
+    const builderPanelColor = document.getElementById("builderPanelColor");
+    const builderPanelColorPicker = document.getElementById("builderPanelColorPicker");
+    const builderPanelFooter = document.getElementById("builderPanelFooter");
+    const ticketPreviewNormal = document.getElementById("ticketPreviewNormal");
+    const ticketEmbedBox = document.getElementById("ticketEmbedBox");
+    const ticketEmbedBorder = document.getElementById("ticketEmbedBorder");
+    const ticketPreviewTitle = document.getElementById("ticketPreviewTitle");
+    const ticketPreviewDesc = document.getElementById("ticketPreviewDesc");
+    const ticketPreviewFooter = document.getElementById("ticketPreviewFooter");
+    const ticketPreviewButtons = document.getElementById("ticketPreviewButtons");
+    const ticketButtonsJson = document.getElementById("ticketButtonsJson");
+    const ticketButtonList = document.getElementById("ticketButtonList");
+    const categoryData = JSON.parse(document.getElementById("ticketCategoryData").textContent || "[]");
+    let ticketButtons = [{ label: "Support", emoji: "🎫", style: "Primary", categoryRef: categoryData[0]?.id || "", enabled: true }];
+
+    function validHex(value){ return /^#[0-9A-Fa-f]{6}$/.test(String(value || "").trim()); }
+    function categoryLabel(id){ const found = categoryData.find((item) => item.id === id); return found ? `${found.emoji || "🎫"} ${found.name}` : "No category"; }
+    function syncTicketButtons(){ ticketButtonsJson.value = JSON.stringify(ticketButtons); renderTicketButtons(); updateTicketPreview(); }
+    function renderTicketButtons(){ ticketButtonList.innerHTML = ""; ticketButtons.forEach((button, index) => { const pill = document.createElement("button"); pill.type = "button"; pill.className = `mini-btn ${index === 0 ? "" : "secondary"}`; pill.textContent = `${button.emoji || ""} ${button.label || "Button"} • ${categoryLabel(button.categoryRef)}`; pill.title = "Click to remove"; pill.addEventListener("click", () => { ticketButtons.splice(index, 1); if (!ticketButtons.length) ticketButtons.push({ label: "Support", emoji: "🎫", style: "Primary", categoryRef: "", enabled: true }); syncTicketButtons(); }); ticketButtonList.appendChild(pill); }); }
+    function updateTicketPreview(){ ticketPreviewNormal.textContent = panelContent?.value?.trim() || ""; ticketEmbedBox.classList.toggle("ticket-hidden", !panelEmbedEnabled.checked); ticketPreviewTitle.textContent = builderPanelTitle.value.trim() || "🎫 Need Help?"; ticketPreviewDesc.textContent = builderPanelDescription.value.trim() || "Choose a button below to open the right ticket."; ticketPreviewFooter.textContent = builderPanelFooter.value.trim() || "Legendary Bot Ticket System"; ticketEmbedBorder.style.background = validHex(builderPanelColor.value) ? builderPanelColor.value : "#8b5cf6"; ticketPreviewButtons.innerHTML = ""; ticketButtons.forEach((button) => { if (!button.enabled) return; const btn = document.createElement("button"); btn.type = "button"; btn.className = `ticket-button-preview ${button.style || "Primary"}`; btn.textContent = `${button.emoji ? button.emoji + " " : ""}${button.label || "Open Ticket"}`; ticketPreviewButtons.appendChild(btn); }); }
+    document.getElementById("addTicketButtonBtn")?.addEventListener("click", () => { if (ticketButtons.length >= 25) return alert("Discord supports a maximum of 25 buttons per message."); ticketButtons.push({ label: document.getElementById("buttonLabelInput").value.trim() || "Open Ticket", emoji: document.getElementById("buttonEmojiInput").value.trim() || "🎫", style: document.getElementById("buttonStyleInput").value || "Primary", categoryRef: document.getElementById("buttonCategoryInput").value || "", enabled: true }); syncTicketButtons(); });
+    [panelContent,panelEmbedEnabled,builderPanelTitle,builderPanelDescription,builderPanelColor,builderPanelFooter].forEach((el) => { el?.addEventListener("input", updateTicketPreview); el?.addEventListener("change", updateTicketPreview); });
+    builderPanelColorPicker?.addEventListener("input", () => { builderPanelColor.value = builderPanelColorPicker.value; updateTicketPreview(); });
+    builderPanelColor?.addEventListener("input", () => { if (validHex(builderPanelColor.value)) builderPanelColorPicker.value = builderPanelColor.value; updateTicketPreview(); });
+    document.getElementById("ticketPanelForm")?.addEventListener("submit", syncTicketButtons);
+    syncTicketButtons();
+  </script>
+  <script src="/assets/js/site-music.js"></script>
+</body>
+</html>

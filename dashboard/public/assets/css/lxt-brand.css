@@ -1,0 +1,101 @@
+:root {
+  --lxt-panel: rgba(8, 12, 28, 0.82);
+  --lxt-line: rgba(255, 255, 255, 0.14);
+  --lxt-text: #f8fafc;
+  --lxt-muted: #a8b2cc;
+}
+
+.lxt-site-header {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: min(1180px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 18px 0;
+}
+
+.lxt-parent-brand,
+.lxt-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--lxt-text);
+  text-decoration: none;
+}
+
+.lxt-parent-brand img {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  object-fit: cover;
+  box-shadow: 0 0 24px color-mix(in srgb, var(--accent, #8b5cf6) 28%, transparent);
+}
+
+.lxt-parent-brand span,
+.lxt-back-link span {
+  display: grid;
+  line-height: 1.05;
+}
+
+.lxt-parent-brand small,
+.lxt-back-link small {
+  color: var(--lxt-muted);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.lxt-parent-brand strong,
+.lxt-back-link strong {
+  margin-top: 4px;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+.lxt-back-link {
+  padding: 9px 12px;
+  border: 1px solid var(--lxt-line);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.055);
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.lxt-back-link:hover,
+.lxt-back-link:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--accent, #8b5cf6);
+  outline: none;
+}
+
+.lxt-footer {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 22px 16px 28px;
+  color: var(--lxt-muted);
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.lxt-footer img {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+}
+
+.lxt-footer strong { color: var(--lxt-text); }
+
+@media (max-width: 560px) {
+  .lxt-site-header { align-items: flex-start; }
+  .lxt-parent-brand small { display: none; }
+  .lxt-back-link small { display: none; }
+  .lxt-back-link { padding: 10px; }
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= selectorTitle || "Owner Server Selector" %> - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" type="image/png" href="/favicon.png?v=17.1.0" />
+  <link rel="shortcut icon" type="image/png" href="/favicon.png?v=17.1.0" />
+</head>
+<body>
+  <div class="server-select-page legendary-server-select-v16">
+    <div class="server-select-shell">
+      <div class="server-select-header premium-server-header">
+        <img src="<%= botAvatar %>" alt="Bot Avatar" class="server-select-logo" />
+
+        <div>
+          <h1><%= selectorTitle || "Owner Server Selector" %></h1>
+          <p><%= selectorSubtitle || "All servers where Legendary Bot is installed are shown here. Choose a server to manage as the bot owner." %></p>
+        </div>
+      </div>
+
+      <% if (success) { %><div class="alert success"><%= success %></div><% } %>
+      <% if (error) { %><div class="alert error"><%= error %></div><% } %>
+
+      <section class="server-grid premium-server-grid">
+        <% if (!servers || !servers.length) { %>
+          <div class="section-card">
+            <div class="section-header">
+              <h2>No servers found</h2>
+              <p>The bot is not currently installed in any servers or Discord data is still loading.</p>
+            </div>
+          </div>
+        <% } %>
+
+        <% (servers || []).forEach(server => { %>
+          <article class="server-option-card premium-server-card <%= server.premiumEnabled ? 'is-premium' : 'is-free' %>">
+            <form method="POST" action="/select-server" class="premium-server-open-form" data-no-ajax="true" data-no-loading="false">
+              <input type="hidden" name="guildId" value="<%= server.id %>" />
+              <button type="submit" class="premium-server-open-button">
+                <img src="<%= server.icon %>" alt="Server Icon" class="server-option-icon" />
+
+                <span class="server-option-text">
+                  <h3><%= server.name %></h3>
+                  <p><%= server.memberCount %> members • <%= server.id %></p>
+                </span>
+
+                <span class="server-option-arrow">→</span>
+              </button>
+            </form>
+
+            <% if (canManagePremium !== false) { %>
+              <form method="POST" action="/select-server/<%= server.id %>/premium" class="premium-toggle-form" data-no-ajax="true" data-no-loading="false">
+                <label class="premium-toggle-line">
+                  <input type="checkbox" name="premiumEnabled" <%= server.premiumEnabled ? 'checked' : '' %> onchange="this.form.submit()" />
+                  <span class="premium-toggle-ui"></span>
+                  <strong><%= server.premiumEnabled ? 'Premium Enabled' : 'Free Server' %></strong>
+                </label>
+              </form>
+            <% } else { %>
+              <div class="premium-toggle-form">
+                <div class="premium-toggle-line read-only">
+                  <span class="premium-toggle-ui"></span>
+                  <strong><%= server.premiumEnabled ? 'Premium Active' : 'Free Plan' %></strong>
+                </div>
+              </div>
+            <% } %>
+          </article>
+        <% }) %>
+      </section>
+
+      <div class="server-select-footer">
+        <a href="/logout">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/dashboard.js"></script>
+<script src="/assets/js/site-music.js"></script></body>
+</html>

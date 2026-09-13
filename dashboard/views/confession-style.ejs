@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Confession Style - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" type="image/png" href="/favicon.png?v=5.1.0" />
+  <link rel="shortcut icon" type="image/png" href="/favicon.png?v=5.1.0" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+
+    <main class="main-content">
+      <%- include("partials/topbar", {
+        pageTitle: "Confession Style",
+        pageSubtitle: "Customize how confession messages look before connecting it to the live /confess command."
+      }) %>
+
+      <% if (success) { %>
+        <div class="alert success"><%= success %></div>
+      <% } %>
+
+      <% if (error) { %>
+        <div class="alert error"><%= error %></div>
+      <% } %>
+
+      <section class="hero-card">
+        <div class="hero-text">
+          <div class="hero-icon-wrap">
+            <img src="<%= botAvatar %>" class="hero-bot-avatar" alt="Bot Avatar" />
+          </div>
+          <div>
+            <h2>Confession Message Customizer</h2>
+            <p>
+              Design the confession embed style, buttons, footer, and preview it live.
+              The next phase will wire this style into the real /confess command.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="builder-grid">
+        <section class="section-card">
+          <div class="section-header">
+            <h2>Customize Confession Embed</h2>
+            <p>Use #{number} in the title to show the confession number.</p>
+          </div>
+
+          <form method="POST" action="/confession-style/save" class="form-stack">
+            <label class="form-group">
+              <span>Embed Title</span>
+              <input
+                name="embedTitle"
+                id="embedTitle"
+                class="input"
+                value="<%= style.embedTitle || 'confession #{number}' %>"
+              />
+            </label>
+
+            <div class="form-group">
+              <span>Embed Color</span>
+              <div class="color-row">
+                <input
+                  type="color"
+                  id="embedColorPicker"
+                  class="color-picker"
+                  value="<%= style.embedColor || '#8b5cf6' %>"
+                />
+                <input
+                  name="embedColor"
+                  id="embedColor"
+                  class="input color-hex-input"
+                  value="<%= style.embedColor || '#8b5cf6' %>"
+                />
+              </div>
+            </div>
+
+            <label class="form-group">
+              <span>Anonymous Label</span>
+              <input
+                name="anonymousLabel"
+                id="anonymousLabel"
+                class="input"
+                value="<%= style.anonymousLabel || 'new confession!' %>"
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Embed Footer</span>
+              <input
+                name="embedFooter"
+                id="embedFooter"
+                class="input"
+                value="<%= style.embedFooter || '💌 leave your own confession with /confess!' %>"
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Thumbnail URL</span>
+              <input
+                name="embedThumbnail"
+                id="embedThumbnail"
+                class="input"
+                value="<%= style.embedThumbnail || '' %>"
+                placeholder="https://..."
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Image URL</span>
+              <input
+                name="embedImage"
+                id="embedImage"
+                class="input"
+                value="<%= style.embedImage || '' %>"
+                placeholder="https://..."
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Reply Button Label</span>
+              <input
+                name="replyButtonLabel"
+                id="replyButtonLabel"
+                class="input"
+                value="<%= style.replyButtonLabel || 'Reply' %>"
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Reaction Button Label</span>
+              <input
+                name="reactionButtonLabel"
+                id="reactionButtonLabel"
+                class="input"
+                value="<%= style.reactionButtonLabel || 'React' %>"
+              />
+            </label>
+
+            <div class="template-save-box">
+              <label class="toggle-line">
+                <input type="checkbox" name="showConfessionNumber" <%= style.showConfessionNumber ? "checked" : "" %> />
+                <span>Show confession number in title</span>
+              </label>
+
+              <label class="toggle-line">
+                <input type="checkbox" name="saveToTemplates" <%= style.saveToTemplates ? "checked" : "" %> />
+                <span>Also save this style into Embed Templates</span>
+              </label>
+            </div>
+
+            <div class="button-row">
+              <button type="submit" class="primary-btn">Save Confession Style</button>
+              <a href="/confessions" class="secondary-link-btn">Back to Confessions</a>
+            </div>
+          </form>
+        </section>
+
+        <section class="section-card preview-panel">
+          <div class="section-header">
+            <h2>Live Preview</h2>
+            <p>This preview shows how the confession embed will look.</p>
+          </div>
+
+          <div class="discord-preview">
+            <div class="discord-embed">
+              <div class="discord-embed-border" id="embedBorder"></div>
+
+              <div class="discord-embed-content">
+                <div class="discord-title" id="previewTitle">confession #1</div>
+
+                <div class="discord-description" id="previewDescription">
+                  new confession!
+
+                  yoo this is a sample anonymous confession preview.
+                </div>
+
+                <img id="previewThumbnail" class="preview-thumbnail hidden" alt="Thumbnail" />
+                <img id="previewImage" class="preview-image hidden" alt="Embed Image" />
+
+                <div class="discord-footer" id="previewFooter">
+                  💌 leave your own confession with /confess!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-row preview-button-row">
+            <button type="button" class="mini-btn" id="previewReplyBtn">Reply</button>
+            <button type="button" class="mini-btn" id="previewReactBtn">React</button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="/dashboard.js"></script>
+
+  <script>
+    const embedTitle = document.getElementById("embedTitle");
+    const embedColor = document.getElementById("embedColor");
+    const embedColorPicker = document.getElementById("embedColorPicker");
+    const anonymousLabel = document.getElementById("anonymousLabel");
+    const embedFooter = document.getElementById("embedFooter");
+    const embedThumbnail = document.getElementById("embedThumbnail");
+    const embedImage = document.getElementById("embedImage");
+    const replyButtonLabel = document.getElementById("replyButtonLabel");
+    const reactionButtonLabel = document.getElementById("reactionButtonLabel");
+
+    const previewTitle = document.getElementById("previewTitle");
+    const previewDescription = document.getElementById("previewDescription");
+    const previewFooter = document.getElementById("previewFooter");
+    const embedBorder = document.getElementById("embedBorder");
+    const previewThumbnail = document.getElementById("previewThumbnail");
+    const previewImage = document.getElementById("previewImage");
+    const previewReplyBtn = document.getElementById("previewReplyBtn");
+    const previewReactBtn = document.getElementById("previewReactBtn");
+
+    function validHex(value) {
+      return /^#[0-9A-Fa-f]{6}$/.test(value);
+    }
+
+    function updatePreview() {
+      const title = embedTitle.value.trim() || "confession #{number}";
+      previewTitle.textContent = title.replaceAll("#{number}", "1");
+
+      previewDescription.textContent =
+        `${anonymousLabel.value.trim() || "new confession!"}\n\n` +
+        "yoo this is a sample anonymous confession preview.";
+
+      previewFooter.textContent =
+        embedFooter.value.trim() || "💌 leave your own confession with /confess!";
+
+      embedBorder.style.background =
+        validHex(embedColor.value.trim()) ? embedColor.value.trim() : "#8b5cf6";
+
+      previewReplyBtn.textContent = replyButtonLabel.value.trim() || "Reply";
+      previewReactBtn.textContent = reactionButtonLabel.value.trim() || "React";
+
+      if (embedThumbnail.value.trim()) {
+        previewThumbnail.src = embedThumbnail.value.trim();
+        previewThumbnail.classList.remove("hidden");
+      } else {
+        previewThumbnail.classList.add("hidden");
+      }
+
+      if (embedImage.value.trim()) {
+        previewImage.src = embedImage.value.trim();
+        previewImage.classList.remove("hidden");
+      } else {
+        previewImage.classList.add("hidden");
+      }
+    }
+
+    embedColorPicker.addEventListener("input", () => {
+      embedColor.value = embedColorPicker.value;
+      updatePreview();
+    });
+
+    embedColor.addEventListener("input", () => {
+      if (validHex(embedColor.value.trim())) {
+        embedColorPicker.value = embedColor.value.trim();
+      }
+      updatePreview();
+    });
+
+    [
+      embedTitle,
+      anonymousLabel,
+      embedFooter,
+      embedThumbnail,
+      embedImage,
+      replyButtonLabel,
+      reactionButtonLabel,
+    ].forEach((el) => {
+      el.addEventListener("input", updatePreview);
+    });
+
+    updatePreview();
+  </script>
+<script src="/assets/js/site-music.js"></script></body>
+</html>

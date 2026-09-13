@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI System V2 - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" type="image/png" href="/favicon.png?v=mega1" />
+  
+<style>
+  .mega-hero{position:relative;overflow:hidden;border-radius:30px;padding:30px;margin-bottom:22px;background:linear-gradient(135deg,rgba(139,92,246,.24),rgba(34,211,238,.12)),rgba(15,17,42,.78);border:1px solid rgba(255,255,255,.12);box-shadow:0 24px 70px rgba(0,0,0,.26)}
+  .mega-hero h1{margin:0;font-size:clamp(2rem,4vw,4.2rem);letter-spacing:-.07em;line-height:.95}.mega-hero p{margin:12px 0 0;color:#cbd5ff;line-height:1.6;max-width:930px}.mega-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.mega-card{border-radius:24px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.055);padding:20px;box-shadow:0 16px 40px rgba(0,0,0,.18)}.mega-card h2,.mega-card h3{margin:0 0 10px}.mega-muted{color:#b9c2ff;line-height:1.55}.mega-list{display:grid;gap:10px;margin-top:12px}.mega-item{padding:12px;border-radius:16px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08)}.mega-form{display:grid;gap:14px}.mega-input,.mega-textarea,.mega-select{width:100%;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);color:#fff;padding:12px 14px;font-weight:800}.mega-textarea{min-height:110px;resize:vertical}.mega-toggle{display:flex;gap:10px;align-items:center;font-weight:900}.mega-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.mega-btn{border:0;border-radius:15px;padding:12px 16px;font-weight:1000;color:#06111d;background:linear-gradient(135deg,#8b5cf6,#22d3ee);cursor:pointer}.mega-btn.secondary{color:#fff;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.13)}.mega-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.25);color:#cffafe;font-weight:1000;font-size:.78rem}.mega-stat{font-size:2rem;font-weight:1000}.mega-table{width:100%;border-collapse:separate;border-spacing:0 10px}.mega-table td,.mega-table th{text-align:left;padding:12px;background:rgba(255,255,255,.055)}.mega-table th{color:#c4b5fd;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em}.mega-table tr td:first-child,.mega-table tr th:first-child{border-radius:14px 0 0 14px}.mega-table tr td:last-child,.mega-table tr th:last-child{border-radius:0 14px 14px 0}@media(max-width:950px){.mega-grid{grid-template-columns:1fr}.mega-hero{padding:23px}}
+</style>
+
+</head>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+    <main class="main-content">
+      <%- include("partials/topbar", { pageTitle: "AI System V2", pageSubtitle: "Advanced AI settings foundation for memory, providers, safety, and modes." }) %>
+      <% if (success) { %><div class="alert success"><%= success %></div><% } %>
+      <% if (error) { %><div class="alert error"><%= error %></div><% } %>
+      
+<section class="mega-hero"><span class="mega-badge">🤖 Foundation Ready</span><h1>AI System V2</h1><p>This page prepares the advanced AI system: provider fallback, memory rules, personalities, usage limits, channel controls, safety mode, and future AI dashboard tools.</p></section>
+<form class="mega-card mega-form" method="POST" action="/ai-system-v2/save"><label class="mega-toggle"><input type="checkbox" name="enabled" <%= aiV2Config.enabled ? "checked" : "" %> /> Enable AI V2 foundation</label><label><strong>AI Notes / Plan</strong><textarea class="mega-textarea" name="notes"><%= aiV2Config.notes || "" %></textarea></label><div class="mega-grid"><div class="mega-card"><h3>Provider Fallback</h3><p class="mega-muted">Gemini, Groq, OpenRouter, and local fallback planning.</p></div><div class="mega-card"><h3>Memory</h3><p class="mega-muted">Short memory, session memory, server profile memory, and opt-out controls.</p></div><div class="mega-card"><h3>Safety + Limits</h3><p class="mega-muted">Cooldowns, daily limits, role bypasses, and moderation-safe responses.</p></div></div><button class="mega-btn" type="submit">Save AI V2 Settings</button></form>
+
+    </main>
+  </div>
+  <script src="/dashboard.js"></script>
+  <script src="/assets/js/site-music.js"></script>
+</body>
+</html>

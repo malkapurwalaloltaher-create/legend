@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Green Useful Websites - Animated Directory</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #052e16 0%, #16a34a 52%, #064e3b 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .animated-bg span {
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 15s linear infinite;
+            bottom: -150px;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px #fff; }
+            to { text-shadow: 0 0 20px #fff, 0 0 30px #22c55e; }
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2em;
+            animation: slideInUp 1s ease;
+        }
+
+        /* Category Grid */
+        .categories {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .category {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideInLeft 1s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .category h2 {
+            color: white;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            position: relative;
+        }
+
+        .category h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, #fff, #22c55e);
+            animation: width 2s ease infinite;
+        }
+
+        @keyframes width {
+            0% { width: 50px; }
+            50% { width: 100px; }
+            100% { width: 50px; }
+        }
+
+        /* Links Grid */
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        /* Link Card Styles */
+        .link-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 15px;
+            text-decoration: none;
+            color: white;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: cardAppear 0.5s ease backwards;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .link-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .link-card:hover::before {
+            left: 100%;
+        }
+
+        .link-card:hover {
+            transform: translateY(-5px) scale(1.05);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .link-icon {
+            font-size: 2em;
+            margin-bottom: 8px;
+            display: inline-block;
+            animation: bounce 2s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .link-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .link-description {
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+
+        /* Floating animation for cards */
+        .link-card:nth-child(odd) {
+            animation-delay: 0.1s;
+        }
+
+        .link-card:nth-child(even) {
+            animation-delay: 0.2s;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #052e16, #16a34a);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            animation: pulse 2s ease infinite;
+            z-index: 1000;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .back-to-top:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 50px;
+            padding: 20px;
+            animation: fadeIn 2s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
+            .links-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .category h2 {
+                font-size: 1.5em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    
+        .github-footer{display:flex;justify-content:center;margin:24px auto 6px;}
+        .github-link-bottom{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:white;border:1px solid rgba(255,255,255,.32);border-radius:999px;padding:12px 18px;background:rgba(5,46,22,.60);font-weight:800;box-shadow:0 0 24px rgba(34,197,94,.30);animation:githubFloat 2.5s ease-in-out infinite;backdrop-filter:blur(8px);}
+        .github-link-bottom:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 0 38px rgba(34,197,94,.50);}
+        .github-mark svg{width:24px;height:24px;fill:currentColor;filter:drop-shadow(0 0 10px rgba(134,239,172,.70));}
+        .github-spark{display:inline-block;color:#bbf7d0;animation:githubSpark 1.3s ease-in-out infinite;}
+        @keyframes githubFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+        @keyframes githubSpark{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.25) rotate(18deg)}}
+
+    
+        .github-footer{display:flex!important;justify-content:center!important;align-items:center!important;margin:28px auto 10px!important;position:relative!important;z-index:4!important;}
+        .github-link-bottom{position:relative!important;overflow:hidden!important;display:inline-flex!important;align-items:center!important;gap:12px!important;text-decoration:none!important;color:#f7fff9!important;border:1px solid rgba(134,239,172,.55)!important;border-radius:18px!important;padding:15px 24px!important;background:linear-gradient(135deg,rgba(8,70,34,.88),rgba(16,110,58,.72))!important;backdrop-filter:blur(14px)!important;font-weight:1000!important;font-size:1rem!important;box-shadow:0 18px 45px rgba(0,0,0,.30),0 0 30px rgba(34,197,94,.28),inset 0 1px 0 rgba(255,255,255,.12)!important;animation:githubColorClashFloat 2.7s ease-in-out infinite!important;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease!important;}
+        .github-link-bottom::before{content:"";position:absolute;inset:-40% -70%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);transform:translateX(-65%) rotate(14deg);animation:githubColorClashShine 2.4s ease-in-out infinite;}
+        .github-link-bottom:hover{transform:translateY(-6px) scale(1.045)!important;border-color:rgba(187,247,208,.85)!important;box-shadow:0 24px 60px rgba(0,0,0,.36),0 0 48px rgba(34,197,94,.46)!important;}
+        .github-mark,.github-arrow,.github-link-bottom span{position:relative;z-index:1;}
+        .github-mark{width:28px;height:28px;display:grid;place-items:center;filter:drop-shadow(0 0 12px rgba(134,239,172,.70));animation:githubIconPulse 1.8s ease-in-out infinite;}
+        .github-mark svg{width:28px!important;height:28px!important;fill:currentColor!important;}
+        .github-arrow{font-size:1.2rem;color:#bbf7d0;text-shadow:0 0 12px rgba(34,197,94,.85);animation:githubArrowJump 1.25s ease-in-out infinite;}
+        @keyframes githubColorClashFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+        @keyframes githubColorClashShine{0%{transform:translateX(-75%) rotate(14deg);opacity:0}28%,58%{opacity:1}100%{transform:translateX(75%) rotate(14deg);opacity:0}}
+        @keyframes githubIconPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+        @keyframes githubArrowJump{0%,100%{transform:translate(0,0)}50%{transform:translate(4px,-4px)}}
+
+
+        /* Proper top-right music button for 100 Websites */
+        .website-music-toggle {
+            position: fixed;
+            top: 28px;
+            right: 28px;
+            z-index: 1500;
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 999px;
+            padding: 13px 18px;
+            background: rgba(5, 46, 22, 0.72);
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.25), 0 0 18px rgba(34,197,94,0.35);
+            backdrop-filter: blur(14px);
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+        }
+
+        .website-music-toggle:hover {
+            transform: translateY(-2px) scale(1.04);
+            border-color: rgba(187,247,208,0.8);
+            box-shadow: 0 15px 45px rgba(0,0,0,0.35), 0 0 28px rgba(34,197,94,0.55);
+        }
+
+        .legend-home-nav {
+            display: flex;
+            justify-content: center;
+            margin: 4px auto 20px;
+        }
+
+        .legend-home {
+            display: inline-flex;
+            min-height: 44px;
+            align-items: center;
+            gap: 9px;
+            padding: 10px 16px;
+            border: 1px solid rgba(187,247,208,0.65);
+            border-radius: 999px;
+            background: rgba(5,46,22,0.78);
+            color: #f0fdf4;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.12);
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-decoration: none;
+            backdrop-filter: blur(12px);
+            transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .legend-home:hover {
+            background: rgba(22,101,52,0.92);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3), 0 0 22px rgba(74,222,128,0.35);
+            transform: translateY(-2px);
+        }
+
+        .legend-home:focus-visible {
+            outline: 3px solid #ffffff;
+            outline-offset: 3px;
+        }
+
+        .legend-home:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        @media (max-width: 650px) {
+            .website-music-toggle {
+                top: 16px;
+                right: 16px;
+                padding: 10px 13px;
+                font-size: 0.82rem;
+            }
+
+            .legend-home-nav {
+                justify-content: flex-start;
+                margin-right: 7.5rem;
+            }
+
+            .legend-home {
+                padding-inline: 13px;
+                font-size: 0.78rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .legend-home {
+                transition: none;
+            }
+
+            .legend-home:hover,
+            .legend-home:active {
+                transform: none;
+            }
+        }
+
+</style>
+</head>
+<body>
+<button class="website-music-toggle" id="websiteMusicToggle" type="button">🔇 Music Off</button>
+
+<div class="animated-bg" id="animatedBg"></div>
+<nav class="legend-home-nav" aria-label="Legendary Lands navigation"><a class="legend-home" href="/"><span aria-hidden="true">📁</span> Legendary Lands <span aria-hidden="true">/</span></a></nav>
+<div class="header"><h1>🌟 100 Green Useful Websites</h1><p>Discover amazing tools, resources, and platforms to boost your productivity</p></div>
+<div class="categories">
+<div class="category"><h2>🔍 Search & Research</h2><div class="links-grid">
+<a href="https://www.google.com" target="_blank" class="link-card" style="animation-delay:0.05s"><span class="link-icon">🔍</span><div class="link-title">Google</div><div class="link-description">Search engine</div></a>
+<a href="https://www.perplexity.ai" target="_blank" class="link-card" style="animation-delay:0.10s"><span class="link-icon">🧠</span><div class="link-title">Perplexity</div><div class="link-description">AI answer search</div></a>
+<a href="https://duckduckgo.com" target="_blank" class="link-card" style="animation-delay:0.15s"><span class="link-icon">🦆</span><div class="link-title">DuckDuckGo</div><div class="link-description">Private search</div></a>
+<a href="https://scholar.google.com" target="_blank" class="link-card" style="animation-delay:0.20s"><span class="link-icon">🎓</span><div class="link-title">Google Scholar</div><div class="link-description">Research papers</div></a>
+<a href="https://www.wolframalpha.com" target="_blank" class="link-card" style="animation-delay:0.25s"><span class="link-icon">🧮</span><div class="link-title">WolframAlpha</div><div class="link-description">Computational answers</div></a>
+<a href="https://archive.org" target="_blank" class="link-card" style="animation-delay:0.30s"><span class="link-icon">📚</span><div class="link-title">Internet Archive</div><div class="link-description">Digital library</div></a>
+<a href="https://www.similarweb.com" target="_blank" class="link-card" style="animation-delay:0.35s"><span class="link-icon">📊</span><div class="link-title">Similarweb</div><div class="link-description">Website insights</div></a>
+<a href="https://web.archive.org" target="_blank" class="link-card" style="animation-delay:0.40s"><span class="link-icon">⏳</span><div class="link-title">Wayback Machine</div><div class="link-description">Old website versions</div></a>
+<a href="https://www.worldcat.org" target="_blank" class="link-card" style="animation-delay:0.45s"><span class="link-icon">📖</span><div class="link-title">WorldCat</div><div class="link-description">Find books worldwide</div></a>
+<a href="https://www.britannica.com" target="_blank" class="link-card" style="animation-delay:0.50s"><span class="link-icon">🏛️</span><div class="link-title">Britannica</div><div class="link-description">Reference articles</div></a>
+</div></div>
+<div class="category"><h2>🤖 AI & Coding</h2><div class="links-grid">
+<a href="https://chat.openai.com" target="_blank" class="link-card" style="animation-delay:0.05s"><span class="link-icon">🤖</span><div class="link-title">ChatGPT</div><div class="link-description">AI assistant</div></a>
+<a href="https://claude.ai" target="_blank" class="link-card" style="animation-delay:0.10s"><span class="link-icon">🧠</span><div class="link-title">Claude</div><div class="link-description">AI assistant</div></a>
+<a href="https://gemini.google.com" target="_blank" class="link-card" style="animation-delay:0.15s"><span class="link-icon">💎</span><div class="link-title">Gemini</div><div class="link-description">Google AI</div></a>
+<a href="https://github.com" target="_blank" class="link-card" style="animation-delay:0.20s"><span class="link-icon">💻</span><div class="link-title">GitHub</div><div class="link-description">Code hosting</div></a>
+<a href="https://stackoverflow.com" target="_blank" class="link-card" style="animation-delay:0.25s"><span class="link-icon">❓</span><div class="link-title">Stack Overflow</div><div class="link-description">Coding Q&A</div></a>
+<a href="https://codepen.io" target="_blank" class="link-card" style="animation-delay:0.30s"><span class="link-icon">✏️</span><div class="link-title">CodePen</div><div class="link-description">Frontend demos</div></a>
+<a href="https://replit.com" target="_blank" class="link-card" style="animation-delay:0.35s"><span class="link-icon">🚀</span><div class="link-title">Replit</div><div class="link-description">Online coding</div></a>
+<a href="https://vercel.com" target="_blank" class="link-card" style="animation-delay:0.40s"><span class="link-icon">▲</span><div class="link-title">Vercel</div><div class="link-description">Deploy websites</div></a>
+<a href="https://www.netlify.com" target="_blank" class="link-card" style="animation-delay:0.45s"><span class="link-icon">🌐</span><div class="link-title">Netlify</div><div class="link-description">Static hosting</div></a>
+<a href="https://developer.mozilla.org" target="_blank" class="link-card" style="animation-delay:0.50s"><span class="link-icon">📘</span><div class="link-title">MDN Web Docs</div><div class="link-description">Web documentation</div></a>
+</div></div>
+<div class="category"><h2>🎨 Design & Creative</h2><div class="links-grid">
+<a href="https://www.canva.com" target="_blank" class="link-card" style="animation-delay:0.05s"><span class="link-icon">🎨</span><div class="link-title">Canva</div><div class="link-description">Graphic design</div></a>
+<a href="https://www.figma.com" target="_blank" class="link-card" style="animation-delay:0.10s"><span class="link-icon">🖌️</span><div class="link-title">Figma</div><div class="link-description">UI design</div></a>
+<a href="https://unsplash.com" target="_blank" class="link-card" style="animation-delay:0.15s"><span class="link-icon">📷</span><div class="link-title">Unsplash</div><div class="link-description">Free photos</div></a>
+<a href="https://www.pexels.com" target="_blank" class="link-card" style="animation-delay:0.20s"><span class="link-icon">🖼️</span><div class="link-title">Pexels</div><div class="link-description">Free media</div></a>
+<a href="https://fonts.google.com" target="_blank" class="link-card" style="animation-delay:0.25s"><span class="link-icon">🔤</span><div class="link-title">Google Fonts</div><div class="link-description">Free fonts</div></a>
+<a href="https://colorhunt.co" target="_blank" class="link-card" style="animation-delay:0.30s"><span class="link-icon">🌈</span><div class="link-title">Color Hunt</div><div class="link-description">Color palettes</div></a>
+<a href="https://coolors.co" target="_blank" class="link-card" style="animation-delay:0.35s"><span class="link-icon">🎯</span><div class="link-title">Coolors</div><div class="link-description">Palette generator</div></a>
+<a href="https://www.remove.bg" target="_blank" class="link-card" style="animation-delay:0.40s"><span class="link-icon">✂️</span><div class="link-title">Remove.bg</div><div class="link-description">Remove backgrounds</div></a>
+<a href="https://www.photopea.com" target="_blank" class="link-card" style="animation-delay:0.45s"><span class="link-icon">🖼️</span><div class="link-title">Photopea</div><div class="link-description">Online editor</div></a>
+<a href="https://www.flaticon.com" target="_blank" class="link-card" style="animation-delay:0.50s"><span class="link-icon">⭐</span><div class="link-title">Flaticon</div><div class="link-description">Icons</div></a>
+</div></div>
+<div class="category"><h2>📚 Learning</h2><div class="links-grid">
+<a href="https://www.khanacademy.org" target="_blank" class="link-card" style="animation-delay:0.05s"><span class="link-icon">📚</span><div class="link-title">Khan Academy</div><div class="link-description">Free lessons</div></a>
+<a href="https://www.coursera.org" target="_blank" class="link-card" style="animation-delay:0.10s"><span class="link-icon">🎓</span><div class="link-title">Coursera</div><div class="link-description">Online courses</div></a>
+<a href="https://www.edx.org" target="_blank" class="link-card" style="animation-delay:0.15s"><span class="link-icon">🏫</span><div class="link-title">edX</div><div class="link-description">University courses</div></a>
+<a href="https://www.udemy.com" target="_blank" class="link-card" style="animation-delay:0.20s"><span class="link-icon">💡</span><div class="link-title">Udemy</div><div class="link-description">Skill courses</div></a>
+<a href="https://www.duolingo.com" target="_blank" class="link-card" style="animation-delay:0.25s"><span class="link-icon">🦉</span><div class="link-title">Duolingo</div><div class="link-description">Learn languages</div></a>
+<a href="https://www.w3schools.com" target="_blank" class="link-card" style="animation-delay:0.30s"><span class="link-icon">🌐</span><div class="link-title">W3Schools</div><div class="link-description">Web tutorials</div></a>
+<a href="https://www.freecodecamp.org" target="_blank" class="link-card" style="animation-delay:0.35s"><span class="link-icon">🔥</span><div class="link-title">freeCodeCamp</div><div class="link-description">Learn coding</div></a>
+<a href="https://brilliant.org" target="_blank" class="link-card" style="animation-delay:0.40s"><span class="link-icon">🧩</span><div class="link-title">Brilliant</div><div class="link-description">Interactive learning</div></a>
+<a href="https://quizlet.com" target="_blank" class="link-card" style="animation-delay:0.45s"><span class="link-icon">🃏</span><div class="link-title">Quizlet</div><div class="link-description">Flashcards</div></a>
+<a href="https://kahoot.com" target="_blank" class="link-card" style="animation-delay:0.50s"><span class="link-icon">🎮</span><div class="link-title">Kahoot</div><div class="link-description">Learning games</div></a>
+</div></div>
+<div class="category"><h2>⚙️ Productivity</h2><div class="links-grid">
+<a href="https://www.notion.so" target="_blank" class="link-card" style="animation-delay:0.05s"><span class="link-icon">📝</span><div class="link-title">Notion</div><div class="link-description">Workspace notes</div></a>
+<a href="https://trello.com" target="_blank" class="link-card" style="animation-delay:0.10s"><span class="link-icon">📋</span><div class="link-title">Trello</div><div class="link-description">Project boards</div></a>
+<a href="https://todoist.com" target="_blank" class="link-card" style="animation-delay:0.15s"><span class="link-icon">✅</span><div class="link-title">Todoist</div><div class="link-description">Task manager</div></a>
+<a href="https://calendar.google.com" target="_blank" class="link-card" style="animation-delay:0.20s"><span class="link-icon">📅</span><div class="link-title">Google Calendar</div><div class="link-description">Calendar</div></a>
+<a href="https://drive.google.com" target="_blank" class="link-card" style="animation-delay:0.25s"><span class="link-icon">☁️</span><div class="link-title">Google Drive</div><div class="link-description">Cloud storage</div></a>
+<a href="https://www.dropbox.com" target="_blank" class="link-card" style="animation-delay:0.30s"><span class="link-icon">📦</span><div class="link-title">Dropbox</div><div class="link-description">File storage</div></a>
+<a href="https://www.grammarly.com" target="_blank" class="link-card" style="animation-delay:0.35s"><span class="link-icon">✍️</span><div class="link-title">Grammarly</div><div class="link-description">Writing help</div></a>
+<a href="https://www.deepl.com" target="_blank" class="link-card" style="animation-delay:0.40s"><span class="link-icon">🌍</span><div class="link-title">DeepL</div><div class="link-description">Translator</div></a>
+<a href="https://smallpdf.com" target="_blank" class="link-card" style="animation-delay:0.45s"><span class="link-icon">📄</span><div class="link-title">Smallpdf</div><div class="link-description">PDF tools</div></a>
+<a href="https://tinypng.com" target="_blank" class="link-card" style="animation-delay:0.50s"><span class="link-icon">🗜️</span><div class="link-title">TinyPNG</div><div class="link-description">Image compression</div></a>
+</div></div>
+<div class="category"><h2>🎬 Media & Entertainment</h2><div class="links-grid">
+<a href="https://www.youtube.com" target="_blank" class="link-card" style="animation-delay:0.05s"><span class="link-icon">▶️</span><div class="link-title">YouTube</div><div class="link-description">Videos</div></a>
+<a href="https://www.spotify.com" target="_blank" class="link-card" style="animation-delay:0.10s"><span class="link-icon">🎵</span><div class="link-title">Spotify</div><div class="link-description">Music</div></a>
+<a href="https://soundcloud.com" target="_blank" class="link-card" style="animation-delay:0.15s"><span class="link-icon">☁️</span><div class="link-title">SoundCloud</div><div class="link-description">Audio platform</div></a>
+<a href="https://www.twitch.tv" target="_blank" class="link-card" style="animation-delay:0.20s"><span class="link-icon">🎮</span><div class="link-title">Twitch</div><div class="link-description">Live streams</div></a>
+<a href="https://www.imdb.com" target="_blank" class="link-card" style="animation-delay:0.25s"><span class="link-icon">🎬</span><div class="link-title">IMDb</div><div class="link-description">Movie database</div></a>
+<a href="https://letterboxd.com" target="_blank" class="link-card" style="animation-delay:0.30s"><span class="link-icon">🍿</span><div class="link-title">Letterboxd</div><div class="link-description">Movie tracking</div></a>
+<a href="https://www.crunchyroll.com" target="_blank" class="link-card" style="animation-delay:0.35s"><span class="link-icon">🍥</span><div class="link-title">Crunchyroll</div><div class="link-description">Anime streaming</div></a>
+<a href="https://store.steampowered.com" target="_blank" class="link-card" style="animation-delay:0.40s"><span class="link-icon">🕹️</span><div class="link-title">Steam</div><div class="link-description">PC games</div></a>
+<a href="https://store.epicgames.com" target="_blank" class="link-card" style="animation-delay:0.45s"><span class="link-icon">🎯</span><div class="link-title">Epic Games</div><div class="link-description">Game store</div></a>
+<a href="https://radio.garden" target="_blank" class="link-card" style="animation-delay:0.50s"><span class="link-icon">📻</span><div class="link-title">Radio Garden</div><div class="link-description">World radio</div></a>
+</div></div>
+<div class="category"><h2>📰 News & Reading</h2><div class="links-grid">
+<a href="https://www.wikipedia.org" target="_blank" class="link-card" style="animation-delay:0.05s"><span class="link-icon">📖</span><div class="link-title">Wikipedia</div><div class="link-description">Knowledge base</div></a>
+<a href="https://www.reddit.com" target="_blank" class="link-card" style="animation-delay:0.10s"><span class="link-icon">💬</span><div class="link-title">Reddit</div><div class="link-description">Communities</div></a>
+<a href="https://medium.com" target="_blank" class="link-card" style="animation-delay:0.15s"><span class="link-icon">✍️</span><div class="link-title">Medium</div><div class="link-description">Articles</div></a>
+<a href="https://www.bbc.com/news" target="_blank" class="link-card" style="animation-delay:0.20s"><span class="link-icon">📰</span><div class="link-title">BBC News</div><div class="link-description">News</div></a>
+<a href="https://www.reuters.com" target="_blank" class="link-card" style="animation-delay:0.25s"><span class="link-icon">🌍</span><div class="link-title">Reuters</div><div class="link-description">World news</div></a>
+<a href="https://www.theverge.com" target="_blank" class="link-card" style="animation-delay:0.30s"><span class="link-icon">⚡</span><div class="link-title">The Verge</div><div class="link-description">Tech news</div></a>
+<a href="https://news.ycombinator.com" target="_blank" class="link-card" style="animation-delay:0.35s"><span class="link-icon">🧡</span><div class="link-title">Hacker News</div><div class="link-description">Tech community</div></a>
+<a href="https://www.producthunt.com" target="_blank" class="link-card" style="animation-delay:0.40s"><span class="link-icon">🚀</span><div class="link-title">Product Hunt</div><div class="link-description">New products</div></a>
+<a href="https://substack.com" target="_blank" class="link-card" style="animation-delay:0.45s"><span class="link-icon">📩</span><div class="link-title">Substack</div><div class="link-description">Newsletters</div></a>
+<a href="https://getpocket.com" target="_blank" class="link-card" style="animation-delay:0.50s"><span class="link-icon">📌</span><div class="link-title">Pocket</div><div class="link-description">Save articles</div></a>
+</div></div>
+<div class="category"><h2>💼 Finance & Career</h2><div class="links-grid">
+<a href="https://www.linkedin.com" target="_blank" class="link-card" style="animation-delay:0.05s"><span class="link-icon">👔</span><div class="link-title">LinkedIn</div><div class="link-description">Professional network</div></a>
+<a href="https://www.indeed.com" target="_blank" class="link-card" style="animation-delay:0.10s"><span class="link-icon">💼</span><div class="link-title">Indeed</div><div class="link-description">Job search</div></a>
+<a href="https://www.glassdoor.com" target="_blank" class="link-card" style="animation-delay:0.15s"><span class="link-icon">🏢</span><div class="link-title">Glassdoor</div><div class="link-description">Company reviews</div></a>
+<a href="https://www.investopedia.com" target="_blank" class="link-card" style="animation-delay:0.20s"><span class="link-icon">📈</span><div class="link-title">Investopedia</div><div class="link-description">Finance education</div></a>
+<a href="https://www.tradingview.com" target="_blank" class="link-card" style="animation-delay:0.25s"><span class="link-icon">📊</span><div class="link-title">TradingView</div><div class="link-description">Charts</div></a>
+<a href="https://www.paypal.com" target="_blank" class="link-card" style="animation-delay:0.30s"><span class="link-icon">💳</span><div class="link-title">PayPal</div><div class="link-description">Payments</div></a>
+<a href="https://wise.com" target="_blank" class="link-card" style="animation-delay:0.35s"><span class="link-icon">🌍</span><div class="link-title">Wise</div><div class="link-description">International money</div></a>
+<a href="https://www.google.com/finance" target="_blank" class="link-card" style="animation-delay:0.40s"><span class="link-icon">💹</span><div class="link-title">Google Finance</div><div class="link-description">Market info</div></a>
+<a href="https://wellfound.com" target="_blank" class="link-card" style="animation-delay:0.45s"><span class="link-icon">🚀</span><div class="link-title">AngelList</div><div class="link-description">Startup jobs</div></a>
+<a href="https://resume.io" target="_blank" class="link-card" style="animation-delay:0.50s"><span class="link-icon">📄</span><div class="link-title">Resume.io</div><div class="link-description">Resume builder</div></a>
+</div></div>
+<div class="category"><h2>🧰 Tools & Utilities</h2><div class="links-grid">
+<a href="https://www.speedtest.net" target="_blank" class="link-card" style="animation-delay:0.05s"><span class="link-icon">⚡</span><div class="link-title">Speedtest</div><div class="link-description">Internet speed</div></a>
+<a href="https://haveibeenpwned.com" target="_blank" class="link-card" style="animation-delay:0.10s"><span class="link-icon">🛡️</span><div class="link-title">Have I Been Pwned</div><div class="link-description">Breach checker</div></a>
+<a href="https://www.virustotal.com" target="_blank" class="link-card" style="animation-delay:0.15s"><span class="link-icon">🦠</span><div class="link-title">VirusTotal</div><div class="link-description">File/link scanner</div></a>
+<a href="https://temp-mail.org" target="_blank" class="link-card" style="animation-delay:0.20s"><span class="link-icon">📧</span><div class="link-title">Temp Mail</div><div class="link-description">Temporary email</div></a>
+<a href="https://www.qrcode-monkey.com" target="_blank" class="link-card" style="animation-delay:0.25s"><span class="link-icon">🔲</span><div class="link-title">QR Code Monkey</div><div class="link-description">QR generator</div></a>
+<a href="https://convertio.co" target="_blank" class="link-card" style="animation-delay:0.30s"><span class="link-icon">🔁</span><div class="link-title">Convertio</div><div class="link-description">File converter</div></a>
+<a href="https://cloudconvert.com" target="_blank" class="link-card" style="animation-delay:0.35s"><span class="link-icon">☁️</span><div class="link-title">CloudConvert</div><div class="link-description">File conversion</div></a>
+<a href="https://downforeveryoneorjustme.com" target="_blank" class="link-card" style="animation-delay:0.40s"><span class="link-icon">📡</span><div class="link-title">Down For Everyone</div><div class="link-description">Website status</div></a>
+<a href="https://www.whatismyip.com" target="_blank" class="link-card" style="animation-delay:0.45s"><span class="link-icon">🌐</span><div class="link-title">WhatIsMyIP</div><div class="link-description">IP lookup</div></a>
+<a href="https://regex101.com" target="_blank" class="link-card" style="animation-delay:0.50s"><span class="link-icon">🔎</span><div class="link-title">Regex101</div><div class="link-description">Regex tester</div></a>
+</div></div>
+<div class="category"><h2>✈️ Travel & Maps</h2><div class="links-grid">
+<a href="https://www.google.com/maps" target="_blank" class="link-card" style="animation-delay:0.05s"><span class="link-icon">🗺️</span><div class="link-title">Google Maps</div><div class="link-description">Navigation</div></a>
+<a href="https://www.airbnb.com" target="_blank" class="link-card" style="animation-delay:0.10s"><span class="link-icon">🏠</span><div class="link-title">Airbnb</div><div class="link-description">Places to stay</div></a>
+<a href="https://www.tripadvisor.com" target="_blank" class="link-card" style="animation-delay:0.15s"><span class="link-icon">⭐</span><div class="link-title">Tripadvisor</div><div class="link-description">Travel reviews</div></a>
+<a href="https://www.booking.com" target="_blank" class="link-card" style="animation-delay:0.20s"><span class="link-icon">🏨</span><div class="link-title">Booking.com</div><div class="link-description">Hotel bookings</div></a>
+<a href="https://www.rome2rio.com" target="_blank" class="link-card" style="animation-delay:0.25s"><span class="link-icon">🚗</span><div class="link-title">Rome2Rio</div><div class="link-description">Route planning</div></a>
+<a href="https://www.skyscanner.com" target="_blank" class="link-card" style="animation-delay:0.30s"><span class="link-icon">✈️</span><div class="link-title">Skyscanner</div><div class="link-description">Flight search</div></a>
+<a href="https://www.google.com/travel/flights" target="_blank" class="link-card" style="animation-delay:0.35s"><span class="link-icon">🛫</span><div class="link-title">Google Flights</div><div class="link-description">Flight tracker</div></a>
+<a href="https://www.xe.com" target="_blank" class="link-card" style="animation-delay:0.40s"><span class="link-icon">💱</span><div class="link-title">XE</div><div class="link-description">Currency converter</div></a>
+<a href="https://www.timeanddate.com" target="_blank" class="link-card" style="animation-delay:0.45s"><span class="link-icon">🕒</span><div class="link-title">TimeAndDate</div><div class="link-description">World time</div></a>
+<a href="https://www.wikivoyage.org" target="_blank" class="link-card" style="animation-delay:0.50s"><span class="link-icon">🧭</span><div class="link-title">Wikivoyage</div><div class="link-description">Travel guides</div></a>
+</div></div>
+</div><button class="back-to-top" onclick="scrollToTop()" title="Back to Top">↑</button><div class="footer"><p>✨ Your gateway to 100 useful websites on the internet ✨</p><div class="github-footer" aria-label="GitHub project link">
+        <a class="github-link-bottom" href="https://github.com/mrxavier53/100-Useful-Websites" target="_blank" rel="noopener">
+            <span class="github-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.42-4.04-1.42-.55-1.38-1.34-1.75-1.34-1.75-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.4 11.4 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.49 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.58A12 12 0 0 0 12 .5Z"/></svg></span>
+            <span>View on GitHub</span>
+            <span class="github-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div><p style="font-size:0.9em;margin-top:10px;">Click any card to explore • Built for Legendary Labs • legend.maqraat.com</p></div>
+<script>
+        // Generate animated background bubbles
+        function createBubbles() {
+            const bg = document.getElementById('animatedBg');
+            const bubbleCount = 30;
+            
+            for (let i = 0; i < bubbleCount; i++) {
+                const span = document.createElement('span');
+                const size = Math.random() * 50 + 10;
+                const left = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 10 + 10;
+                
+                span.style.width = size + 'px';
+                span.style.height = size + 'px';
+                span.style.left = left + '%';
+                span.style.animationDelay = delay + 's';
+                span.style.animationDuration = duration + 's';
+                span.style.background = `rgba(255, 255, 255, ${Math.random() * 0.2})`;
+                
+                bg.appendChild(span);
+            }
+        }
+
+        // Extra smooth scroll to top with easing
+        function scrollToTop() {
+            const start = window.scrollY || document.documentElement.scrollTop;
+            const duration = 850;
+            const startTime = performance.now();
+
+            function easeOutCubic(t) {
+                return 1 - Math.pow(1 - t, 3);
+            }
+
+            function animate(now) {
+                const progress = Math.min((now - startTime) / duration, 1);
+                const eased = easeOutCubic(progress);
+                window.scrollTo(0, Math.round(start * (1 - eased)));
+                if (progress < 1) requestAnimationFrame(animate);
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // Add hover sound effect (optional - just for fun)
+        const cards = document.querySelectorAll('.link-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.05)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Show/hide back to top button
+        window.addEventListener('scroll', function() {
+            const button = document.querySelector('.back-to-top');
+            if (window.scrollY > 500) {
+                button.style.display = 'flex';
+            } else {
+                button.style.display = 'flex'; // Always show but could hide
+            }
+        });
+
+
+
+        // Proper 100 Websites background music button
+        const websiteMusic = new Audio('/assets/audio/websites-bg.mp3?v=1.0.10');
+        const websiteMusicToggle = document.getElementById('websiteMusicToggle');
+        websiteMusic.loop = true;
+        websiteMusic.volume = 0.38;
+        let websiteMusicOn = false;
+
+        function updateWebsiteMusicButton() {
+            if (!websiteMusicToggle) return;
+            websiteMusicToggle.textContent = websiteMusicOn ? '🔊 Music On' : '🔇 Music Off';
+        }
+
+        if (websiteMusicToggle) {
+            websiteMusicToggle.addEventListener('click', async () => {
+                if (websiteMusicOn) {
+                    websiteMusic.pause();
+                    websiteMusicOn = false;
+                    updateWebsiteMusicButton();
+                    localStorage.setItem('usefulWebsitesMusic', 'off');
+                    return;
+                }
+
+                try {
+                    await websiteMusic.play();
+                    websiteMusicOn = true;
+                    updateWebsiteMusicButton();
+                    localStorage.setItem('usefulWebsitesMusic', 'on');
+                } catch (error) {
+                    websiteMusicOn = false;
+                    updateWebsiteMusicButton();
+                    alert('Music could not start. Please click the button again.');
+                }
+            });
+        }
+
+        if (localStorage.getItem('usefulWebsitesMusic') === 'on') {
+            websiteMusic.play().then(() => {
+                websiteMusicOn = true;
+                updateWebsiteMusicButton();
+            }).catch(() => {
+                websiteMusicOn = false;
+                updateWebsiteMusicButton();
+            });
+        } else {
+            updateWebsiteMusicButton();
+        }
+
+        // Initialize bubbles
+        createBubbles();
+
+        // Add animation delays to cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.link-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = (index * 0.05) + 's';
+            });
+        });
+    </script>
+</body></html>

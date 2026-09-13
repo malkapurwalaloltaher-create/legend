@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Message Builder - Legendary Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" type="image/png" href="/favicon.png?v=4.3.0" />
+  <link rel="shortcut icon" type="image/png" href="/favicon.png?v=4.3.0" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include("partials/sidebar") %>
+
+    <main class="main-content">
+      <%- include("partials/topbar", {
+        pageTitle: "Message Builder",
+        pageSubtitle: "Build, preview, load templates, send, and save custom embed messages."
+      }) %>
+
+      <% if (success) { %>
+        <div class="alert success"><%= success %></div>
+      <% } %>
+
+      <% if (error) { %>
+        <div class="alert error"><%= error %></div>
+      <% } %>
+
+      <div class="builder-grid">
+        <section class="section-card">
+          <div class="section-header">
+            <h2>Build Message</h2>
+            <p>Create a normal message, rich embed, or load a saved template.</p>
+          </div>
+
+          <div class="template-loader-box">
+            <label class="form-group">
+              <span>Load Saved Template</span>
+              <select id="templateSelect" class="input">
+                <option value="">Select a template to load</option>
+                <% templates.forEach(template => { %>
+                  <option value="<%= template._id %>">
+                    <%= template.name %> • <%= template.category || "General" %>
+                  </option>
+                <% }) %>
+              </select>
+            </label>
+
+            <button type="button" class="secondary-btn" id="loadTemplateBtn">Load Template</button>
+          </div>
+
+          <form method="POST" action="/api/send-message" class="form-stack">
+            <label class="form-group">
+              <span>Channel</span>
+              <select name="channelId" required class="input">
+                <option value="">Select a channel</option>
+
+                <% channelGroups.forEach(group => { %>
+                  <optgroup label="📁 <%= group.name %>">
+                    <% group.channels.forEach(channel => { %>
+                      <option value="<%= channel.id %>"># <%= channel.name %></option>
+                    <% }) %>
+                  </optgroup>
+                <% }) %>
+              </select>
+            </label>
+
+            <label class="form-group">
+              <span>Normal Message Content</span>
+              <textarea
+                name="content"
+                id="content"
+                class="input textarea"
+                placeholder="Optional normal message above the embed..."
+              ></textarea>
+            </label>
+
+            <label class="form-group">
+              <span>Embed Title</span>
+              <input
+                type="text"
+                name="embedTitle"
+                id="embedTitle"
+                class="input"
+                placeholder="Example: Server Announcement"
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Embed Description</span>
+              <textarea
+                name="embedDescription"
+                id="embedDescription"
+                class="input textarea"
+                placeholder="Type the embed description..."
+              ></textarea>
+            </label>
+
+            <div class="form-group">
+              <span>Embed Color</span>
+              <div class="color-row">
+                <input type="color" id="embedColorPicker" class="color-picker" value="#8b5cf6" />
+                <input
+                  type="text"
+                  name="embedColor"
+                  id="embedColor"
+                  class="input color-hex-input"
+                  value="#8b5cf6"
+                  placeholder="#8b5cf6"
+                />
+              </div>
+            </div>
+
+            <label class="form-group">
+              <span>Footer Text</span>
+              <input
+                type="text"
+                name="footerText"
+                id="footerText"
+                class="input"
+                placeholder="Footer text..."
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Thumbnail URL</span>
+              <input
+                type="text"
+                name="thumbnailUrl"
+                id="thumbnailUrl"
+                class="input"
+                placeholder="https://..."
+              />
+            </label>
+
+            <label class="form-group">
+              <span>Image URL</span>
+              <input
+                type="text"
+                name="imageUrl"
+                id="imageUrl"
+                class="input"
+                placeholder="https://..."
+              />
+            </label>
+
+            <div class="template-save-box">
+              <label class="toggle-line">
+                <input type="checkbox" name="saveAsTemplate" id="saveAsTemplate" />
+                <span>Save this embed as a template too</span>
+              </label>
+
+              <label class="form-group template-name-field">
+                <span>Template Name</span>
+                <input
+                  name="templateName"
+                  class="input"
+                  placeholder="Example: Message Builder Embed"
+                />
+              </label>
+            </div>
+
+            <div class="button-row">
+              <button type="submit" class="primary-btn">Send Message</button>
+              <button type="submit" name="onlySaveTemplate" value="yes" class="secondary-btn">
+                Save Template Only
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section class="section-card preview-panel">
+          <div class="section-header">
+            <h2>Preview</h2>
+            <p>This is a simple preview. Discord may look slightly different.</p>
+          </div>
+
+          <div class="preview-normal" id="previewNormal"></div>
+
+          <div class="discord-preview">
+            <div class="discord-embed" id="discordEmbed">
+              <div class="discord-embed-border" id="embedBorder"></div>
+
+              <div class="discord-embed-content">
+                <div class="discord-title" id="previewTitle">Embed Title</div>
+                <div class="discord-description" id="previewDescription">
+                  Embed description will appear here...
+                </div>
+
+                <img id="previewThumbnail" class="preview-thumbnail hidden" alt="Thumbnail" />
+                <img id="previewImage" class="preview-image hidden" alt="Embed Image" />
+
+                <div class="discord-footer" id="previewFooter">Footer text</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="/dashboard.js"></script>
+
+  
+    <script type="application/json" id="ejs-data-dashboard-views-message-builder-ejs-0-templates"><%- JSON.stringify(templates || []).replace(/</g, "\\u003c") %></script>
+
+<script>
+    const templates = JSON.parse(document.getElementById("ejs-data-dashboard-views-message-builder-ejs-0-templates").textContent || "null");
+    const templateSelect = document.getElementById("templateSelect");
+    const loadTemplateBtn = document.getElementById("loadTemplateBtn");
+
+    const content = document.getElementById("content");
+    const embedTitle = document.getElementById("embedTitle");
+    const embedDescription = document.getElementById("embedDescription");
+    const embedColor = document.getElementById("embedColor");
+    const embedColorPicker = document.getElementById("embedColorPicker");
+    const footerText = document.getElementById("footerText");
+    const thumbnailUrl = document.getElementById("thumbnailUrl");
+    const imageUrl = document.getElementById("imageUrl");
+
+    const previewNormal = document.getElementById("previewNormal");
+    const previewTitle = document.getElementById("previewTitle");
+    const previewDescription = document.getElementById("previewDescription");
+    const previewFooter = document.getElementById("previewFooter");
+    const embedBorder = document.getElementById("embedBorder");
+    const previewThumbnail = document.getElementById("previewThumbnail");
+    const previewImage = document.getElementById("previewImage");
+
+    function validHex(value) {
+      return /^#[0-9A-Fa-f]{6}$/.test(value);
+    }
+
+    function updatePreview() {
+      previewNormal.textContent = content.value.trim() || "";
+      previewTitle.textContent = embedTitle.value.trim() || "Embed Title";
+      previewDescription.textContent = embedDescription.value.trim() || "Embed description will appear here...";
+      previewFooter.textContent = footerText.value.trim() || "Footer text";
+      embedBorder.style.background = validHex(embedColor.value.trim()) ? embedColor.value.trim() : "#8b5cf6";
+
+      if (thumbnailUrl.value.trim()) {
+        previewThumbnail.src = thumbnailUrl.value.trim();
+        previewThumbnail.classList.remove("hidden");
+      } else {
+        previewThumbnail.classList.add("hidden");
+      }
+
+      if (imageUrl.value.trim()) {
+        previewImage.src = imageUrl.value.trim();
+        previewImage.classList.remove("hidden");
+      } else {
+        previewImage.classList.add("hidden");
+      }
+    }
+
+    function loadTemplate() {
+      const selectedId = templateSelect.value;
+      const template = templates.find(item => String(item._id) === String(selectedId));
+
+      if (!template) return;
+
+      content.value = template.content || "";
+      embedTitle.value = template.embedTitle || "";
+      embedDescription.value = template.embedDescription || "";
+      embedColor.value = template.embedColor || "#8b5cf6";
+      embedColorPicker.value = validHex(embedColor.value) ? embedColor.value : "#8b5cf6";
+      footerText.value = template.embedFooter || "";
+      thumbnailUrl.value = template.embedThumbnail || "";
+      imageUrl.value = template.embedImage || "";
+
+      updatePreview();
+    }
+
+    loadTemplateBtn.addEventListener("click", loadTemplate);
+
+    embedColorPicker.addEventListener("input", () => {
+      embedColor.value = embedColorPicker.value;
+      updatePreview();
+    });
+
+    embedColor.addEventListener("input", () => {
+      if (validHex(embedColor.value.trim())) {
+        embedColorPicker.value = embedColor.value.trim();
+      }
+      updatePreview();
+    });
+
+    [content, embedTitle, embedDescription, footerText, thumbnailUrl, imageUrl].forEach(el => {
+      el.addEventListener("input", updatePreview);
+    });
+
+    updatePreview();
+  </script>
+<script src="/assets/js/site-music.js"></script></body>
+</html>
